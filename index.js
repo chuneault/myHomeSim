@@ -2,6 +2,8 @@
  * Created by chune on 2016-10-21.
  */
 
+process.chdir(__dirname);
+
 const config = require('./config');
 var server = require('./server'),
     logger = require('./logger');

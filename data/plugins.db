@@ -3,7 +3,7 @@
 {"type":"communication","name":"newtifry","params":{"sourceId":"dcd68f6af387c83592765149ef30785f"},"_id":"L769Ealwn8eJEnxz","active":true}
 {"type":"programming","name":"virtual","params":[{"name":"Alarm","infos":[{"name":"Armed","varName":"ARMED"}]}],"_id":"L769Eblan8eJEnxz","active":false}
 {"type":"logger","name":"console","model":{},"_id":"L869Ealsn8eJEnxz","active":false}
-{"type":"logger","name":"consoleShell","params":{},"_id":"L869Ealsn9eJEnxz","active":true}
+{"type":"logger","name":"consoleShell","params":{},"_id":"L869Ealsn9eJEnxz","active":false}
 {"type":"protocol","name":"serialGateway","params":{"port":"COM7","baudRate":115200},"_id":"SJ6k70j0","active":false}
 {"type":"protocol","name":"ethernetGateway","params":{"url":"192.168.0.150","port":"5003"},"_id":"SJ6k70j1","active":true}
 {"type":"api","name":"httpServer","params":{"port":8080},"_id":"SJ6k7vv0j1","active":true}
