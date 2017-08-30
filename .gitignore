@@ -1,3 +1,4 @@
-/node_modules/*
 /data/sensorsValues.db
-/logs/*
+.idea/
+logs/
+node_modules/
