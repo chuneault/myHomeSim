@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <script id="nodeInfoTemplate" type="text/template7">
+        <ul class="list-group">
+            {{#each this}}
+            <li style="list-style-type: none">
+                {{#ifIn @key "lastHeartBeat|lastUpdate|lastDate|previousValueDate"}}
+                {{@key}} : {{js "moment(parseInt(this)).fromNow()"}}
+                {{else}}
+                {{@key}} : {{this}}
+                {{/ifIn}}
+            </li>
+            {{/each}}
+        </ul>
+    </script>
+
+    <script id="navBarTemplate" type="text/template7">
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" style="opacity: 0.8;">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                            aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">myHomeSim</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class=""><a href="#">Home</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">Settings <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/nodes?type=node">Nodes</a></li>
+                                <li><a href="#">Sensors</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Nav header</li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <div class="navbar-form ">
+                            <input type="text" class="form-control" name="search" onkeyup="{{searchKeyUp}}"
+                                   onclick="{{searchClick}}"
+                                   id="navSearch" placeholder="Search">
+                            <button class="btn btn-primary">Find</button>
+                        </div>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+    </script>
+
+    <script id="wunderGroundTemplate" type="text/template7">
+        <div class="panel panel-default panel-black forecastPanel" style="" data-data='{{JSON this}}'>
+            <canvas id="canvas" style="position: absolute; z-index: -1;"></canvas>
+            <div class="panel-heading" data-toggle="tooltip-wheater"  title="{{forecast.txt_forecast.forecastday[0].fcttext_metric}}">
+                <div class="pull-right" style="margin-top: 20px;">
+                    <span style="font-size:60px;" class='wi wi-wu-{{current_observation.icon}}'></span>
+                    <span style="font-size:60px;" class="wi" data-toggle="tooltip-wheater"  title="{{moon_phase.phaseofMoon}}">{{moonUnicode this.moon_phase.ageOfMoon}}</span>
+                </div>
+                <h3>{{current_observation.weather}}</h3>
+                <h3>{{current_observation.temperature_string}} <span class="wi wi-strong-wind"></span> {{current_observation.feelslike_string}}</h3>
+            </div>
+            <div class="panel-body ">
+                <p class="text-center" style="font-size: medium">
+                    <span class="wi wi-humidity"></span>
+                    <span class="">{{current_observation.relative_humidity}}</span>
+                    <span class="wi wi-cloudy-gusts"></span>
+                    <span class="">{{current_observation.wind_kph}} km/h</span>
+                    <span class="wi wi-sunrise"></span>
+                    <span class="">{{moon_phase.sunrise.hour}}:{{moon_phase.sunrise.minute}}</span>
+                    <span class="wi wi-sunset"></span>
+                    <span class="">{{moon_phase.sunset.hour}}:{{moon_phase.sunset.minute}}</span>
+                </p>
+
+                <div style="">
+                    {{#each forecast.simpleforecast.forecastday}}
+                    <table style="float: left; margin: 5px;" class="forecastTable" data-toggle="tooltip-wheater"
+                           title="{{conditions}}">
+                        <tr style="">
+                            <td colspan="2" style="min-width: 120px;">
+                                <strong>{{date.weekday}}</strong>
+                                <div>{{conditions}}</div>
+                            </td>
+                        </tr>
+                        <tr style="height: 5px;" />
+                        <tr style="text-align: center;">
+                            <td style="" align="">
+                                <i class="wi wi-wu-{{icon}}"
+                                   style="display:block; font-size: 30px; "></i>
+                            </td>
+                            <td style="width: 50px;" align="">
+                                <span class="fa fa-arrow-up"> {{high.celsius}}°</span>
+                                <br>
+                                <span class="fa fa-arrow-down"> {{low.celsius}}°</span>
+                            </td>
+                        </tr>
+                        <tr style="height: 5px;" />
+                        <tr style="text-align: center;">
+                            <td colspan="2">
+                                <span class="">{{snow_allday.cm}} cm</span>
+                                <span class="">à {{pop}} %</span>
+                            </td>
+                        </tr>
+
+                    </table>
+                    {{/each}}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="panel-footer">
+              <p class="text-right">{{current_observation.display_location.full}} - {{current_observation.observation_time}}</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="nodeTempTemplate" type="text/template7">
+        <div class="panel panel-default panel-black grid-item" style="" data-data='{{JSON this}}'>
+            <div class="panel-heading">
+                <h4>
+                {{#each header}}
+                  <span id="{{id}}">{{html}}</span>
+                {{/each}}
+                </h4>
+            </div>
+            <div class="panel-body" style="padding: 0px; font-size: xx-large;">
+                <div class="fadeInFadeOutChild" style="position: relative; ">
+                  {{#each body}}
+                  <span id={{id}} style="position: absolute; opacity: 0; text-align: center; left: 0; right: 0; top: 0; bottom: 0; margin: auto auto;"
+                        data-myHomeSim='{"_id": "{{id}}", "type": "{{type}}", "html": "{{html}}"}'
+                        data-toggle="tooltip-{{type}} ">
+                  </span>
+                  {{/each}}
+                </div>
+                &nbsp;
+                <!-- <div style="visibility: hidden; width: 100%; top: 0; left: 0; position: relative;  font-size: xx-large;">999999</div> !-->
+            </div>
+            <div class="panel-footer">
+                <p class="text-right">
+                    {{#each footer}}
+                      {{#js_compare "this.type == 'chart'"}}
+                        <span  class="fa fa-bar-chart" data-chart={{chartFnc}} data-chartId={{id}}></span>
+                      {{else}}
+                        <span id={{id}} data-myHomeSim='{"_id": "{{id}}", "type": "{{type}}", "html": "{{html}}"}' data-toggle="tooltip-sensor"></span>
+                      {{/js_compare}}
+                    {{/each}}
+                </p>
+            </div>
+        </div>
+    </script>
+</head>
+</html>
+
+
+
+

@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>myHomeSim</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+    <script src="/js/template7.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
+    <script src="https://use.fontawesome.com/4d5fdbd653.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
+    <script src="/js/moment-transform.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
+    <link href="/css/rotating-card.css" rel="stylesheet"/>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
+    <script src="//oss.maxcdn.com/bootbox/4.2.0/bootbox.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <!--<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> /!-->
+    <script src="/js/packery.pkgd.min.js"></script>
+	             
+    <script src="https://npmcdn.com/draggabilly@2.1/dist/draggabilly.pkgd.js"></script>
+
+    <link rel="stylesheet" href="/css/tooltipster.bundle.min.css"/>
+    <script src="/js/tooltipster.bundle.min.js"></script>
+    <script src="/js/jquery.ba-resize.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
+
+
+    <script>
+
+        var icon = {
+            'thermometer': "<i class='fa fa-thermometer' aria-hidden='true'></i>",
+            'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
+            'bars': "<i class='fa fa-bars' aria-hidden='true'></i>",
+            'ok': "<i class='fa fa-check' aria-hidden='true'></i>",
+            'fire': "<i class='fa fa-fire'></i>",
+            'cancel': "<i class='fa fa-times' aria-hidden='true'></i>",
+            'exclamation': "<i class='fa fa-exclamation-circle' aria-hidden='true'></i>",
+            'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
+            "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
+            "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
+            "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+        };
+
+        function updateNode(data, elem, dataAttr) {
+            if ((elem) || (elem = $('#' + data._id))) {
+                elem.each(function() {
+
+                    let elem = $(this);
+                    elem.data('data', data);
+
+                    if (!dataAttr)
+                        dataAttr = elem.data('myHomeSim');
+                    if (!dataAttr)
+                        dataAttr = JSON.parse(elem.attr('data-myHomeSim'));
+
+                    if ((data.lastHeartBeat + (360 * 1000)) <= $.now()) {
+                        $(elem).parents('.panel-heading').addClass('panel-expired');
+                    }
+                    else {
+                        $(elem).parents('.panel-heading').removeClass('panel-expired');
+                        //$(elem).parents('.panel-heading').addClass('');
+                    }
+
+                    var html =
+                            format(dataAttr.html, {
+                                evalVal: format(dataAttr.eval ? eval(format(dataAttr.eval, {
+                                    icon,
+                                    data: data
+                                })) : '', {icon, data: data}),
+                                icon,
+                                data: data
+
+                            });
+
+                    elem.html(html);
+
+                    if ((!elem.data('interval')) && (data.maxDelayHeartBeat > 0)) {
+                        console.log('set interval for timeout', data);
+                        elem.data('interval', window.setInterval(function () {
+
+                            var data = $(elem).data('data');
+                            if ((data.lastHeartBeat + (data.maxDelayHeartBeat * 1000)) <= $.now())
+                                $(elem).parents('.panel-heading').css('background-color', '#ffb3b3');
+                            else
+                                $(elem).parents('.panel-heading').css('background-color', '');
+                        }, 60000));
+                    }
+                });
+            }
+        }
+
+        function updateSensor(data, elem, dataAttr) {
+            if ((elem) || (elem = $('#' + data._id))) {
+                $.each(elem, function (index, e) {
+                    $(e).data('data', data);
+                    if (!dataAttr)
+                        dataAttr = $(e).data('myHomeSim');
+                    if (!dataAttr)
+                        dataAttr = JSON.parse(e.attr('data-myHomeSim'));
+                    // var value =  !isNaN(data.lastValue) ? data.lastValue : data.previousValue || 0;
+                    var value = data.lastValue;
+
+                    /*if ($.isNumeric(value)) {
+                      value = (Math.round(value * 100) / 100 ).toString();
+                    }*/
+
+
+                //console.log(dataAttr.html);
+                    $(e).html(format(dataAttr.html, {
+                        evalVal: format(dataAttr.eval ? eval(format(dataAttr.eval, {
+                            icon,
+                            value,
+                            data: data
+                        })) : '', {icon, value, data: data}),
+                        value,
+                        icon,
+                        data: data
+                    }));
+
+                    if (dataAttr.java) {
+                        eval(dataAttr.java);
+                    }
+                });
+            }
+        }
+
+        var socket = io.connect('/');
+        socket.on('newSensorValue', function (data) {
+            updateSensor(data);
+
+            var notyDefault = {
+                layout: 'topCenter',
+                type: 'error',
+                timeout: 2500,
+                animation: {
+                    open: 'animated bounceInDown', // Animate.css class names
+                    close: 'animated bounceOutUp' // Animate.css class names
+                }
+            };
+
+            if (((data._id == 'rJerE9xb-g') || (data._id == 'Hyg-pxz7g')) && (data.lastValue == 1)) {
+                noty($.extend(notyDefault, {
+                            text: '<span style="font-size: x-large"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + data.desc + '</span>',
+                        })
+                );
+            }
+
+
+            /*if (data._id == 'ryfziys7bl') {
+             noty($.extend(notyDefault, {
+             text: '<span style="font-size: x-large"><i class="fa fa-fire" aria-hidden="true"></i> ' + (data.lastValue == 1 ? 'Starting Heating' : 'End Heating') + '</span>' ,
+             })
+             );
+             }*/
+
+        });
+
+        socket.on('updateNode', function (data) {
+            updateNode(data);
+        });
+
+    </script>
+
+
+    <style>
+        .panel {
+            border-radius: 8px;
+            margin-bottom: 0px;
+            min-width: 250px;
+        }
+
+        .myChart {
+            display: block;
+        }
+
+        body {
+            background-color: #222222;
+            font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
+            font-weight: normal;
+            padding-top: 60px;
+        }
+
+        @media screen and (min-width: 1200px) {
+            .grid-item--large {
+                width: 525px;
+            }
+
+            .grid-item--medlarge {
+                width: 475px;
+            }
+
+            .grid-item--med {
+                width: 425px;
+            }
+        }
+
+        @media screen and (min-width: 1800px) {
+            .container {
+                width: 1870px;
+            }
+
+            .chartBootboxWidth {
+                width: 1800px;
+            }
+
+            body {
+                background: url(img/autumn_season_3-wallpaper-2560x1440.jpg) no-repeat center center fixed;
+                background-size: cover;
+
+            }
+        }
+
+        .container {
+            opacity: 0.9;
+        }
+
+        .panel-resizable {
+            resize: both;
+            overflow: auto
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 50%;
+        }
+
+        .panel-heading h5 {
+            white-space: nowrap;
+            /*overflow: hidden;*/
+            text-overflow: ellipsis;
+            line-height: normal;
+            width: 75%;
+            padding-top: 8px;
+        }
+
+        .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+            outline: 0;
+        }
+
+        .panel-title {
+            line-height: 30px;
+        }
+
+        .panel-default > .panel-footer {
+            line-height: 20px;
+            border-color: #000000;
+            background: rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            height: 20px;
+            padding: 0;
+
+        }
+
+        .panel-black {
+            background-color: rgba(57, 57, 57, 0.75);
+            border-color: #000000;
+            color: #ffffff;
+        }
+
+        .panel-expired {
+            background: #ff000c !important;
+        }
+
+        .panel-default > .panel-heading {
+            border-color: #000000;
+            background: rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+        }
+
+        .list-group-item {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid #000000;
+            color: white;
+        }
+
+        .myclearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+    </style>
+
+
+    <script id="rowTemplate" type="text/template7">
+        {{#each this}}
+        <div class="panel panel-default panel-black panel-resizable grid-item block {{class}}">
+            <div class="panel-heading">
+                {{#if headerTitle}}
+                <span class="panel-title">
+                        {{#each headerTitle}}
+                           <span id={{_id}}
+                                 data-myHomeSim='{{JSON this}}'
+                                 {{#js_compare "this.type == 'sensor'"}}
+                                   data-toggle="tooltip-sensor"
+                                 {{/js_compare}}>
+                           </span>
+                {{/each}}
+                </span>
+                {{else}}
+                <span class="panel-title" id={{_id}}
+                      data-myHomeSim='{{JSON this}}>'
+                </span>
+                {{/if}}
+
+                {{#each headerButtons}}
+                <button type="button"
+                        class="btn btn-default btn-circle pull-right {{class}}"
+                        {{#if dataToggle}} data-toggle={{dataToggle}} {{/if}}
+                {{#if dataChart}} data-chart={{dataChart}} {{/if}}
+                {{#if dataChartId}} data-chartId={{dataChartId}} {{/if}}>
+                </button>
+                {{/each}}
+                <div class="clearfix"></div>
+            </div> <!-- end panel heading -->
+            {{#if sensors}}
+            <div class="panel-body panel-black">
+                <ul class="list-group">
+                    {{#each sensors}}
+                    <li class="list-group-item" id={{_id}}
+                        data-myHomeSim='{{JSON this}}'
+                        {{#js_compare "this.type == 'sensor'"}}
+                          data-toggle="tooltip-sensor"
+                        {{/js_compare}}>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div> <!-- end panel body -->
+            {{/if}}
+        </div> <!-- end panel -->
+        {{/each}}
+    </script>
+
+
+</head>
+<body>
+
+
+<div id="templates" data-template="templates.html"></div>
+
+<div id="navBar"></div>
+
+
+
+<div class="container">
+<!--
+        <h2 style=" color: #ffffff;">
+            Maison
+
+            <span id="rkgvOxjh-e"
+                  data-myHomeSim='{"_id": "rkgvOxjh-e", "type": "sensor", "html": "{icon.thermometer} <strong>{value}</strong>°C"}'
+                  data-toggle="tooltip-sensor"></span>
+            <span id="HywOgih-e"
+                  data-myHomeSim='{"_id": "HywOgih-e", "type": "sensor", "html": "{icon.tint} <strong>{value}</strong> %"}'
+                  data-toggle="tooltip-sensor"></span>
+            <span id="ByxHAcpeMg"
+                  data-myHomeSim='{"_id": "ByxHAcpeMg", "type": "sensor", "html": "(<strong>{value}</strong>)"}'
+                  data-toggle="tooltip-sensor"></span>
+        </h2>
+-->
+    <div id="rows" class="grid">
+        <div class="grid-item" id="wunderGround"></div>
+    </div>
+
+</div>
+
+
+<script>
+    var $grid = null;
+
+
+    function dateOnly(dateTime) {
+        return dateTime.startOf('date');
+    }
+
+    function sumByDate(data, minsVal, labelsVal, datesVal) {
+        var day = -1;
+        var totalMin = 0;
+        $.each(data, function (index, val) {
+            if (day == -1)
+                day = dateOnly(moment(val.valueDate));
+            if (day.isSame(dateOnly(moment(val.valueDate))))
+                totalMin += val.value;
+            else {
+                labelsVal.push(day.format('ddd'));
+                datesVal.push(day);
+                minsVal.push(_.round(totalMin / 60, 1));
+                day = dateOnly(moment(val.valueDate));
+                totalMin = val.value;
+            }
+        });
+        datesVal.push(day);
+        labelsVal.push(day.format('ddd'));
+        minsVal.push(_.round(totalMin / 60, 1));
+    }
+
+    function avrByDate(data, avrsVal, labelsVal) {
+        var day = -1;
+        var totalVal = 0;
+        var i = 0;
+        $.each(data, function (index, val) {
+            if (day == -1)
+                day = dateOnly(moment(val.valueDate));
+            if (day.isSame(dateOnly(moment(val.valueDate)))) {
+                totalVal += val.value;
+                i += 1;
+            } else {
+                avrsVal.push(_.round(totalVal / i, 1));
+                if (labelsVal) labelsVal.push(day.format('ddd'));
+                day = dateOnly(moment(val.valueDate));
+                totalVal = val.value;
+                i = 1;
+            }
+        });
+        avrsVal.push(_.round(totalVal / i, 1));
+        if (labelsVal) labelsVal.push(day.format('ddd'));
+    }
+
+    function allValDateTime(data, allVals) {
+        var lastVal;
+        $.each(data, function (index, val) {
+            if ((val.value != lastVal) || (index == data.length)) {
+                var m = moment(val.valueDate);
+                allVals.push([Date.UTC(m.year(), m.month(), m.date(), m.hours(), m.minutes()), val.value]);
+                //lastVal = val.value;
+            }
+        });
+    }
+
+   //'Température Moyenne - Minutes de chauffage
+    function genChart1(divChart) {
+        var minValueDate = dateOnly(moment().add(-5, 'days'));
+        $.getJSON('/api/sensor/rJWMiyi7Zg/dbvalues?minValueDate=' + minValueDate, function (data) {
+            var minsVal = [], labelsVal = [], datesVal = [];
+
+            sumByDate(data, minsVal, labelsVal, datesVal);
+
+            minValueDate = datesVal[0];
+            $.getJSON('/api/sensor/BJM3Cd00/dbvalues?minValueDate=' + minValueDate + '&limit=9999999', function (data) {
+                var avrsVal = [];
+
+                avrByDate(data, avrsVal);
+
+
+                $(divChart).highcharts({
+                    chart: {
+                        events: {
+                            load: function () {
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Température Moyenne - Minutes de chauffage'
+                    },
+                    xAxis: [{
+                        categories: labelsVal,
+                        crosshair: true
+                    }],
+                    yAxis: [{ // Primary yAxis
+                        labels: {
+                            format: '{value}°C',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'Température',
+
+                        }
+                    }, { // Secondary yAxis
+                        title: {
+                            text: 'Chauffage',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        labels: {
+                            format: '{value} min',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        opposite: true
+                    }],
+                    tooltip: {
+                        shared: true
+                    },
+                    series: [{
+                        name: 'Chauffage',
+                        type: 'column',
+                        yAxis: 1,
+                        data: minsVal,
+                        tooltip: {
+                            valueSuffix: ' minutes'
+                        }
+
+                    }, {
+                        name: 'Temperature Moyenne',
+                        type: 'spline',
+                        data: avrsVal,
+                        tooltip: {
+                            valueSuffix: '°C'
+                        }
+                    }]
+                });
+            });
+
+        });
+    }
+
+    //Température Moyenne par jour
+    function genChart2(divChart, sensorId) {
+
+        var minValueDate = dateOnly(moment().add(-7, 'days'));
+        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + minValueDate + '&limit=99999999', function (data) {
+            var avrsVal = [], labelsVal = [];
+            avrByDate(data, avrsVal, labelsVal);
+            $(divChart).highcharts({
+                chart: {
+                    events: {
+                        load: function () {
+                        }
+                    }
+                },
+                title: {
+                    text: 'Température Moyenne par jour'
+                },
+                xAxis: [{
+                    categories: labelsVal,
+                    crosshair: true
+                }],
+                yAxis: [{ // Primary yAxis
+                    labels: {
+                        format: '{value}°C',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Temperature',
+
+                    }
+                }],
+                tooltip: {
+                    shared: true
+                },
+                series: [{
+                    name: 'Temperature',
+                    type: 'spline',
+                    data: avrsVal,
+                    tooltip: {
+                        valueSuffix: '°C'
+                    }
+                }]
+            });
+        });
+
+    }
+
+    function genChart3(divChart, sensorId) {
+
+        var tonight = moment().transform('23:59:59.999');
+        var beginday = moment().transform('00:00:00.000');
+
+        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+            var avrsVal = [], labelsVal = [];
+            avrByDate(data, avrsVal, labelsVal);
+            $(divChart).highcharts({
+                chart: {
+                    events: {
+                        load: function () {
+                        }
+                    }
+                },
+                title: {
+                    text: 'Température Moyenne par jour'
+                },
+                xAxis: [{
+                    categories: labelsVal,
+                }],
+                yAxis: [{ // Primary yAxis
+                    labels: {
+                        format: '{value}°C',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Temperature',
+
+                    }
+                }],
+                tooltip: {
+                    shared: true
+                },
+                series: [{
+                    name: 'Temperature',
+                    type: 'spline',
+                    data: avrsVal,
+                    tooltip: {
+                        valueSuffix: '°C'
+                    }
+                }]
+            });
+        });
+
+    }
+
+    function genChart4(divChart, sensorId) {
+
+        var tonight = moment().transform('23:59:59.999');
+        var beginday = moment().transform('00:00:00.000');
+
+        /*tonight = moment();*/
+        beginday = moment().add(-2, 'days');
+
+        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+            var valChart = [];
+            allValDateTime(data, valChart);
+            $(divChart).highcharts({
+                chart: {
+                    events: {
+                        load: function () {
+                        }
+                    },
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'Température'
+                },
+                xAxis: [{
+                    type: 'datetime',
+                    //tickInterval: 24 * 3600 * 1000
+                }],
+                tooltip: {
+                    xDateFormat: '%e %b %H:%M'
+
+                },
+                yAxis: [{ // Primary yAxis
+                    labels: {
+                        format: '{value}°C',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Temperature',
+
+                    }
+                }],
+                series: [{
+                    name: 'Temperature',
+                    type: 'areaspline',
+                    data: valChart,
+                    tooltip: {
+                        valueSuffix: '°C'
+                    }
+                }]
+            });
+        });
+
+    }
+
+    function renderTemplate7(template, data, container) {
+        var template = $(template).html();
+        // compile it with Template7
+
+        Template7.registerHelper('compare',
+                function (key, compareWith, options) {
+                    if (key === compareWith)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+        Template7.registerHelper('ifIn',
+                function (key, compareWith, options) {
+                    if (compareWith.split('|').indexOf(key) >= 0)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+        Template7.registerHelper('fieldVal',
+                function (key, val, type) {
+                    var returnVal = val[key] != null ? val[key] : '';
+
+                    if ((type == 'date') && (returnVal != ''))
+                        returnVal = moment(returnVal).format();
+
+                    return returnVal;
+                });
+
+        Template7.registerHelper('JSON',
+                function (val) {
+                    return JSON.stringify(val);
+                });
+
+        Template7.registerHelper('moonUnicode',
+                function (val) {
+                  console.log('moon age ', val/1.05);
+                  return '&#x' + ((61589 + parseInt(val / 1.05)).toString(16));
+                });
+
+        var compiledTemplate = Template7.compile(template);
+        // Now we may render our compiled template by passing required context
+        var html = compiledTemplate(data);
+        if (container)
+            container.append(html);
+        else
+            return html;
+    }
+
+    var dashBoardV2 = [
+        {
+            id: 1, /*Meteo*/
+            'class': 'grid-item--large',
+
+            headerTitle: [
+                {type: "node", _id: "Skb3Rd00", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "HkeWhCOAR", html: "{value} V"},
+                {type: "sensor", _id: "S1bQnAuA0", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "BkSEIoVJg", html: "{icon.exclamation} {value}"},
+                {type: "sensor", _id: "SJ-P3bBJx", html: "{icon.bug} {value}"}
+            ],
+            headerButtons: [
+                {"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "BJM3Cd00"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart3",
+                    dataChartId: "BJM3Cd00"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "BJM3Cd00"
+                }
+            ],
+            sensors: [
+                {type: "sensor", _id: "BJM3Cd00", html: "{icon.thermometer} {value} °C"},
+                {_id: "HklG2CuAC", type: "sensor", html: "{icon.tint} {value} %"},
+                {_id: "r1lQnAuRC", type: "sensor", html: "{icon.bars} {value} hPa"}
+            ]
+        },
+        /*{
+            //Bureau
+            id: 2,
+            'class': 'grid-item--med',
+            headerTitle: [
+                {type: "node",   _id: "BkrMD9k-x",  html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "HJuGv51bl",  html: "{value} V"},
+                {type: "sensor", _id: "rJWdGv51Wl", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "rJldMwqkZe", html: "{icon.exclamation} {value}"}
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "B1gPMw5yWl"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "B1gPMw5yWl"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "B1gPMw5yWl", html: "{icon.thermometer} {value} °C"},
+                {_id: "BkDGDcy-e", type: "sensor", html: "{icon.tint} {value} %"}
+            ]
+        },*/
+        {
+            //Lauralie
+            id: 3,
+            'class': 'grid-item--large',
+            headerTitle: [
+                {type: "node", _id: "Syqi0u00", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "r1x-E5C0", html: "{value} V"},
+                {type: "sensor", _id: "Bksi0O0C", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "S1pVkLryl", html: "{icon.exclamation} {value}"},
+                {type: "sensor", _id: "HyiNyUS1e", html: "{icon.bug} {value}"}
+            ],
+
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "Bylgb4cRC"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "Bylgb4cRC"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "Bylgb4cRC", html: "{icon.thermometer} {value} °C"},
+                {_id: "Hyl5i0_R0", type: "sensor", html: "{icon.tint} {value} %"}
+
+            ]
+        },
+        {
+            id: 4,
+            'class': 'grid-item--medlarge',
+            headerTitle: [ //Mathieu
+                {type: "node", _id: "SyCEGPp1l", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "SJbgBGPp1l", html: "{value} V"},
+                {type: "sensor", _id: "HkQeHzwp1g", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "BkflSGv61e", html: "{icon.exclamation} {value}"},
+                {type: "sensor", _id: "SkEgHGvTke", html: "{icon.bug} {value}"}
+
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "Skeerfvp1g"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "SJbgBGPp1l"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "Skeerfvp1g"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "Skeerfvp1g", html: "{icon.thermometer} {value} °C"},
+                {_id: "HyeHfwTJl", type: "sensor", html: "{icon.tint} {value} %"}
+            ]
+        },
+       
+        {
+            //Ève
+            id: 6,
+            'class': 'grid-item--medlarge',
+            headerTitle: [
+                {type: "node", _id: "SkbuAdA0", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "Hyog1FRA", html: "{value} V"},
+                {type: "sensor", _id: "Bkfu0_AA", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "BJ94HLV1g", html: "{icon.exclamation} {value}"},
+                {type: "sensor", _id: "BypKQLByl", html: "{icon.bug} {value}"}
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "rygsl1FCR"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "rygsl1FCR"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "rygsl1FCR", html: "{icon.thermometer} {value} °C"},
+                {_id: "ryebOROCA", type: "sensor", html: "{icon.tint} {value} %"}
+            ]
+        },
+        {
+            //Door Switch
+            id: 7,
+            'class': 'grid-item--med',
+            headerTitle: [
+                {type: "node", _id: "BJ7VqeWZg", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "H1rNqx-bx", html: "{value} V"},
+                {type: "sensor", _id: "BJGSN9xZZg", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "B1bSN9xWZe", html: "{icon.exclamation} {value}"}
+            ],
+            headerButtons: [
+                {"class": "fa fa-question", dataToggle: "tooltip-node"}
+            ],
+            sensors: [
+                {
+                    type: "sensor", _id: "rJerE9xb-g", html: "{evalVal}",
+                    eval: `if ({value} == 1) {{
+                             $(this).css("background-color", "#ff000c")
+
+
+                           }}
+                           else {{
+                             $(this).css("background-color", "")
+                           }}
+                           {value} == 0 ? "{icon.ok}" :  "{icon.exclamation} Porte ouverte"`
+                }
+            ]
+        },
+        {
+            id: 8,
+            'class': 'grid-item--med',
+            headerTitle: [ //HVAC
+                {type: "node", _id: "Hkes1jmWl", html: "{data.name}"},
+                {type: "sensor", _id: "SJeMiJoX-e", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "BJziyi7Zg", html: "{icon.exclamation} {value}"}
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart1"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "rJWMiyi7Zg"
+                }
+            ],
+            sensors: [
+                {
+                    type: "sensor", _id: "ryfziys7bl", html: "{evalVal}",
+                    eval: '{value} == 0 ? "{icon.cancel}" : "{icon.fire} Heating"'
+                },
+                {_id: "rJWMiyi7Zg", type: "sensor", html: "{value} sec"}
+            ]
+        },
+        {
+            id: 9, //BELL/TEMP/REPEATER
+            'class': 'grid-item--medlarge',
+
+            headerTitle: [
+                {type: "node", _id: "ByqAFcnbe", html: "{data.name}"},
+                {type: "sensor", _id: "H1nRYcnZx", html: "{icon.battery} {value}V"},
+                {type: "sensor", _id: "SkTRKq2Zl", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "Hkz2AFqh-g", html: "{icon.exclamation} {value}"}
+
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "B1kAAd00"
+                }
+
+            ],
+            sensors: [
+                {
+                    type: "sensor", _id: "Skln0t52bl", html: "{evalVal}",
+                    eval: '{value} == 0 ? "{icon.cancel}" : "{icon.bell} Avant"'
+                },
+                {
+                    type: "sensor", _id: "H1bn0KqhZl", html: "{evalVal}",
+                    eval: '{value} == 0 ? "{icon.cancel}" : "{icon.bell} Arrière"'
+                }
+
+            ]
+        },
+        {
+            //Salle à diner
+            id: 10,
+            'class': 'grid-item--medlarge',
+            headerTitle: [
+                {type: "node", _id: "BkXK0_AC", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "B1cTYIHye", html: "{value} V"},
+                {type: "sensor", _id: "Syb7KCO0R", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "Bkl9atUHJg", html: "{icon.exclamation} {value}"}
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "r1Yvf50C"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "r1Yvf50C"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "r1Yvf50C", html: "{icon.thermometer} {value} °C"},
+                {_id: "rJlXKCuRC", type: "sensor", html: "{icon.tint} {value} %"}
+            ]
+        },
+        {
+            id: 12,
+            'class': 'grid-item--med',
+            headerTitle: [ //RELAY
+                {type: "node", _id: "SyjZsgMXe", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "BJesbjgMXe", html: "{value} V"},
+                {type: "sensor", _id: "SJ-fieM7x", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "r1xGoefXl", html: "{icon.exclamation} {value}"}
+            ],
+            sensors: [{
+                type: "sensor", _id: "Hyg-pxz7g",
+                html: '<input id="binary-switch" type="checkbox" {evalVal} data-toggle="toggle">',
+                eval: '{value} == 0 ? "" : "checked"',
+                java: "toggleBinarySwitch()"
+            }
+
+            ]
+        }
+    ];
+
+    function updateWunderground() {
+        $.getJSON('http://api.wunderground.com/api/bccd91f6919ff946/lang:FC/conditions/forecast/astronomy/q/canada/sainte-therese.json', function (data) {
+            $('#wunderGround').empty();
+            renderTemplate7($('#wunderGroundTemplate'), data, $('#wunderGround'));
+
+           //$('.forecastPanel').width(_.sumBy($('.forecastTable'), function(o) { return $(o).outerWidth(true); }) + 30);
+
+            if ($grid) $grid.packery();
+
+            $('[data-toggle="tooltip-wheater"]').tooltipster();
+
+            //snow($('#wunderGround').find('.panel'));
+
+        });
+    }
+
+    function toggleBinarySwitch() {
+        $("#binary-switch").bootstrapToggle();
+        $("#binary-switch").change(function () {
+            var sensor = $(this).parents('li').data('data');
+            $.ajax({
+                url: 'api/sensor/' + sensor._id, type: 'PUT',
+                data: {value: $(this).prop('checked') ? 1 : 0},
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+    }
+
+    function fadeOutFadeIn(elem) {
+        $(elem).addClass('animated fadeOut');
+        $(elem).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+                function () {
+                    $(this).removeClass('animated fadeOut');
+                    $(this).addClass('animated fadeIn');
+                    $(elem).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+                            function () {
+                                $(this).removeClass('animated fadeIn');
+                                fadeOutFadeIn(elem);
+                            });
+                });
+    }
+
+    function fadeInFadeOutChild(parent, done) {
+        var children = parent.children().first();
+
+        function fadeInDateOutElem (elem, done) {
+             $(elem).addClass('animated fadeIn');
+             $(elem).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+                     function () {
+                         $(this).removeClass('animated fadeIn');
+                         $(this).addClass('animated fadeOut');
+                         $(this).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+                                 function () {
+                                     $(elem).removeClass('animated fadeOut');
+                                     done();
+                                 });
+                     });
+         }
+
+        function nextChild(done) {
+            fadeInDateOutElem(children, function(){
+                children = children.next();
+                if (children.length > 0)
+                    nextChild(done);
+                else
+                    done();
+            });
+        }
+
+
+        nextChild(done);
+    }
+
+    renderTemplate7($('#rowTemplate'), dashBoardV2, $('#rows'));
+
+    function snow(parent) {
+        //canvas init
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        //canvas dimensions
+        var W = parent.width();
+        var H = parent.height();
+
+        canvas.width = W;
+        canvas.height = H;
+
+        //snowflake particles
+        var mp = 25; //max particles
+        var particles = [];
+        for (var i = 0; i < mp; i++) {
+            particles.push({
+                x: Math.random() * W, //x-coordinate
+                y: Math.random() * H, //y-coordinate
+                r: Math.random() * 4 + 1, //radius
+                d: Math.random() * mp //density
+            })
+        }
+
+        //Lets draw the flakes
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            for (var i = 0; i < mp; i++) {
+                var p = particles[i];
+                ctx.moveTo(p.x, p.y);
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+            }
+            ctx.fill();
+            update();
+        }
+
+        //Function to move the snowflakes
+        //angle will be an ongoing incremental flag. Sin and Cos functions will be applied to it to create vertical and horizontal movements of the flakes
+        var angle = 0;
+
+        function update() {
+            angle += 0.01;
+            for (var i = 0; i < mp; i++) {
+                var p = particles[i];
+                //Updating X and Y coordinates
+                //We will add 1 to the cos function to prevent negative values which will lead flakes to move upwards
+                //Every particle has its own density which can be used to make the downward movement different for each flake
+                //Lets make it more random by adding in the radius
+                p.y += Math.cos(angle + p.d) + 1 + p.r / 2;
+                p.x += Math.sin(angle) * 2;
+
+                //Sending flakes back from the top when it exits
+                //Lets make it a bit more organic and let flakes enter from the left and right also.
+                if (p.x > W + 5 || p.x < -5 || p.y > H) {
+                    if (i % 3 > 0) //66.67% of the flakes
+                    {
+                        particles[i] = {x: Math.random() * W, y: -10, r: p.r, d: p.d};
+                    }
+                    else {
+                        //If the flake is exitting from the right
+                        if (Math.sin(angle) > 0) {
+                            //Enter from the left
+                            particles[i] = {x: -5, y: Math.random() * H, r: p.r, d: p.d};
+                        }
+                        else {
+                            //Enter from the right
+                            particles[i] = {x: W + 5, y: Math.random() * H, r: p.r, d: p.d};
+                        }
+                    }
+                }
+            }
+        }
+
+        //animation loop
+        setInterval(draw, 33);
+    }
+
+    //load templates
+    $('#templates').load($('#templates').attr('data-template'),
+            function () {
+                loadTemplatesComplete();
+            }
+    );
+
+
+
+    function infinieFade(parent) {
+        fadeInFadeOutChild(parent, function(){
+            infinieFade(parent);
+        });
+    }
+
+    function loadTemplatesComplete() {
+        renderTemplate7($('#navBarTemplate'), {dashboard: 'active'}, $('#navBar'));
+
+
+
+        //Bureau
+        renderTemplate7($('#nodeTempTemplate'),
+                { header: [{html: 'Bureau'}],
+                  body: [{id: 'BkDGDcy-e', type: "sensor", html: '{icon.tint} {value} %'},
+                         {id: 'B1gPMw5yWl', type: "sensor", html: '{icon.thermometer} {value} °C'}],
+
+                  footer: [ {id: 'rJWdGv51Wl', type: "sensor", html: '{icon.ok} {value}'},
+                            {id: 'rJldMwqkZe', type: "sensor", html: '{icon.exclamation} {value}'},
+                            {id: 'HJuGv51bl',  type: "sensor", html:'{icon.battery} {value} V' },
+                            {id: 'B1gPMw5yWl', type: "chart", chartFnc: 'genChart4'}
+                          ]
+                },
+                $('#rows'));
+
+        //Maison
+        renderTemplate7($('#nodeTempTemplate'),
+                { header: [{html: 'Maison'}],
+                    body: [
+                        {id: 'HywOgih-e', type: "sensor", html: '{icon.tint} <strong>{value}</strong> %'},
+                            {id: 'rkgvOxjh-e', type: "sensor", html: '{icon.thermometer} <strong>{value}</strong>°C'}
+
+
+                        ],
+
+                    footer: [ {id: 'SkTRKq2Zl', type: "sensor", html: '{icon.ok} {value}'},
+                        {id: 'Hkz2AFqh-g', type: "sensor", html: '{icon.exclamation} {value}'},
+                        {id: 'Hkg6CFch-l', type: "sensor", html: '{icon.bug} {value}'}
+                    ]
+                },
+                $('#rows'));
+
+
+        //Bureau #2
+        renderTemplate7($('#nodeTempTemplate'),
+                { header: [{html: 'Bureau BMP280'}],
+                    body: [
+                        {id: 'ryew57bjKl', type: "sensor", html: '{icon.thermometer} {value} °C'},
+                        {id: 'Byw9XZoFg', type: "sensor", html: '{icon.bars} {value} hPa'}
+                        ],
+
+                    footer: [ {id: 'r1EDqmZiFe', type: "sensor", html: '{icon.ok} {value}'},
+                        {id: 'SkmDcXZitg', type: "sensor", html: '{icon.exclamation} {value}'},
+                        {id: 'SJHw5XWiYg', type: "sensor", html: '{icon.bug} {value}'},
+                        {id: 'B1MwqmbiYl',  type: "sensor", html:'{icon.battery} {value} V' },
+                        {id: 'ryew57bjKl', type: "chart", chartFnc: 'genChart4'}
+                    ]
+                },
+                $('#rows'));
+
+        //fadeOutFadeIn('#B1gPMw5yWl');
+
+        /*$grid.find('.grid-item').each( function( i, gridItem ) {
+         var draggie = new Draggabilly( gridItem );
+         // bind drag events to Packery
+         $grid.packery( 'bindDraggabillyEvents', draggie );
+         });*/
+
+        var countDataMyHomeSim = $("[data-myHomeSim]").length - 1;
+        $("[data-myHomeSim]").each(function (index, elem) {
+            elem = $(elem);
+            var dataAttr = JSON.parse(elem.attr('data-myHomeSim'));
+            elem.data('myHomeSim', dataAttr);
+            $.getJSON('/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
+                if (dataAttr.type == 'node')   updateNode(data, elem, dataAttr);
+                if (dataAttr.type == 'sensor') updateSensor(data, elem, dataAttr);
+
+                if (index == countDataMyHomeSim) {
+                    $grid = $('.grid').packery({
+                     itemSelector: '.grid-item',
+                     gutter: 5,
+                     });
+
+                    $('.fadeInFadeOutChild').each(function () {
+                        infinieFade($(this));
+                    });
+
+                    updateWunderground();
+
+                    setInterval(function () {
+                        updateWunderground();
+                    }, 1000 * 60 * 5)
+
+
+
+
+                }
+            });
+        });
+
+
+        $('.panel-resizable').resize(function () {
+            if ($grid) $grid.packery();
+        });
+
+
+        //fadeOutFadeIn('#B1gPMw5yWl');
+
+        $('.flipControl').on('click', function () {
+            $(this).closest('.card').toggleClass('flipped');
+
+        });
+
+        $('.fa-bar-chart').on('click',
+                function () {
+                    var elem = this;
+                    var dialog = bootbox.dialog({
+                        size: 'large',
+                        title: 'Graphique',
+                        message: '<divChart class="myChart"></div>'
+                    });
+
+                    dialog.init(function () {
+                        dialog.find("div.modal-dialog").addClass("chartBootboxWidth");
+                        window[$(elem).attr('data-chart')].apply(elem, [$('.myChart'), $(elem).attr('data-chartId')])
+                    });
+                });
+
+        $('.fa-arrow-left').on('click',
+                function () {
+                    $(this).parents('.col-sm-6').height($(this).parents('div.card').height());
+                });
+
+        $('[data-toggle="tooltip-node"]').tooltipster({
+            content: 'Loading...',
+            contentAsHTML: true,
+            functionBefore: function (instance, helper) {
+                var data = $(helper.origin).parent().find('.panel-title').data('data');
+                if (!data)  data = $(helper.origin).parent().find('.panel-title').children().first().data('data');
+                if (data) {
+                    instance.content(renderTemplate7(
+                            $('#nodeInfoTemplate')
+                            , data));
+                }
+            }
+        });
+
+        $('[data-toggle="tooltip-sensor"]').tooltipster({
+            content: 'Loading...',
+            contentAsHTML: true,
+            functionBefore: function (instance, helper) {
+                if (data = $(helper.origin).data('data')) {
+                    $.each(data, function (key, val) {
+                        if (val == null)
+                            data[key] = '';
+                    });
+                    var html = renderTemplate7($('#nodeInfoTemplate'), data);
+                    instance.content(html);
+                }
+            }
+            /*,
+             trigger: 'custom',
+             triggerOpen: {
+             click: true,
+             tap: true
+             },
+             triggerClose: {
+             click: true,
+             tap: true
+             }*/
+        });
+
+    }
+
+
+    /*
+
+     $(document).ready(function() {
+
+     var canvas = $('#canvas')[0];
+     canvas.width = window.innerWidth - 25;
+     canvas.height = window.innerHeight - 50;
+
+     if(canvas.getContext) {
+     var ctx = canvas.getContext('2d');
+     var w = canvas.width;
+     var h = canvas.height;
+     ctx.strokeStyle = 'rgba(174,194,224,0.5)';
+     ctx.lineWidth = 1;
+     ctx.lineCap = 'round';
+
+
+     var init = [];
+     var maxParts = 1000;
+     for(var a = 0; a < maxParts; a++) {
+     init.push({
+     x: Math.random() * w,
+     y: Math.random() * h,
+     l: Math.random() * 1,
+     xs: -4 + Math.random() * 4 + 2,
+     ys: Math.random() * 10 + 10
+     })
+     }
+
+     var particles = [];
+     for(var b = 0; b < maxParts; b++) {
+     particles[b] = init[b];
+     }
+
+     function draw() {
+     ctx.clearRect(0, 0, w, h);
+     for(var c = 0; c < particles.length; c++) {
+     var p = particles[c];
+     ctx.beginPath();
+     ctx.moveTo(p.x, p.y);
+     ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
+     ctx.stroke();
+     }
+     move();
+     }
+
+     function move() {
+     for(var b = 0; b < particles.length; b++) {
+     var p = particles[b];
+     p.x += p.xs;
+     p.y += p.ys;
+     if(p.x > w || p.y > h) {
+     p.x = Math.random() * w;
+     p.y = -20;
+     }
+     }
+     }
+
+     setInterval(draw, 30);
+
+     }
+
+     }
+     */
+
+</script>
+
+
+</body>
+</html>

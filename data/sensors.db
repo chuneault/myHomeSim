@@ -1,0 +1,123 @@
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"B1MwqmbiYl","_nodeId":"rJrcmbotl","previousValue":3.17,"previousValueDate":1503592150564,"lastValue":3.179,"lastDate":1503593063147}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"B1Z-foGzMe","_nodeId":"By1GsGGMl","previousValue":2.404,"previousValueDate":1483061467983,"lastValue":2.404,"lastDate":1483061772839}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"B1bSN9xWZe","_nodeId":"BJ7VqeWZg","previousValue":172,"previousValueDate":1481991870868,"lastValue":175,"lastDate":1482339899706}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"B1cTYIHye","_nodeId":"BkXK0_AC","lastValue":3.033,"lastDate":1503593437540,"previousValue":3.033,"previousValueDate":1503593096134}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"B1fZzoGfzx","_nodeId":"By1GsGGMl","previousValue":244,"previousValueDate":1482956196454,"lastValue":246,"lastDate":1482965518534}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"B1gPMw5yWl","_nodeId":"BkrMD9k-x","previousValue":996,"previousValueDate":1503489160307,"lastValue":996,"lastDate":1503489491488,"offset":"value-=2;","precision":2,"scriptOnChange":null}
+{"id":30,"name":"S_HVAC","type":29,"desc":"HVAC HEATING","_id":"BJ7rgZss-g","_nodeId":"BkGgWsj-g"}
+{"id":90,"name":"S_CUSTOM","_id":"BJ94HLV1g","_nodeId":"SkbuAdA0","lastValue":0,"lastDate":1503592171131,"previousValue":15467,"previousValueDate":1503592091255,"type":23,"desc":"ERROR","scriptOnChange":null,"offset":null}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"BJ9j4efMg","_nodeId":"ByX4SUj-e","lastValue":-5,"lastDate":1479832740128}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"BJGSN9xZZg","_nodeId":"BJ7VqeWZg","previousValue":5160,"previousValueDate":1482508608685,"lastValue":5163,"lastDate":1482508934800}
+{"id":1,"name":"S_TEMP","_id":"BJM3Cd00","_nodeId":"Skb3Rd00","varName":"METEOTEMP","previousValue":19.9,"lastValue":20,"lastDate":1503593294685,"previousValueDate":1503592941765,"type":6,"desc":"Température"}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"BJbGjMMGx","_nodeId":"By1GsGGMl","previousValue":33.8,"previousValueDate":1483061956025,"lastValue":38.2,"lastDate":1483062017045}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"BJesbjgMXe","_nodeId":"SyjZsgMXe","previousValue":2.923,"previousValueDate":1489510628201,"lastValue":2.785,"lastDate":1489510688203}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"BJziyi7Zg","_nodeId":"Hkes1jmWl","previousValue":33671,"previousValueDate":1497004327140,"lastValue":33688,"lastDate":1497019758279}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"BkDGDcy-e","_nodeId":"BkrMD9k-x","previousValue":998,"previousValueDate":1503489160460,"lastValue":998,"lastDate":1503489491642}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"BkNZMoMfGx","_nodeId":"By1GsGGMl","previousValue":205,"previousValueDate":1483061956157,"lastValue":205,"lastDate":1483062017172}
+{"id":90,"name":"S_CUSTOM","_id":"BkSEIoVJg","_nodeId":"Skb3Rd00","lastValue":0,"lastDate":1503592236162,"type":23,"desc":"ERROR","previousValue":261122,"previousValueDate":1503592017384,"visible":true,"scriptOnChange":null,"offset":null}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"BkflSGv61e","_nodeId":"SyCEGPp1l","previousValue":532,"previousValueDate":1503592029235,"lastValue":0,"lastDate":1503593131248,"scriptOnChange":"checkDebugInfo"}
+{"id":91,"name":"S_CUSTOM","_id":"Bkfu0_AA","_nodeId":"SkbuAdA0","previousValue":13,"lastValue":17,"lastDate":1503593205639,"previousValueDate":1503592860855,"type":23,"desc":"OK"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"Bkl9atUHJg","_nodeId":"BkXK0_AC","lastValue":0,"lastDate":1503592750279,"scriptOnChange":null,"previousValue":732,"previousValueDate":1503592194210,"offset":null}
+{"id":219,"name":"unknown","_id":"BkldqjR4ql","_nodeId":"rkdqiR4ce","lastValue":60847,"lastDate":1488411536402}
+{"id":91,"name":"S_CUSTOM","_id":"Bksi0O0C","_nodeId":"Syqi0u00","previousValue":14,"lastValue":19,"lastDate":1503593335152,"previousValueDate":1503592986534,"type":23,"desc":"OK"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"ByBmadNC8l","_nodeId":"HJ76OVRLx","previousValue":0,"previousValueDate":1484830909048,"lastValue":0,"lastDate":1484830983844}
+{"id":91,"name":"S_CUSTOM","_id":"ByDdAdAC","_nodeId":"Hk8OC_A0","previousValue":103982,"lastValue":5,"lastDate":1493814167179,"previousValueDate":1493544762977,"type":23,"desc":"OK"}
+{"id":1,"name":"S_TEMP","_id":"Bylgb4cRC","_nodeId":"Syqi0u00","lastValue":24.8,"lastDate":1503593335151,"previousValue":24.7,"previousValueDate":1503592986400,"type":6,"desc":"Température"}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"BypKQLByl","_nodeId":"SkbuAdA0","visible":false,"lastValue":0,"lastDate":1503592171179,"previousValue":0,"previousValueDate":1503592091307}
+{"id":3,"name":"S_BARO","type":8,"desc":"Baromètre","_id":"Byw9XZoFg","_nodeId":"rJrcmbotl","previousValue":1006.1,"previousValueDate":1503592150711,"lastValue":1006.2,"lastDate":1503593063275}
+{"name":"ip","_id":"ByxHAcpeMg","_nodeId":"HkrCcpeGg","lastValue":"66.131.23.159","lastDate":1500645588932,"scriptOnChange":"updateVultrDns","previousValue":"66.130.112.126","previousValueDate":1499473519326}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"ByzBVB8sZl","_nodeId":"ByX4SUj-e","previousValue":0,"previousValueDate":1480021223285,"lastValue":0,"lastDate":1480021286455}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"H12xTMjKg","_nodeId":"rJrcmbotl","previousValue":38.6,"previousValueDate":1487773303603,"lastValue":998,"lastDate":1487773348244}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"H1IUEISJg","_nodeId":"Hk8OC_A0","visible":false,"lastValue":0,"lastDate":1493814167172,"previousValue":205,"previousValueDate":1493486164128}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"H1bLNpZGl","_nodeId":"ByX4SUj-e","previousValue":3.243,"previousValueDate":1480021223178,"lastValue":3.329,"lastDate":1480021286357}
+{"id":8,"name":"S_DOOR","type":0,"desc":"Sonnette Arrière","_id":"H1bn0KqhZl","_nodeId":"ByqAFcnbe","previousValue":1,"previousValueDate":1503258084493,"lastValue":0,"lastDate":1503258084997,"scriptOnChange":"if (value == 1) server.invokeAction('newtifry','sendMessage',['Ding Dong Arrière','Cours Forest Cours!', 2]);"}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"H1fQa_4RIe","_nodeId":"HJ76OVRLx","previousValue":3.206,"previousValueDate":1484830908601,"lastValue":3.197,"lastDate":1484830983395}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"H1nRYcnZx","_nodeId":"ByqAFcnbe","previousValue":4.23,"previousValueDate":1503593315675,"lastValue":4.215,"lastDate":1503593435685}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"H1rNqx-bx","_nodeId":"BJ7VqeWZg","previousValue":3.234,"previousValueDate":1482508608650,"lastValue":3.339,"lastDate":1482508934767}
+{"id":7,"name":"S_DOOR","type":0,"desc":"Sonnette Avant","_id":"HJX7TO4AUe","_nodeId":"HJ76OVRLx","previousValue":0,"previousValueDate":1484830908991,"lastValue":0,"lastDate":1484830983784}
+{"id":5,"name":"S_TEMP","type":6,"desc":"Température F","_id":"HJbvqQZstl","_nodeId":"rJrcmbotl","previousValue":74.8,"previousValueDate":1503592150649,"lastValue":74.5,"lastDate":1503593063229}
+{"id":30,"type":29,"desc":"HVAC HEATING","_id":"HJkYyim-g","_nodeId":"BJ7VqeWZg","name":"S_HVAC","lastValue":0,"lastDate":1479410639875}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"HJuGv51bl","_nodeId":"BkrMD9k-x","previousValue":3.117,"previousValueDate":1503489160153,"lastValue":3.109,"lastDate":1503489491333}
+{"id":2,"name":"unknown","_id":"HJxoK5Lsbg","_nodeId":"SyjY9Ljbe","lastValue":3.262,"lastDate":1479400067436}
+{"id":91,"name":"unknown","_id":"HkJviUi-e","_nodeId":"SyjY9Ljbe","lastValue":4369,"lastDate":1479400279098}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"HkQeHzwp1g","_nodeId":"SyCEGPp1l","previousValue":5,"previousValueDate":1503593131353,"lastValue":9,"lastDate":1503593455106}
+{"id":4,"name":"S_TEMP","_id":"HkWG2AOC0","_nodeId":"Skb3Rd00","varName":"METEOTEMP2","previousValue":18.5,"lastValue":18.7,"lastDate":1503593294697,"previousValueDate":1503592941868,"type":6,"desc":"Température"}
+{"id":2,"name":"S_POWER","_id":"HkeWhCOAR","_nodeId":"Skb3Rd00","lastValue":2.587,"lastDate":1503593294685,"previousValue":2.587,"previousValueDate":1503592941720,"type":13,"desc":"Battery Voltage"}
+{"id":1,"name":"S_TEMP","_id":"HkesUXqAC","_nodeId":"Hk8OC_A0","lastValue":22,"lastDate":1493814166913,"previousValue":17.9,"previousValueDate":1493544762846,"type":6,"desc":"Température"}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"Hkg6CFch-l","_nodeId":"ByqAFcnbe","previousValue":0,"previousValueDate":1503593316015,"lastValue":0,"lastDate":1503593436109}
+{"id":0,"name":"S_HUM","_id":"HklG2CuAC","_nodeId":"Skb3Rd00","varName":"METEOHUM","previousValue":56.9,"lastValue":57.4,"lastDate":1503593294688,"previousValueDate":1503593083012,"offset":"value-=5;","scriptOnChange":"WUnderGround","type":7,"desc":"Humdité"}
+{"id":255,"name":"S_ARDUINO_RELAY","type":18,"desc":"2.0.1-beta","_id":"HklLa44tJg","_nodeId":"r186EVYyl"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"Hkz2AFqh-g","_nodeId":"ByqAFcnbe","previousValue":74825,"previousValueDate":1503567639956,"lastValue":74827,"lastDate":1503580840226}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"HyHg-osZx","_nodeId":"BkGgWsj-g","lastValue":3.252,"lastDate":1479418094095}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"HyeHfwTJl","_nodeId":"SyCEGPp1l","previousValue":61.8,"previousValueDate":1503593131185,"lastValue":62.4,"lastDate":1503593455106}
+{"id":10,"name":"S_BINARY","type":3,"desc":"Relay","_id":"Hyg-pxz7g","_nodeId":"SyjZsgMXe","previousValue":1,"previousValueDate":1482791114721,"lastValue":0,"lastDate":1482808600683}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"HygheTfite","_nodeId":"rJrcmbotl","previousValue":18.4,"previousValueDate":1487773303518,"lastValue":998,"lastDate":1487773348076}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"HyiNyUS1e","_nodeId":"Syqi0u00","visible":false,"lastValue":205,"lastDate":1503593335152,"previousValue":205,"previousValueDate":1503592986589}
+{"id":0,"name":"S_HUM","_id":"Hyl5i0_R0","_nodeId":"Syqi0u00","previousValue":60,"lastValue":59,"lastDate":1503593335151,"previousValueDate":1503592986463,"type":7,"desc":"Humdité"}
+{"id":2,"name":"S_POWER","_id":"Hyog1FRA","_nodeId":"SkbuAdA0","lastValue":3.117,"lastDate":1503593205486,"previousValue":3.109,"previousValueDate":1503592860853,"type":13,"desc":"Battery Voltage"}
+{"id":1,"name":"S_DOOR","type":0,"desc":"TEST","_id":"HyrVrIobx","_nodeId":"ByX4SUj-e","previousValue":1,"previousValueDate":1480001116294,"lastValue":1,"lastDate":1480001117224}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"HywOgih-e","_nodeId":"ByqAFcnbe","previousValue":56,"previousValueDate":1503593135971,"lastValue":56,"lastDate":1503593435984}
+{"name":"Armed","_id":"S1I-R6Uke","_nodeId":"SJax06Iye","previousValue":"1","previousValueDate":1477146876163,"lastValue":"0","lastDate":1477152540405,"varName":"ARMED"}
+{"id":91,"name":"S_CUSTOM","_id":"S1bQnAuA0","_nodeId":"Skb3Rd00","previousValue":30,"lastValue":37,"lastDate":1503593294881,"previousValueDate":1503593083141,"type":23,"desc":"OK","visible":true}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"S1bX6d40Ug","_nodeId":"HJ76OVRLx","previousValue":17.1,"previousValueDate":1484830908869,"lastValue":17.1,"lastDate":1484830983659}
+{"id":90,"name":"S_CUSTOM","_id":"S1i07LH1x","_nodeId":"Hk8OC_A0","previousValue":344,"previousValueDate":1493486164073,"lastValue":0,"lastDate":1493814167166,"type":23,"desc":"ERROR","scriptOnChange":null,"offset":null}
+{"id":113,"name":"unknown","_id":"S1k_Gae4l","_nodeId":"SyCEGPp1l","lastValue":0,"lastDate":1481851495054}
+{"id":90,"name":"S_CUSTOM","_id":"S1pVkLryl","_nodeId":"Syqi0u00","lastValue":0,"lastDate":1503592292360,"type":23,"desc":"ERROR","previousValue":1,"previousValueDate":1503589507858,"scriptOnChange":null,"offset":null}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SJ-HEHLjZg","_nodeId":"ByX4SUj-e","previousValue":332,"previousValueDate":1480021223228,"lastValue":335,"lastDate":1480021286402}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"SJ-P3bBJx","_nodeId":"Skb3Rd00","visible":false,"lastValue":0,"lastDate":1503592236204,"previousValue":0,"previousValueDate":1503592017426}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SJ-fieM7x","_nodeId":"SyjZsgMXe","previousValue":3,"previousValueDate":1489510628324,"lastValue":6,"lastDate":1489510688260}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"SJHw5XWiYg","_nodeId":"rJrcmbotl","previousValue":205,"previousValueDate":1503592150852,"lastValue":205,"lastDate":1503593063408}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"SJbgBGPp1l","_nodeId":"SyCEGPp1l","previousValue":3.143,"previousValueDate":1503593131092,"lastValue":3.152,"lastDate":1503593455105}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SJeMiJoX-e","_nodeId":"Hkes1jmWl","previousValue":81472,"previousValueDate":1503593309088,"lastValue":81474,"lastDate":1503593429199}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"Sk8mTOER8l","_nodeId":"HJ76OVRLx","previousValue":5,"previousValueDate":1484830983906,"lastValue":8,"lastDate":1484830984344}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"SkEgHGvTke","_nodeId":"SyCEGPp1l","visible":false,"lastValue":0,"lastDate":1503593131301,"previousValue":0,"previousValueDate":1503592029290}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SkTRKq2Zl","_nodeId":"ByqAFcnbe","previousValue":135074,"previousValueDate":1503593315926,"lastValue":135079,"lastDate":1503593436047}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"Skeerfvp1g","_nodeId":"SyCEGPp1l","previousValue":25,"previousValueDate":1503593131133,"lastValue":24.8,"lastDate":1503593455105}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"Ski6FIH1l","_nodeId":"BkXK0_AC","visible":false,"lastValue":205,"lastDate":1503592750332,"previousValue":0,"previousValueDate":1503592194212}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"SklWfozGMl","_nodeId":"By1GsGGMl","previousValue":12.1,"previousValueDate":1483061894954,"lastValue":15.7,"lastDate":1483062016960}
+{"id":7,"name":"S_DOOR","type":0,"desc":"Sonnette Avant","_id":"Sklb8Vpbzx","_nodeId":"ByX4SUj-e","previousValue":0,"previousValueDate":1479824129959,"lastValue":1,"lastDate":1479824130451}
+{"id":7,"name":"S_DOOR","type":0,"desc":"Sonnette Avant","_id":"Skln0t52bl","_nodeId":"ByqAFcnbe","previousValue":1,"previousValueDate":1503586404708,"lastValue":0,"lastDate":1503586405285,"scriptOnChange":"if (value == 1) server.invokeAction('newtifry','sendMessage',['Ding Dong Avant','Cours Forest Cours!', 2]);"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"SkmDcXZitg","_nodeId":"rJrcmbotl","previousValue":0,"previousValueDate":1503589520829,"lastValue":0,"lastDate":1503592150753}
+{"id":5,"name":"S_TEMP","_id":"SyQnA_RA","_nodeId":"Skb3Rd00","varName":"METEOTEMPF","previousValue":65.4,"lastValue":65.7,"lastDate":1503593294743,"previousValueDate":1503592941969,"scriptOnChange":"WUnderGround","type":6,"desc":"Température F"}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"SyXSE9l-Ze","_nodeId":"BJ7VqeWZg","previousValue":205,"previousValueDate":1482508608738,"lastValue":205,"lastDate":1482508934857}
+{"id":91,"name":"S_CUSTOM","_id":"Syb7KCO0R","_nodeId":"BkXK0_AC","previousValue":11,"lastValue":15,"lastDate":1503593437665,"previousValueDate":1503593096136,"type":23,"desc":"OK"}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"Syf9Wi7bx","_nodeId":"Hkes1jmWl","previousValue":5.046,"previousValueDate":1503593309036,"lastValue":5.046,"lastDate":1503593429157}
+{"id":0,"name":"S_HUM","type":7,"desc":"Humdité","_id":"Syg7au4R8e","_nodeId":"HJ76OVRLx","previousValue":39,"previousValueDate":1484830968795,"lastValue":37,"lastDate":1484830983721}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"SygH4HUsZl","_nodeId":"ByX4SUj-e","previousValue":0,"previousValueDate":1480006391860,"lastValue":0,"lastDate":1480006402654}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"SyvXpuECLl","_nodeId":"HJ76OVRLx","previousValue":0,"previousValueDate":1484830983964,"lastValue":0,"lastDate":1484830984406}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"r1EDqmZiFe","_nodeId":"rJrcmbotl","previousValue":5,"previousValueDate":1503592150795,"lastValue":11,"lastDate":1503593063349}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"r1XZfszzMl","_nodeId":"By1GsGGMl","previousValue":97612,"previousValueDate":1483061956094,"lastValue":97616,"lastDate":1483062017111}
+{"id":1,"name":"S_TEMP","_id":"r1Yvf50C","_nodeId":"BkXK0_AC","previousValue":23.9,"lastValue":23.8,"lastDate":1503593437541,"previousValueDate":1503593096135,"type":6,"desc":"Température"}
+{"id":2,"name":"S_POWER","_id":"r1iL75A0","_nodeId":"Hk8OC_A0","lastValue":3.009,"lastDate":1493814166851,"previousValue":1.783,"previousValueDate":1493544762802,"type":13,"desc":"Battery Voltage"}
+{"id":3,"name":"S_BARO","_id":"r1lQnAuRC","varName":"METEOBARO","_nodeId":"Skb3Rd00","lastValue":1011.2,"lastDate":1503593294827,"previousValue":1011.3,"previousValueDate":1503592942011,"scriptOnChange":"WUnderGround","type":8,"desc":"Baromètre"}
+{"id":2,"name":"S_POWER","_id":"r1x-E5C0","_nodeId":"Syqi0u00","lastValue":3.17,"lastDate":1503593335151,"previousValue":3.17,"previousValueDate":1503592986332,"type":13,"desc":"Battery Voltage"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"r1xGoefXl","_nodeId":"SyjZsgMXe","previousValue":20,"previousValueDate":1484830831976,"lastValue":20,"lastDate":1489510628262}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"rJGdfDc1Wg","_nodeId":"BkrMD9k-x","previousValue":0,"previousValueDate":1486861577943,"lastValue":0,"lastDate":1487776165416}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"rJWMiyi7Zg","_nodeId":"Hkes1jmWl","previousValue":379,"previousValueDate":1503538698947,"lastValue":53,"lastDate":1503540193106}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"rJWdGv51Wl","_nodeId":"BkrMD9k-x","previousValue":524,"previousValueDate":1503489160514,"lastValue":528,"lastDate":1503489491695}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"rJbHeWjsZx","_nodeId":"BkGgWsj-g","lastValue":3,"lastDate":1479418094283}
+{"id":6,"name":"S_MOTION","type":1,"desc":"Mouvement / Porte","_id":"rJerE9xb-g","_nodeId":"BJ7VqeWZg","previousValue":0,"previousValueDate":1482507630390,"lastValue":0,"lastDate":1482508608571}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"rJgre-ojZx","_nodeId":"BkGgWsj-g","lastValue":0,"lastDate":1479418094158}
+{"id":0,"name":"S_HUM","_id":"rJlLuCOCC","_nodeId":"Hk8OC_A0","previousValue":49.7,"lastValue":65.3,"lastDate":1493814167158,"previousValueDate":1493544762925,"type":7,"desc":"Humdité"}
+{"id":0,"name":"S_HUM","_id":"rJlXKCuRC","_nodeId":"BkXK0_AC","previousValue":65.5,"lastValue":65.4,"lastDate":1503593437611,"previousValueDate":1503593096136,"type":7,"desc":"Humdité"}
+{"id":90,"name":"S_CUSTOM","type":23,"desc":"ERROR","_id":"rJldMwqkZe","_nodeId":"BkrMD9k-x","previousValue":45943,"previousValueDate":1486861577889,"lastValue":45947,"lastDate":1487776165367}
+{"id":66,"name":"unknown","_id":"rJo6iQiVl","_nodeId":"Skb3Rd00","lastValue":1076317969,"lastDate":1482533826739}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"rJx-fjgfXe","_nodeId":"SyjZsgMXe","previousValue":0,"previousValueDate":1489510628388,"lastValue":0,"lastDate":1489510688320}
+{"id":8,"name":"S_DOOR","type":0,"desc":"Sonnette Arrière","_id":"rk4QpdNCIl","_nodeId":"HJ76OVRLx","previousValue":0,"previousValueDate":1484830909491,"lastValue":0,"lastDate":1484830984282}
+{"id":1,"name":"S_TEMP","type":6,"desc":"Température","_id":"rkgvOxjh-e","_nodeId":"ByqAFcnbe","previousValue":22.9,"previousValueDate":1503593135905,"lastValue":23,"lastDate":1503593435921}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"rkzBlZojZe","_nodeId":"BkGgWsj-g","lastValue":0,"lastDate":1479418094218}
+{"id":8,"name":"S_DOOR","type":0,"desc":"Sonnette Arrière","_id":"ryGINpWGe","_nodeId":"ByX4SUj-e","lastValue":1,"lastDate":1479820371339}
+{"id":0,"name":"S_HUM","_id":"ryebOROCA","_nodeId":"SkbuAdA0","previousValue":67,"lastValue":66.9,"lastDate":1503593205586,"previousValueDate":1503592860854,"type":7,"desc":"Humdité"}
+{"id":4,"name":"S_TEMP","type":6,"desc":"Température","_id":"ryew57bjKl","_nodeId":"rJrcmbotl","previousValue":21.8,"previousValueDate":1503592150610,"lastValue":21.6,"lastDate":1503593063190,"precision":2,"offset":"value-=2;","scriptOnChange":null}
+{"id":30,"type":29,"desc":"HVAC HEATING","_id":"ryfziys7bl","_nodeId":"Hkes1jmWl","previousValue":1,"previousValueDate":1503540139237,"lastValue":0,"lastDate":1503540193046,"name":"S_HVAC"}
+{"id":1,"name":"S_TEMP","_id":"rygsl1FCR","_nodeId":"SkbuAdA0","lastValue":22.9,"lastDate":1503593205528,"previousValue":22.9,"previousValueDate":1503592860853,"type":6,"desc":"Température"}
+{"id":6,"name":"S_MOTION","type":1,"desc":"Mouvement / Porte","_id":"rytdIY4fl","_nodeId":"ByX4SUj-e","previousValue":1,"previousValueDate":1480020907694,"lastValue":1,"lastDate":1480021223114}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"Syf9Wi7bx","_nodeId":"Hkes1jmWl","previousValue":5.046,"previousValueDate":1503593429157,"lastValue":5.024,"lastDate":1503593549232}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SJeMiJoX-e","_nodeId":"Hkes1jmWl","previousValue":81474,"previousValueDate":1503593429199,"lastValue":81476,"lastDate":1503593549275}
+{"id":2,"name":"S_POWER","_id":"Hyog1FRA","_nodeId":"SkbuAdA0","lastValue":3.109,"lastDate":1503593550278,"previousValue":3.117,"previousValueDate":1503593205486,"type":13,"desc":"Battery Voltage"}
+{"id":1,"name":"S_TEMP","_id":"rygsl1FCR","_nodeId":"SkbuAdA0","lastValue":22.9,"lastDate":1503593550320,"previousValue":22.9,"previousValueDate":1503593205528,"type":6,"desc":"Température"}
+{"id":0,"name":"S_HUM","_id":"ryebOROCA","_nodeId":"SkbuAdA0","previousValue":66.9,"lastValue":66.8,"lastDate":1503593550376,"previousValueDate":1503593205586,"type":7,"desc":"Humdité"}
+{"id":91,"name":"S_CUSTOM","_id":"Bkfu0_AA","_nodeId":"SkbuAdA0","previousValue":17,"lastValue":21,"lastDate":1503593550426,"previousValueDate":1503593205639,"type":23,"desc":"OK"}
+{"id":2,"name":"S_POWER","type":13,"desc":"Battery Voltage","_id":"H1nRYcnZx","_nodeId":"ByqAFcnbe","previousValue":4.215,"previousValueDate":1503593435685,"lastValue":4.246,"lastDate":1503593555690}
+{"id":91,"name":"S_CUSTOM","type":23,"desc":"OK","_id":"SkTRKq2Zl","_nodeId":"ByqAFcnbe","previousValue":135079,"previousValueDate":1503593436047,"lastValue":135082,"lastDate":1503593555923}
+{"id":92,"name":"S_CUSTOM","type":23,"desc":"DEBUG","_id":"Hkg6CFch-l","_nodeId":"ByqAFcnbe","previousValue":0,"previousValueDate":1503593436109,"lastValue":0,"lastDate":1503593555989}

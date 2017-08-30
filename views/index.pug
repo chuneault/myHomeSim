@@ -1,0 +1,17 @@
+//
+   Created by chune on 2016-11-18.
+
+doctype html
+html
+    head
+        title!= title
+        meta(charset='utf-8')
+
+
+    script(type='text/javascript').
+       var test = !{JSON.stringify(test)};
+       console.log(test);
+
+    body
+        each item in test
+            h1!= JSON.stringify(item)
