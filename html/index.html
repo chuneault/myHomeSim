@@ -1200,7 +1200,6 @@
         renderTemplate7($('#navBarTemplate'), {dashboard: 'active'}, $('#navBar'));
 
 
-
         //Bureau
         renderTemplate7($('#nodeTempTemplate'),
                 { header: [{html: 'Bureau'}],
@@ -1337,6 +1336,8 @@
             }
         });
 
+        setTimeout(function(){
+
         $('[data-toggle="tooltip-sensor"]').tooltipster({
             content: 'Loading...',
             contentAsHTML: true,
@@ -1361,6 +1362,8 @@
              tap: true
              }*/
         });
+
+        }, 5000);
 
     }
 
