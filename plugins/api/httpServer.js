@@ -83,8 +83,8 @@ class httpServer extends plugins {
     //disable Nagle
     app.use(function (req, res, next) {
       req.connection.setNoDelay(true);
-        //res.header("Access-Control-Allow-Origin", "POST, GET, PUT, DELETE");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
       next();
     });
