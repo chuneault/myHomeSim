@@ -62,9 +62,11 @@ class httpServer extends plugins {
     var bodyParser = require('body-parser');
 
     var appRoot = require('app-root-path');
+
     app.use(express.static(appRoot + '/html'));
 
-    app.use('/static', express.static(appRoot + '/bower_components'));
+    //app.use('/static', express.static(appRoot + '/bower_components'));
+    app.use('/dist/colorpicker', express.static(appRoot + '/node_modules/bootstrap-colorpicker/dist'));
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);
@@ -81,8 +83,7 @@ class httpServer extends plugins {
     //disable Nagle
     app.use(function (req, res, next) {
       req.connection.setNoDelay(true);
-
-        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Origin", "POST, GET, PUT, DELETE");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
       next();
