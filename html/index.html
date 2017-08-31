@@ -44,10 +44,20 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+
+    <!--
+    <script src="/dist/colorpickersliders/tinycolor.js"></script>
+    <link href="/dist/colorpickersliders/jquery.colorpickersliders.css" rel="stylesheet">
+    <script src="/dist/colorpickersliders/jquery.colorpickersliders.js"></script>
+    /!-->
 
     <script>
 
-        var icon = {
+      var $$myHomeSiteApiURL = '<%= myHomeSiteApiURL %>';
+
+      var icon = {
             'thermometer': "<i class='fa fa-thermometer' aria-hidden='true'></i>",
             'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
             'bars': "<i class='fa fa-bars' aria-hidden='true'></i>",
@@ -144,7 +154,7 @@
             }
         }
 
-        var socket = io.connect('/');
+        var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
             updateSensor(data);
 
@@ -361,7 +371,6 @@
         {{/each}}
     </script>
 
-
 </head>
 <body>
 
@@ -397,7 +406,6 @@
 
 <script>
     var $grid = null;
-
 
     function dateOnly(dateTime) {
         return dateTime.startOf('date');
@@ -460,13 +468,13 @@
    //'Température Moyenne - Minutes de chauffage
     function genChart1(divChart) {
         var minValueDate = dateOnly(moment().add(-5, 'days'));
-        $.getJSON('/api/sensor/rJWMiyi7Zg/dbvalues?minValueDate=' + minValueDate, function (data) {
+        $.getJSON($$myHomeSiteApiURL +'/api/sensor/rJWMiyi7Zg/dbvalues?minValueDate=' + minValueDate, function (data) {
             var minsVal = [], labelsVal = [], datesVal = [];
 
             sumByDate(data, minsVal, labelsVal, datesVal);
 
             minValueDate = datesVal[0];
-            $.getJSON('/api/sensor/BJM3Cd00/dbvalues?minValueDate=' + minValueDate + '&limit=9999999', function (data) {
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/BJM3Cd00/dbvalues?minValueDate=' + minValueDate + '&limit=9999999', function (data) {
                 var avrsVal = [];
 
                 avrByDate(data, avrsVal);
@@ -542,7 +550,7 @@
     function genChart2(divChart, sensorId) {
 
         var minValueDate = dateOnly(moment().add(-7, 'days'));
-        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + minValueDate + '&limit=99999999', function (data) {
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + minValueDate + '&limit=99999999', function (data) {
             var avrsVal = [], labelsVal = [];
             avrByDate(data, avrsVal, labelsVal);
             $(divChart).highcharts({
@@ -592,7 +600,7 @@
         var tonight = moment().transform('23:59:59.999');
         var beginday = moment().transform('00:00:00.000');
 
-        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
             var avrsVal = [], labelsVal = [];
             avrByDate(data, avrsVal, labelsVal);
             $(divChart).highcharts({
@@ -644,7 +652,7 @@
         /*tonight = moment();*/
         beginday = moment().add(-2, 'days');
 
-        $.getJSON('/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
             var valChart = [];
             allValDateTime(data, valChart);
             $(divChart).highcharts({
@@ -954,8 +962,8 @@
             headerTitle: [
                 {type: "node", _id: "ByqAFcnbe", html: "{data.name}"},
                 {type: "sensor", _id: "H1nRYcnZx", html: "{icon.battery} {value}V"},
-                {type: "sensor", _id: "SkTRKq2Zl", html: "{icon.ok} {value}"},
-                {type: "sensor", _id: "Hkz2AFqh-g", html: "{icon.exclamation} {value}"}
+                /*{type: "sensor", _id: "SkTRKq2Zl", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "Hkz2AFqh-g", html: "{icon.exclamation} {value}"}*/
 
             ],
             headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
@@ -1021,7 +1029,26 @@
             }
 
             ]
-        }
+        },
+
+        {
+          id: 13,
+          'class': 'grid-item--med',
+          headerTitle: [ //RELAY
+            {type: "node", _id: "Sy47j7EYZ", html: "{data.name}"},
+
+            {type: "sensor", _id: "HkZL7iXVtZ", html: "{icon.ok} {value}"},
+            {type: "sensor", _id: "BJlL7i7NtZ", html: "{icon.exclamation} {value}"}
+          ],
+          sensors: [{
+            type: "sensor", _id: "ryQIQiQEF-",
+            html: '<input id="aqualedcolor" type="text">',
+            java: "aqualedPicker()"
+          }
+
+          ]
+
+     }
     ];
 
     function updateWunderground() {
@@ -1052,6 +1079,69 @@
                 }
             });
         });
+    }
+
+    function aqualedPicker(){
+      var $lastAquaColor = '';
+
+      jQuery.each( [ "put", "delete" ], function( i, method ) {
+        jQuery[ method ] = function( url, data, callback, type ) {
+          if ( jQuery.isFunction( data ) ) {
+            type = type || callback;
+            callback = data;
+            data = undefined;
+          }
+
+          return jQuery.ajax({
+            url: url,
+            type: method,
+            dataType: type,
+            data: data,
+            success: callback
+          });
+        };
+      });
+
+      function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+            break;
+          }
+        }
+      }
+
+      function changeAquaColor(color) {
+        var formDoc = {value: color};
+        for (let i=1; i<=3; i++) {
+          $.put($$myHomeSiteApiURL + '/api/sensor/ryQIQiQEF-/40', formDoc, function(data) { });
+          sleep(100);
+        }
+      }
+
+      $("#aqualedcolor").spectrum({
+        showPaletteOnly: true,
+        togglePaletteOnly: true,
+        chooseText: "OK",
+        cancelText: "Cancel",
+        palette: [
+          ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+          ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+          ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+          ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+          ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+          ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+          ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+          ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+        ],
+        move: function(color) {
+          if ($lastAquaColor != color.toHex()) {
+            $lastAquaColor = color.toHex();
+            console.log($lastAquaColor);
+            changeAquaColor($lastAquaColor);
+          }
+        }
+      });
     }
 
     function fadeOutFadeIn(elem) {
@@ -1199,42 +1289,29 @@
     function loadTemplatesComplete() {
         renderTemplate7($('#navBarTemplate'), {dashboard: 'active'}, $('#navBar'));
 
-
-        //Bureau
-        renderTemplate7($('#nodeTempTemplate'),
-                { header: [{html: 'Bureau'}],
-                  body: [{id: 'BkDGDcy-e', type: "sensor", html: '{icon.tint} {value} %'},
-                         {id: 'B1gPMw5yWl', type: "sensor", html: '{icon.thermometer} {value} °C'}],
-
-                  footer: [ {id: 'rJWdGv51Wl', type: "sensor", html: '{icon.ok} {value}'},
-                            {id: 'rJldMwqkZe', type: "sensor", html: '{icon.exclamation} {value}'},
-                            {id: 'HJuGv51bl',  type: "sensor", html:'{icon.battery} {value} V' },
-                            {id: 'B1gPMw5yWl', type: "chart", chartFnc: 'genChart4'}
-                          ]
-                },
-                $('#rows'));
-
         //Maison
         renderTemplate7($('#nodeTempTemplate'),
-                { header: [{html: 'Maison'}],
+                { header: [{type: "node", _id: "ByqAFcnbe", html: "Maison"}],
+                    headerButton: [{"class": "fa fa-question", dataToggle: "tooltip-node"}],
                     body: [
-                        {id: 'HywOgih-e', type: "sensor", html: '{icon.tint} <strong>{value}</strong> %'},
+                            {id: 'HywOgih-e', type: "sensor", html: '{icon.tint} <strong>{value}</strong> %'},
                             {id: 'rkgvOxjh-e', type: "sensor", html: '{icon.thermometer} <strong>{value}</strong>°C'}
-
-
-                        ],
+                          ],
 
                     footer: [ {id: 'SkTRKq2Zl', type: "sensor", html: '{icon.ok} {value}'},
-                        {id: 'Hkz2AFqh-g', type: "sensor", html: '{icon.exclamation} {value}'},
-                        {id: 'Hkg6CFch-l', type: "sensor", html: '{icon.bug} {value}'}
-                    ]
+                              {id: 'Hkz2AFqh-g', type: "sensor", html: '{icon.exclamation} {value}'},
+                              {id: 'Hkg6CFch-l', type: "sensor", html: '{icon.bug} {value}'}
+                            ]
                 },
                 $('#rows'));
 
 
         //Bureau #2
         renderTemplate7($('#nodeTempTemplate'),
-                { header: [{html: 'Bureau BMP280'}],
+                {   header: [
+                              {type: "node", _id: "rJrcmbotl", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                            ],
+                    headerButton: [{"class": "fa fa-question", dataToggle: "tooltip-node"}],
                     body: [
                         {id: 'ryew57bjKl', type: "sensor", html: '{icon.thermometer} {value} °C'},
                         {id: 'Byw9XZoFg', type: "sensor", html: '{icon.bars} {value} hPa'}
@@ -1262,7 +1339,7 @@
             elem = $(elem);
             var dataAttr = JSON.parse(elem.attr('data-myHomeSim'));
             elem.data('myHomeSim', dataAttr);
-            $.getJSON('/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
+            $.getJSON($$myHomeSiteApiURL + '/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
                 if (dataAttr.type == 'node')   updateNode(data, elem, dataAttr);
                 if (dataAttr.type == 'sensor') updateSensor(data, elem, dataAttr);
 
@@ -1336,7 +1413,7 @@
             }
         });
 
-        setTimeout(function(){
+
 
         $('[data-toggle="tooltip-sensor"]').tooltipster({
             content: 'Loading...',
@@ -1362,8 +1439,6 @@
              tap: true
              }*/
         });
-
-        }, 5000);
 
     }
 

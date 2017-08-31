@@ -63,10 +63,12 @@ class httpServer extends plugins {
 
     var appRoot = require('app-root-path');
 
-    app.use(express.static(appRoot + '/html'));
+    //app.use(express.static(appRoot + '/html'));
 
     //app.use('/static', express.static(appRoot + '/bower_components'));
-    app.use('/dist/colorpicker', express.static(appRoot + '/node_modules/bootstrap-colorpicker/dist'));
+    //app.use('/dist/colorpicker', express.static(appRoot + '/node_modules/bootstrap-colorpicker/dist'));
+    //app.use('/dist/colorpickersliders', express.static(appRoot + '/html/components/colorpickersliders/dist'));
+
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);
@@ -74,7 +76,10 @@ class httpServer extends plugins {
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
 
-    app.set('view engine', 'pug');
+    //app.set('view engine', 'pug');
+
+    app.set('view engine', 'html');
+    app.engine('html', require('ejs').renderFile);
 
     // use morgan to log requests to the console
     //app.use(morgan('dev'));
@@ -93,23 +98,27 @@ class httpServer extends plugins {
       res.send('Hello from myHomeSim!');
     });
 
+    app.get('/', function (req, res) {
+      res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: 'http://192.168.0.150:8080'});
+    });
+
+    app.use(express.static(appRoot + '/html'));
+
     app.get('/dashboard', function (req, res) {
-      var appRoot = require('app-root-path');
       res.sendFile(appRoot + '/html/index.html');
     });
 
     app.get('/nodes', function (req, res) {
-      var appRoot = require('app-root-path');
       res.sendFile(appRoot + '/html/nodes.html');
     });
 
-    app.get('/jade', function (req, res) {
+    /*app.get('/jade', function (req, res) {
 
       res.render('index.pug', { title: 'Hey', message: 'Hello there!',
           test: [{nom: 'Huneault', prenom: 'Carl'},
                  {nom: 'Huneault', prenom: 'Lauralie'}
                  ]});
-    });
+    });*/
 
     io.on('connection', function (socket) {
       //socket.emit('news', { hello: 'world' });

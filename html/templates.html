@@ -127,11 +127,21 @@
     <script id="nodeTempTemplate" type="text/template7">
         <div class="panel panel-default panel-black grid-item" style="" data-data='{{JSON this}}'>
             <div class="panel-heading">
-                <h4>
-                {{#each header}}
-                  <span id="{{id}}">{{html}}</span>
+                <span class="panel-title">
+                  {{#each header}}
+                     {{#if _id}}
+                        <span id={{_id}} data-myHomeSim='{{JSON this}}'></span>
+                     {{else}}
+                         <span id="{{id}}">{{html}}</span>
+                     {{/if}}
+                  {{/each}}
+                </span>
+                {{#each headerButton}}
+                   <button type="button"
+                        class="btn btn-default btn-circle pull-right {{class}}"
+                        {{#if dataToggle}} data-toggle={{dataToggle}} {{/if}}
+                   </button>
                 {{/each}}
-                </h4>
             </div>
             <div class="panel-body" style="padding: 0px; font-size: xx-large;">
                 <div class="fadeInFadeOutChild" style="position: relative; ">

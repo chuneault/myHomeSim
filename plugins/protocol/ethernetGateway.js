@@ -24,6 +24,8 @@ class mySensorsEthernetDevice extends plugins {
     this.__client = new net.Socket();
 
     controller.on('loadDBCompleted', function(){
+
+      controller.checkNodeHeartBeat();
       self.log.info('Connecting to mySensors Ethernet Gateway', self.params.url.bold);
       self.connect(self.params.url, self.params.port);
     });
