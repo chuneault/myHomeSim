@@ -99,7 +99,7 @@ class httpServer extends plugins {
     });
 
     app.get('/', function (req, res) {
-      res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: 'http://192.168.0.150:8080'});
+      res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
     app.use(express.static(appRoot + '/html'));
