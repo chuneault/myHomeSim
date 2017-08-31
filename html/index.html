@@ -47,15 +47,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
-    <!--
-    <script src="/dist/colorpickersliders/tinycolor.js"></script>
-    <link href="/dist/colorpickersliders/jquery.colorpickersliders.css" rel="stylesheet">
-    <script src="/dist/colorpickersliders/jquery.colorpickersliders.js"></script>
-    /!-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css" />
 
     <script>
 
       var $$myHomeSiteApiURL = '<%= myHomeSiteApiURL %>';
+
+      function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+            break;
+          }
+        }
+      }
 
       var icon = {
             'thermometer': "<i class='fa fa-thermometer' aria-hidden='true'></i>",
@@ -134,22 +140,27 @@
                       value = (Math.round(value * 100) / 100 ).toString();
                     }*/
 
+                    if (dataAttr.html) {
 
-                //console.log(dataAttr.html);
-                    $(e).html(format(dataAttr.html, {
+                      $(e).html(format(dataAttr.html, {
                         evalVal: format(dataAttr.eval ? eval(format(dataAttr.eval, {
-                            icon,
-                            value,
-                            data: data
+                          icon,
+                          value,
+                          data: data
                         })) : '', {icon, value, data: data}),
                         value,
                         icon,
                         data: data
-                    }));
+                      }));
 
-                    if (dataAttr.java) {
+                      if (dataAttr.java) {
                         eval(dataAttr.java);
+                      }
                     }
+
+                    if (dataAttr.updateJava)
+                      new Function("elem", "data", "dataAttr", dataAttr.updateJava).call(this, elem, data, dataAttr);
+
                 });
             }
         }
@@ -1034,17 +1045,21 @@
         {
           id: 13,
           'class': 'grid-item--med',
-          headerTitle: [ //RELAY
+          headerTitle: [ //Aqua Led RGB
             {type: "node", _id: "Sy47j7EYZ", html: "{data.name}"},
-
             {type: "sensor", _id: "HkZL7iXVtZ", html: "{icon.ok} {value}"},
             {type: "sensor", _id: "BJlL7i7NtZ", html: "{icon.exclamation} {value}"}
           ],
-          sensors: [{
-            type: "sensor", _id: "ryQIQiQEF-",
-            html: '<input id="aqualedcolor" type="text">',
-            java: "aqualedPicker()"
-          }
+          headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"}],
+          sensors: [{type: "sensor", _id: "ryQIQiQEF-",
+                     initJava: 'initAqualedPicker(elem, data);',
+                     updateJava: "updateJavaAqualedPicker(elem, data, dataAttr);"
+                    },
+            {type: "sensor", _id: "ByZgmhHKb",
+              initJava: "initAquaLedBrightness(elem, data)",
+              updateJava: "updateJavaAquaLedBrightness(elem, data, dataAttr);"
+              //eval: 'Math.round(({value} / 255 * 100)).toString() + "%"'
+            }
 
           ]
 
@@ -1081,7 +1096,35 @@
         });
     }
 
-    function aqualedPicker(){
+
+    function initAquaLedBrightness(elem, data) {
+      $(elem).html('<input id="ex1" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>');
+      $('#ex1').slider({
+        formatter: function(value) {
+          return value;
+        }
+
+
+      }).on('change',
+
+       function(e) {
+         let formDoc = {value: Math.trunc(e.value.newValue / 100 * 255)};
+         for (let i=1; i<=3; i++) {
+            $.put($$myHomeSiteApiURL + '/api/sensor/ByZgmhHKb/23', formDoc, function(data) { });
+            sleep(100);
+          }
+        }
+      );
+    }
+
+    function updateJavaAquaLedBrightness(elem, data, dataAttr) {
+      $('#ex1').slider('setValue', Math.round((data.lastValue / 255 * 100)));
+    }
+
+    function initAqualedPicker(elem, data){
+
+      $(elem).html('<input id="aqualedcolor" type="text">');
+
       var $lastAquaColor = '';
 
       jQuery.each( [ "put", "delete" ], function( i, method ) {
@@ -1101,15 +1144,6 @@
           });
         };
       });
-
-      function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds){
-            break;
-          }
-        }
-      }
 
       function changeAquaColor(color) {
         var formDoc = {value: color};
@@ -1137,11 +1171,16 @@
         move: function(color) {
           if ($lastAquaColor != color.toHex()) {
             $lastAquaColor = color.toHex();
-            console.log($lastAquaColor);
             changeAquaColor($lastAquaColor);
           }
         }
       });
+    }
+
+    function updateJavaAqualedPicker(elem, data, dataAttr) {
+      let template = "000000";
+      let HTMLColor = template.substring(0,7 - data.lastValue.toString().length) + data.lastValue.toString(16);
+      $("#aqualedcolor").spectrum('set', HTMLColor);
     }
 
     function fadeOutFadeIn(elem) {
@@ -1190,6 +1229,9 @@
     }
 
     renderTemplate7($('#rowTemplate'), dashBoardV2, $('#rows'));
+
+
+
 
     function snow(parent) {
         //canvas init
@@ -1340,8 +1382,12 @@
             var dataAttr = JSON.parse(elem.attr('data-myHomeSim'));
             elem.data('myHomeSim', dataAttr);
             $.getJSON($$myHomeSiteApiURL + '/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
-                if (dataAttr.type == 'node')   updateNode(data, elem, dataAttr);
-                if (dataAttr.type == 'sensor') updateSensor(data, elem, dataAttr);
+                if (dataAttr.initJava)
+                  new Function("elem", "data", dataAttr.initJava).call(this, elem, data);
+                if (dataAttr.type == 'node')
+                  updateNode(data, elem, dataAttr);
+                if (dataAttr.type == 'sensor')
+                  updateSensor(data, elem, dataAttr);
 
                 if (index == countDataMyHomeSim) {
                     $grid = $('.grid').packery({
