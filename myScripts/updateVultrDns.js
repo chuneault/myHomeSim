@@ -2,7 +2,7 @@
  * Created by chune on 2016-11-21.
  */
 
-var unirest = require('unirest');
+let unirest = require('unirest');
 
 unirest.get('https://api.vultr.com/v1/dns/records')
     .headers({'API-Key': '7JPMNZFXC3LFSZ7TZWKSAU7FYOVP2PZ2XZUA'})

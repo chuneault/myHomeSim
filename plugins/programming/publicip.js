@@ -4,10 +4,9 @@
 
 "use strict";
 
-
-const _ = require('lodash');
 const plugins = require("../../lib/hsPlugins.js");
-var getIP = require('external-ip')();
+let getIP = require('external-ip')();
+let schedule = require('node-schedule');
 
 class publicIp extends plugins {
 
@@ -25,17 +24,20 @@ class publicIp extends plugins {
             if (node) {
               ctrl.addOrUpdateSensor({_nodeId: node._id, name: 'ip'}, {name: 'ip'}, node,
                   function (err, sensor) {
-                    var checkIp = function () {
+                    let checkIp = function () {
+                      console.log('checking inet ip');
                       getIP(function (err, ip) {
+                        console.log('ip is: ', ip);
                         if (sensor.lastValue != ip) {
                           ctrl.addSensorValue(sensor, ip);
                         }
                       })
                     };
                     checkIp();
-                    setInterval(function () {
+                    schedule.scheduleJob('*/5 * * * *', function(){
+                      //console.log('The answer to life, the universe, and everything!');
                       checkIp();
-                    }, 60000);
+                    });
                   });
             }
           });

@@ -2,3 +2,6 @@
 .idea/
 logs/
 node_modules/
+/data/nodes.db
+/data/plugins.db
+/data/sensors.db

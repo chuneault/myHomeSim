@@ -105,7 +105,7 @@ class httpServer extends plugins {
     app.use(express.static(appRoot + '/html'));
 
     app.get('/dashboard', function (req, res) {
-      res.sendFile(appRoot + '/html/index.html');
+      res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
     app.get('/nodes', function (req, res) {

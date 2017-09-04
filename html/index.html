@@ -1058,12 +1058,22 @@
             {type: "sensor", _id: "ByZgmhHKb",
               initJava: "initAquaLedBrightness(elem, data)",
               updateJava: "updateJavaAquaLedBrightness(elem, data, dataAttr);"
-              //eval: 'Math.round(({value} / 255 * 100)).toString() + "%"'
             }
 
           ]
 
-     }
+        },
+      {
+        id: 14,
+        'class': 'grid-item--med',
+        headerTitle: [ //Public Ip
+          {type: "node", _id: "HkrCcpeGg", html: "{data.name}"}
+        ],
+        headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"}],
+        sensors: [{type: "sensor", _id: "ByxHAcpeMg", html: "{value}" }]
+
+
+      }
     ];
 
     function updateWunderground() {
@@ -1458,8 +1468,6 @@
                 }
             }
         });
-
-
 
         $('[data-toggle="tooltip-sensor"]').tooltipster({
             content: 'Loading...',
