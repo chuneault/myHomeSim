@@ -276,6 +276,17 @@ class httpServer extends plugins {
         response.status(412).send('node not found');
     });
 
+    app.delete('/api/node/:_nodeId', function (request, response){
+
+      var node = ctrl.nodes[request.params._nodeId];
+      if (node) {
+
+        ctrl.deleteNode(node);
+        response.status(200).send('node deleted');
+      }
+      else
+        response.status(412).send('node not found');
+    });
 
     app.get('/api/sensors/:_nodeId', function (request, response){
       //console.log('searching for', request.params.filter.bold.green);
