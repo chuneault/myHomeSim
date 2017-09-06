@@ -306,7 +306,12 @@
         });
 
         $('[data-toggle="delete-node"]').click(function () {
+          let panel = $(this).parents('.panel');
           $.delete('/api/node/' + $(this).attr('data-id'), {}, function (data) {
+            panel.remove();
+            $('.grid').isotope({
+              itemSelector: '.panel',
+            });
             noty({
                 text: data,
                 layout: 'topCenter',
