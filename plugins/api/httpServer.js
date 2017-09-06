@@ -80,6 +80,7 @@ class httpServer extends plugins {
 
     app.set('view engine', 'html');
     app.engine('html', require('ejs').renderFile);
+    app.engine('js', require('ejs').renderFile);
 
     // use morgan to log requests to the console
     //app.use(morgan('dev'));
@@ -109,8 +110,13 @@ class httpServer extends plugins {
     });
 
     app.get('/nodes', function (req, res) {
-      res.sendFile(appRoot + '/html/nodes.html');
+      res.render(appRoot + '/html/nodes.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
+
+    app.get('/myUtils.js', function (req, res) {
+      res.render(appRoot + '/html/js/myUtils.js', {myHomeSiteApiURL: self.params.apiUrl});
+    });
+
 
     /*app.get('/jade', function (req, res) {
 

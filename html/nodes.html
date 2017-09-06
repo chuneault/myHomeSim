@@ -9,7 +9,7 @@
     <script src="/js/template7.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+    <script src="/myUtils.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -130,7 +130,8 @@
             <p>{{lastValue}}</p>
             <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
             <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
-            <a href="#" class="btn btn-danger">Delete</a>
+            <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
+            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
         </div>
     </div>
     {{/each}}
@@ -302,6 +303,37 @@
                     message: renderTemplate7($('#editFormTemplate'), data)
                 });
             });
+        });
+
+        $('[data-toggle="delete-node"]').click(function () {
+          $.delete('/api/node/' + $(this).attr('data-id'), {}, function (data) {
+            noty({
+                text: data,
+                layout: 'topCenter',
+                type: 'success',
+                timeout: 2500,
+                animation: {
+                  open: 'animated bounceInDown', // Animate.css class names
+                  close: 'animated bounceOutUp' // Animate.css class names
+
+                }
+              });
+            });
+        });
+
+        $('[data-toggle="reboot-node"]').click(function () {
+          $.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
+            noty({
+              text: data,
+              layout: 'topCenter',
+              type: 'success',
+              timeout: 2500,
+              animation: {
+                open: 'animated bounceInDown', // Animate.css class names
+                close: 'animated bounceOutUp' // Animate.css class names
+              }
+            });
+          });
         });
 
         $('[data-toggle="edit-sensor"]').click(function () {

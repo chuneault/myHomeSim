@@ -11,7 +11,11 @@
     <script src="/js/template7.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/myUtils.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/js/template7.min.js"></script>
+
 
     <script src="/socket.io/socket.io.js"></script>
 
@@ -52,7 +56,7 @@
 
     <script>
 
-      var $$myHomeSiteApiURL = '<%= myHomeSiteApiURL %>';
+
 
       function sleep(milliseconds) {
         var start = new Date().getTime();
@@ -1137,23 +1141,6 @@
 
       var $lastAquaColor = '';
 
-      jQuery.each( [ "put", "delete" ], function( i, method ) {
-        jQuery[ method ] = function( url, data, callback, type ) {
-          if ( jQuery.isFunction( data ) ) {
-            type = type || callback;
-            callback = data;
-            data = undefined;
-          }
-
-          return jQuery.ajax({
-            url: url,
-            type: method,
-            dataType: type,
-            data: data,
-            success: callback
-          });
-        };
-      });
 
       function changeAquaColor(color) {
         var formDoc = {value: color};
