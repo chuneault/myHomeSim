@@ -1,10 +1,12 @@
-let unirest = require('unirest');
 
+let schedule = require('node-schedule');
+let moment = require('moment');
+let date = moment().hour(11).minute(10);
 
-unirest.get('http://api.wunderground.com/api/bccd91f6919ff946/lang:FC/conditions/forecast/astronomy/q/canada/sainte-therese.json')
-    .end(function(resp){
+            console.log('Schedule Sunrise Event at', date.format('LLLL'));
+            schedule.scheduleJob(date, function(){
+                console.log('Sunrise !!!!!');
+            });
 
-      console.dir(resp.body);
-      console.log(resp.body.sun_phase.sunrise.hour);
-    });
-
+var readline = require('readline'), 
+rl = readline.createInterface(process.stdin, process.stdout);

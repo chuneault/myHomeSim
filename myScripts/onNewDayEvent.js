@@ -7,18 +7,16 @@ function getSunPhase() {
         .end(function (resp) {
             //console.log(resp.body);
 
-            let date = new Date();
-            date.setHours(resp.body.sun_phase.sunrise.hour);
-            date.setMinutes(resp.body.sun_phase.sunrise.minute);
-            console.log('Schedule Sunrise Event at', date);
+            let date = new moment().hour(resp.body.sun_phase.sunrise.hour).minute(resp.body.sun_phase.sunrise.minute);
+            console.log('Schedule Sunrise Event at', date.format('LLLL'));
             schedule.scheduleJob(date, function(){
                 console.log('Sunrise !!!!!');
                 server.event.emit('sunrise');
             });
 
-            date.setHours(resp.body.sun_phase.sunset.hour);
-            date.setMinutes(resp.body.sun_phase.sunset.minute);
-            console.log('Schedule Sunset Event at', date);
+            date.hour(resp.body.sun_phase.sunset.hour);
+            date.minute(resp.body.sun_phase.sunset.minute);
+            console.log('Schedule Sunset Event at', date.format('LLLL'));
             schedule.scheduleJob(date, function(){
                 console.log('Sunset !!!!!');
                 server.event.emit('sunset');
