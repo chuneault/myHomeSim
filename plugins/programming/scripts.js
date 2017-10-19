@@ -23,6 +23,8 @@ class scripts extends plugins {
       if (script.scriptFileName)
         self.__controller.addVar(script.name, {__type: 'script', scriptFileName: script.scriptFileName});
 
+      if (script.runAtLoad)
+          self.__controller.runScript(script.name);
 
 
     });
