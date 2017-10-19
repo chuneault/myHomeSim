@@ -1124,6 +1124,7 @@
        function(e) {
          let formDoc = {value: Math.trunc(e.value.newValue / 100 * 255)};
          for (let i=1; i<=3; i++) {
+            console.log('/api/sensor/ByZgmhHKb/23', formDoc)
             $.put($$myHomeSiteApiURL + '/api/sensor/ByZgmhHKb/23', formDoc, function(data) { });
             sleep(100);
           }
@@ -1145,6 +1146,7 @@
       function changeAquaColor(color) {
         var formDoc = {value: color};
         for (let i=1; i<=3; i++) {
+          console.log('/api/sensor/ryQIQiQEF-/40', formDoc)
           $.put($$myHomeSiteApiURL + '/api/sensor/ryQIQiQEF-/40', formDoc, function(data) { });
           sleep(100);
         }

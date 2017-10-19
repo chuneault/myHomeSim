@@ -27,9 +27,24 @@ function getSunPhase() {
 
 }
 
-
 server.on('newDay',function(){
     getSunPhase();
 });
 
 getSunPhase();
+
+server.on('sunrise', function(){
+    let sensor = server.vars['AQUALEDCOLOR'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'FFFF');
+
+    sensor = server.vars['AQUALEDBRIGHT'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '255');
+});
+
+server.on('sunset', function(){
+    let sensor = server.vars['AQUALEDCOLOR'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'FFFF');
+
+    sensor = server.vars['AQUALEDBRIGHT'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
+});
