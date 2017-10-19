@@ -21,7 +21,7 @@
     "moment": "^2.15.1",
     "nedb": "^1.8.0",
     "net": "^1.0.2",
-    "node-schedule": "^1.2.4",
+    "node-schedule": "^1.2.5",
     "plug": "^0.1.1",
     "promisify-me": "^0.1.1",
     "pushbullet": "^1.4.3",
