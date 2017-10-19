@@ -7,9 +7,9 @@ function getSunPhase() {
         .end(function (resp) {
             //console.log(resp.body);
 
-            let date = new moment().hour(resp.body.sun_phase.sunrise.hour).minute(resp.body.sun_phase.sunrise.minute);
+            let date = new moment().hour(resp.body.sun_phase.sunrise.hour).minute(resp.body.sun_phase.sunrise.minute).second(0);
             console.log('Schedule Sunrise Event at', date.format('LLLL'));
-            schedule.scheduleJob(date, function(){
+            schedule.scheduleJob(date.toDate(), function(){
                 console.log('Sunrise !!!!!');
                 server.event.emit('sunrise');
             });
@@ -17,7 +17,7 @@ function getSunPhase() {
             date.hour(resp.body.sun_phase.sunset.hour);
             date.minute(resp.body.sun_phase.sunset.minute);
             console.log('Schedule Sunset Event at', date.format('LLLL'));
-            schedule.scheduleJob(date, function(){
+            schedule.scheduleJob(date.toDate(), function(){
                 console.log('Sunset !!!!!');
                 server.event.emit('sunset');
             });
@@ -34,17 +34,23 @@ server.on('newDay',function(){
 getSunPhase();
 
 server.on('sunrise', function(){
-    let sensor = server.vars['AQUALEDCOLOR'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'FFFF');
+    console.log('Open Aqua Led Strip');
 
-    sensor = server.vars['AQUALEDBRIGHT'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '255');
+    for (let i=1; i<=3; i++) {
+      let sensor = server.vars['AQUALEDCOLOR'];
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'ffffff');
+      sensor = server.vars['AQUALEDBRIGHT'];
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '255');
+    }
 });
 
 server.on('sunset', function(){
-    let sensor = server.vars['AQUALEDCOLOR'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'FFFF');
+    console.log('Close Aqua Led Strip');
 
-    sensor = server.vars['AQUALEDBRIGHT'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
+    for (let i=1; i<=3; i++) {
+      let sensor = server.vars['AQUALEDCOLOR'];
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, '073763');
+      sensor = server.vars['AQUALEDBRIGHT'];
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
+    }
 });
