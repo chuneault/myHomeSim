@@ -74,6 +74,7 @@ class mySensorsEthernetDevice extends plugins {
       subType: subType,
       payLoad: msgVal
     });
+    console.log('send message to node', msg);
     this.__client.write(msg.toString());
   }
 
