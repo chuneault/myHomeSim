@@ -67,9 +67,9 @@ server.on('sunrise', function(){
 
     for (let i=1; i<=3; i++) {
       let sensor = server.vars['AQUALEDCOLOR'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 'ffffff');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
       sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '255');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', '255');
     }
 });
 
@@ -78,9 +78,9 @@ server.on('sunset', function(){
 
     for (let i=1; i<=3; i++) {
       let sensor = server.vars['AQUALEDCOLOR'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, '472931');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '073763');
       sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', '63');
     }
 });
 
