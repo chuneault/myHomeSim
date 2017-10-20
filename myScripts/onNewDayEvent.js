@@ -69,9 +69,9 @@ server.on('sunrise', function(){
       let sensor = server.vars['AQUALEDCOLOR'];
 
         unirest.put('http://127.0.0.1:8080/api/sensor/ryQIQiQEF-/40')
-            .field('value', 'ffffff')
+            .body({'value': 'ffffff'})
             .end(function (resp) {
-               console.log(resp);
+               console.log(resp.body);
             });
       //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, "40", "ffffff");
       //sensor = server.vars['AQUALEDBRIGHT'];
