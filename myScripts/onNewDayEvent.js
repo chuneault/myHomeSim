@@ -42,7 +42,7 @@ function getSunPhase() {
                 console.log('need to wait checkethernetGatewayConnected');
                 let checkethernetGatewayConnected = function(){
                     console.log('checkethernetGatewayConnected');
-                    if (server.vars['checkethernetGatewayConnected'] != true)
+                    if (server.vars['ethernetGatewayConnected'] != true)
                         setTimeout(checkethernetGatewayConnected, 1000);
                     else {
                       if (callSunsetAfterLoad)
