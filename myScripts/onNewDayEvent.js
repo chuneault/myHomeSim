@@ -2,17 +2,6 @@ let unirest = require('unirest');
 let schedule = require('node-schedule');
 let callSunriseAfterLoad = false;
 let callSunsetAfterLoad = false;
-let Client = require('node-rest-client').Client;
-
-
-let options = {
-		mimetypes: {
-		   	    json: ["application/json", "application/my-custom-content-type-for-json;charset=utf-8"]
-			
-   			   }
-  	      };
-let client = new Client(options);
-
 
 
 function getSunPhase() {
@@ -76,33 +65,18 @@ server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
 
     for (let i=1; i<=2; i++) {
+
       let sensor = server.vars['AQUALEDCOLOR'];
 
-      var args = {
-	data: { value: "ffffff" }, // data passed to REST method (only useful in POST, PUT or PATCH methods)
-	path: { "id": "ryQIQiQEF-" }, // path substitution var
-        headers: { "Content-Type": "application/json"}
-      };
+      unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
+          .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+          .send({ "value": "ffffff" })
+          .end(function (resp) {
+              console.log(resp.body);
+      });
 
-
-      client.put("http://127.0.0.1:8080/api/sensor/${id}/40", args,
-	function (data, response) {
-		// parsed response body as js object
-		console.log(data);
-		// raw response
-		console.log(response);
-	});
-
-
-
-     //   unirest.put('http://127.0.0.1:8080/api/sensor/ryQIQiQEF-/40')
-     //       .body('{"value": "ffffff"}')
-     //       .end(function (resp) {
-     //          console.log(resp.body);
-     //       });
-     //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 0xffffff.toString(16));
-     //sensor = server.vars['AQUALEDBRIGHT'];
-     //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
+      sensor = server.vars['AQUALEDBRIGHT'];
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
     }
 });
 
@@ -111,9 +85,16 @@ server.on('sunset', function(){
 
     for (let i=1; i<=2; i++) {
       let sensor = server.vars['AQUALEDCOLOR'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, '472931');
+
+      unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
+        .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+        .send({ "value": "472931" })
+        .end(function (resp) {
+            console.log(resp.body);
+        });
+
       sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
     }
 });
 

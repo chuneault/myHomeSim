@@ -1,14 +1,8 @@
+let unirest = require('unirest');
 
-let schedule = require('node-schedule');
-let moment = require('moment');
-let date = moment().hour(19).minute(3);
-
-console.log('Schedule Sunrise Event at', date.format('LLLL'));
-    schedule.scheduleJob(date.toDate(), function(){
-    console.log('Sunrise !!!!!');
- });
-
-console.log(date.toDate());
-
-var readline = require('readline'), 
-rl = readline.createInterface(process.stdin, process.stdout);
+unirest.put('http://myHomeSim:8080/api/sensor/{id}/40')
+   .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+   .send({ "value": "ffffff" })
+   .end(function (resp) {
+       console.log(resp.body);
+   });
