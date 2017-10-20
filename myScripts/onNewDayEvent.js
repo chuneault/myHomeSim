@@ -27,7 +27,7 @@ function getSunPhase() {
             }
 
             callSunsetAfterLoad = (moment().isAfter(dateSunset) && moment().isAfter(dateSunset));
-            console.log('callSunriseAfterLoad', callSunriseAfterLoad);
+            console.log('callSunsetAfterLoad', callSunsetAfterLoad);
 
             if (moment().isBefore(dateSunset)) {
                 console.log('Schedule Sunset Event at', dateSunset.format('LLLL'));
@@ -39,7 +39,9 @@ function getSunPhase() {
 
             if (callSunriseAfterLoad || callSunsetAfterLoad) {
 
+                console.log('need to wait checkethernetGatewayConnected');
                 let checkethernetGatewayConnected = function(){
+                    console.log('checkethernetGatewayConnected');
                     if (server.vars['checkethernetGatewayConnected'] != true)
                         setTimeout(checkethernetGatewayConnected, 1000);
                     else {
