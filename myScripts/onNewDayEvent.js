@@ -65,22 +65,24 @@ server.on('newDay',function(){
 server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
 
-    for (let i=1; i<=3; i++) {
+    for (let i=1; i<=2; i++) {
       let sensor = server.vars['AQUALEDCOLOR'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 16777215);
       sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', '255');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
+      sleep(100);
     }
 });
 
 server.on('sunset', function(){
     console.log('Close Aqua Led Strip');
 
-    for (let i=1; i<=3; i++) {
+    for (let i=1; i<=2; i++) {
       let sensor = server.vars['AQUALEDCOLOR'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '073763');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 40, 472931);
       sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', '63');
+      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 63);
+      sleep(100);
     }
 });
 
