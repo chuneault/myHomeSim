@@ -50,7 +50,9 @@ function getSunPhase() {
                       if (callSunriseAfterLoad)
                           server.event.emit('sunrise');
                     }
-                }
+                };
+
+                checkethernetGatewayConnected();
             }
         })
 
