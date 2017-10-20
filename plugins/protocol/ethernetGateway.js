@@ -45,6 +45,12 @@ class mySensorsEthernetDevice extends plugins {
       self.log.error('mySensorsEthernetGateway Connection closed'.bold.red);
     });
 
+    this.__client.on('connect', function() {
+       console.log('ethernetGatewayConnected');
+       self.__controller.vars['ethernetGatewayConnected'] = true;
+    });
+
+
 
   };
 

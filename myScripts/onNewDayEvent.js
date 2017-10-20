@@ -37,7 +37,19 @@ function getSunPhase() {
                 });
             }
 
+            if (callSunriseAfterLoad || callSunsetAfterLoad) {
 
+                let checkethernetGatewayConnected = function(){
+                    if (server.vars['checkethernetGatewayConnected'] != true)
+                        setTimeout(checkethernetGatewayConnected, 1000);
+                    else {
+                      if (callSunsetAfterLoad)
+                         server.event.emit('sunset');
+                      if (callSunriseAfterLoad)
+                          server.event.emit('sunrise');
+                    }
+                }
+            }
         })
 
 }
@@ -66,15 +78,6 @@ server.on('sunset', function(){
       sensor = server.vars['AQUALEDBRIGHT'];
       sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
     }
-});
-
-           
-server.on('loadDBCompleted', function(){
- console.log('onNewDayEvent loadDBCompleted');
- if (callSunsetAfterLoad)  
-  server.event.emit('sunset');
- if (callSunriseAfterLoad)  
-  server.event.emit('sunrise');
 });
 
 
