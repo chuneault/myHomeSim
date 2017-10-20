@@ -1,5 +1,8 @@
 let unirest = require('unirest');
 let schedule = require('node-schedule');
+let callSunriseAfterLoad = false;
+let callSunsetAfterLoad = false;
+
 
 
 function getSunPhase() {
@@ -11,8 +14,9 @@ function getSunPhase() {
             let dateSunset = new moment().hour(resp.body.sun_phase.sunset.hour).minute(resp.body.sun_phase.sunset.minute).second(0);
 
 
-            if (moment().isAfter(dateSunrise) && moment().isBefore(dateSunset))
-              server.event.emit('sunrise');
+            callSunriseAfterLoad = (moment().isAfter(dateSunrise) && moment().isBefore(dateSunset));
+            console.log('callSunriseAfterLoad', callSunriseAfterLoad);
+
 
             if (moment().isBefore(dateSunrise)) {
                 console.log('Schedule Sunrise Event at', dateSunrise.format('LLLL'));
@@ -22,8 +26,8 @@ function getSunPhase() {
                 });
             }
 
-            if (moment().isAfter(dateSunset) && moment().isAfter(dateSunset))
-              server.event.emit('sunset');
+            callSunsetAfterLoad = (moment().isAfter(dateSunset) && moment().isAfter(dateSunset));
+            console.log('callSunriseAfterLoad', callSunriseAfterLoad);
 
             if (moment().isBefore(dateSunset)) {
                 console.log('Schedule Sunset Event at', dateSunset.format('LLLL'));
@@ -63,5 +67,15 @@ server.on('sunset', function(){
       sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
     }
 });
+
+           
+server.on('loadDBCompleted', function(){
+ console.log('onNewDayEvent loadDBCompleted');
+ if (callSunsetAfterLoad)  
+  server.event.emit('sunset');
+ if (callSunriseAfterLoad)  
+  server.event.emit('sunrise');
+});
+
 
 getSunPhase();
