@@ -64,7 +64,6 @@ server.on('newDay',function(){
 server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
 
-    for (let i=1; i<=2; i++) {
 
       let sensor = server.vars['AQUALEDCOLOR'];
 
@@ -75,6 +74,7 @@ server.on('sunrise', function(){
               console.log(resp.body);
       });
 
+    for (let i=1; i<=3; i++) {
       sensor = server.vars['AQUALEDBRIGHT'];
       sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
     }
@@ -83,7 +83,7 @@ server.on('sunrise', function(){
 server.on('sunset', function(){
     console.log('Close Aqua Led Strip');
 
-    for (let i=1; i<=2; i++) {
+
       let sensor = server.vars['AQUALEDCOLOR'];
 
       unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
@@ -92,7 +92,7 @@ server.on('sunset', function(){
         .end(function (resp) {
             console.log(resp.body);
         });
-
+    for (let i=1; i<=3; i++) {
       sensor = server.vars['AQUALEDBRIGHT'];
       sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
     }
