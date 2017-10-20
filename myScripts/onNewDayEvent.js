@@ -7,20 +7,31 @@ function getSunPhase() {
         .end(function (resp) {
             //console.log(resp.body);
 
-            let date = new moment().hour(resp.body.sun_phase.sunrise.hour).minute(resp.body.sun_phase.sunrise.minute).second(0);
-            console.log('Schedule Sunrise Event at', date.format('LLLL'));
-            schedule.scheduleJob(date.toDate(), function(){
-                console.log('Sunrise !!!!!');
-                server.event.emit('sunrise');
-            });
+            let dateSunrise = new moment().hour(resp.body.sun_phase.sunrise.hour).minute(resp.body.sun_phase.sunrise.minute).second(0);
+            let dateSunset = new moment().hour(resp.body.sun_phase.sunset.hour).minute(resp.body.sun_phase.sunset.minute).second(0);
 
-            date.hour(resp.body.sun_phase.sunset.hour);
-            date.minute(resp.body.sun_phase.sunset.minute);
-            console.log('Schedule Sunset Event at', date.format('LLLL'));
-            schedule.scheduleJob(date.toDate(), function(){
-                console.log('Sunset !!!!!');
-                server.event.emit('sunset');
-            });
+
+            if (moment().isAfter(dateSunrise) && moment().isBefore(dateSunset))
+              server.event.emit('sunrise');
+
+            if (moment().isBefore(dateSunrise)) {
+                console.log('Schedule Sunrise Event at', dateSunrise.format('LLLL'));
+                schedule.scheduleJob(dateSunrise.toDate(), function () {
+                    console.log('Sunrise !!!!!');
+                    server.event.emit('sunrise');
+                });
+            }
+
+            if (moment().isAfter(dateSunset) && moment().isAfter(dateSunset))
+              server.event.emit('sunset');
+
+            if (moment().isBefore(dateSunset)) {
+                console.log('Schedule Sunset Event at', dateSunset.format('LLLL'));
+                schedule.scheduleJob(dateSunset.toDate(), function () {
+                    console.log('Sunset !!!!!');
+                    server.event.emit('sunset');
+                });
+            }
 
 
         })
@@ -30,8 +41,6 @@ function getSunPhase() {
 server.on('newDay',function(){
     getSunPhase();
 });
-
-getSunPhase();
 
 server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
@@ -54,3 +63,5 @@ server.on('sunset', function(){
       sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, '63');
     }
 });
+
+getSunPhase();
