@@ -1,10 +1,10 @@
-let unirest = require('unirest');
 let schedule = require('node-schedule');
 let callSunriseAfterLoad = false;
 let callSunsetAfterLoad = false;
 
 
 function getSunPhase() {
+    let unirest = require('unirest');
     unirest.get('http://api.wunderground.com/api/bccd91f6919ff946/lang:FC/conditions/forecast/astronomy/q/canada/sainte-therese.json')
         .end(function (resp) {
             //console.log(resp.body);
@@ -64,26 +64,25 @@ server.on('newDay',function(){
 server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
 
+    let unirest = require('unirest');
     let sensor = server.vars['AQUALEDCOLOR'];
 
     unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
-        .headers({"Accept": "application/json", 
-                  "content-type": "application/x-www-form-urlencoded",
-                  "value": "ffffff"})
-        .form({"value": "ffffff"})
+        .headers({'Accept': 'application/json', 
+                  'Content-Type': 'application/json'})
+        .send({"value": "ffffff"})
         .end(function (resp) {
             console.log(resp.body);
+            setTimeout(function(){
+              let sensor = server.vars['AQUALEDBRIGHT'];
+              unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
+                .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+                .send({"value": "255"})
+                .end(function (resp) {
+                   console.log(resp.body);
+              })}, 10000);
+
     });
-
-
-    sensor = server.vars['AQUALEDBRIGHT'];
-    unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
-      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-      .send({"value": "255"})
-      .end(function (resp) {
-          console.log(resp.body);
-    });
-
 
 });
 
