@@ -8,6 +8,7 @@
 const mySensor = require("./serialProtocol.js");
 const plugins = require("../../lib/hsPlugins.js");
 const net = require('net');
+const moment  = require('moment');
 
 class mySensorsEthernetDevice extends plugins {
 
@@ -69,7 +70,9 @@ class mySensorsEthernetDevice extends plugins {
   send(node, sensor, subType, msgVal) {
     var self = this;
     var sendMessage = function(){
-        self.__client.write(self.__msgToSendQueue.shift().toString());
+      let msg = self.__msgToSendQueue.shift();
+      console.log(moment(), 'Send Message To Node', msg );
+      self.__client.write(msg.toString());
         while (self.__msgToSendQueue.length > 0)
           setTimeout(sendMessage(), 1000);
     };
