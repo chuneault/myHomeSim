@@ -284,6 +284,8 @@ class mySensors {
             break;
           case mySensorsProtocol.internal.I_LOG_MESSAGE:
             break;
+          case mySensorsProtocol.internal.I_DISCOVER_RESPONSE:
+            break;
           case mySensorsProtocol.internal.I_HEARTBEAT_RESPONSE:
             ctrl.findNode({_deviceId: self.device._id, id: msg.nodeId},
                 function (notFound, node) {
