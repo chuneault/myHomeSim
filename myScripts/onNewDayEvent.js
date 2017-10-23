@@ -64,20 +64,27 @@ server.on('newDay',function(){
 server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
 
-
     let sensor = server.vars['AQUALEDCOLOR'];
 
     unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
-        .headers({'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'})
-        .send({ "value": "FFFFFF" })
+        .headers({"Accept": "application/json", 
+                  "content-type": "application/x-www-form-urlencoded",
+                  "value": "ffffff"})
+        .form({"value": "ffffff"})
         .end(function (resp) {
             console.log(resp.body);
     });
 
-    for (let i=1; i<=3; i++) {
-      sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 255);
-    }
+
+    sensor = server.vars['AQUALEDBRIGHT'];
+    unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
+      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+      .send({"value": "255"})
+      .end(function (resp) {
+          console.log(resp.body);
+    });
+
+
 });
 
 server.on('sunset', function(){
@@ -86,19 +93,23 @@ server.on('sunset', function(){
     let sensor = server.vars['AQUALEDCOLOR'];
 
     unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
-      .headers({'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'})
+      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
       .send({"value": "73763"})
       .end(function (resp) {
           console.log(resp.body);
     });
 
-    for (let i=1; i<=3; i++) {
-      //sensor = server.vars['AQUALEDCOLOR'];
-      //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
+    sensor = server.vars['AQUALEDBRIGHT'];
+    unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
+      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+      .send({"value": "63"})
+      .end(function (resp) {
+          console.log(resp.body);
+    });
 
-      sensor = server.vars['AQUALEDBRIGHT'];
-      sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, 63);
-    }
+
+    //sensor = server.vars['AQUALEDCOLOR'];
+    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
 });
 
 

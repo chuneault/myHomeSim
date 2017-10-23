@@ -4,6 +4,8 @@
 
 let unirest = require('unirest');
 
+try {
+
 unirest.get('https://api.vultr.com/v1/dns/records')
     .headers({'API-Key': '7JPMNZFXC3LFSZ7TZWKSAU7FYOVP2PZ2XZUA'})
     .query({domain: "huneault.ca"})
@@ -16,3 +18,10 @@ unirest.get('https://api.vultr.com/v1/dns/records')
             //console.log(response.body);
           });
     });
+
+}
+
+catch (err) {
+  // Handle the error here.
+  console.log('Error updateVultrDns', err);
+}
