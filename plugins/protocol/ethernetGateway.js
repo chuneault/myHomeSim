@@ -70,11 +70,16 @@ class mySensorsEthernetDevice extends plugins {
   send(node, sensor, subType, msgVal) {
     var self = this;
     var sendMessage = function(){
-      let msg = self.__msgToSendQueue.shift();
-      console.log(moment(), 'Send Message To Node', msg );
+      let msg = self.__msgToSendQueue[0];
+      console.log('Send Message To Node', msg );
       self.__client.write(msg.toString());
-        while (self.__msgToSendQueue.length > 0)
-          setTimeout(sendMessage(), 1000);
+      while (self.__msgToSendQueue.length > 0) {
+         setTimeout(function(){
+           self.__msgToSendQueue.shift();
+           if (self.__msgToSendQueue.length > 0)
+             sendMessage();
+         }, 1000);
+      }
     };
 
     this.__msgToSendQueue.push(new this.__mySensor.message({
