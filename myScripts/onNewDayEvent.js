@@ -73,14 +73,14 @@ server.on('sunrise', function(){
         .send({"value": "ffffff"})
         .end(function (resp) {
             console.log(resp.body);
-            setTimeout(function(){
+
               let sensor = server.vars['AQUALEDBRIGHT'];
               unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
                 .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
                 .send({"value": "255"})
                 .end(function (resp) {
                    console.log(resp.body);
-              })}, 10000);
+              });
 
     });
 

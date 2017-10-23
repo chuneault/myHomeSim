@@ -22,6 +22,7 @@ class mySensorsEthernetDevice extends plugins {
 
     this.__mySensor = new mySensor(this);
     this.__client = new net.Socket();
+    this.__msgToSendQueue = [];
 
     controller.on('loadDBCompleted', function(){
 
@@ -66,16 +67,24 @@ class mySensorsEthernetDevice extends plugins {
   };
 
   send(node, sensor, subType, msgVal) {
-    var msg = new this.__mySensor.message({
+    var self = this;
+    var sendMessage = function(){
+        self.__client.write(self.__msgToSendQueue.shift().toString());
+        while (self.__msgToSendQueue.length > 0)
+          setTimeout(sendMessage(), 1000);
+    };
+
+    this.__msgToSendQueue.push(new this.__mySensor.message({
       nodeId: node.id,
       childSensorId: sensor.id,
       messageType: this.__mySensor.protocol.messageType.set,
       ack: 0,
       subType: subType,
       payLoad: msgVal
-    });
-    console.log('send message to node', msg);
-    this.__client.write(msg.toString());
+    }));
+
+    if (this.__msgToSendQueue.length <= 1)
+      sendMessage();
   }
 
   reboot(node, now) {

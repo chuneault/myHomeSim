@@ -311,12 +311,12 @@ class httpServer extends plugins {
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
         console.log('send message to node', request.body);
+
+        //send message 3 times
         sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
-        for (let i=0; i<2; i++) {
-          setTimeout(function(){
-              sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
-          }, 1000);
-        }
+        sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
+        sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
+
         response.status(200).send('send message to node ' + sensor.__ownerNode.name+ ', msgType: ' + request.params._msgType + ', msgVal: ' + request.body.value);
       }
       else
