@@ -9,7 +9,7 @@ const plugins = require("../../lib/hsPlugins.js");
 
 class httpServer extends plugins {
 
-   generateInteraction(interaction) {
+  generateInteraction(interaction) {
      var self = this;
      var orValues = [];
      var regEx = /([\[\]])\1|[\[](.*?)(?:!(.+?))?[\]]/g;
@@ -50,20 +50,78 @@ class httpServer extends plugins {
      generate(0, orValues, interaction.question, interaction.question);
    }
 
-
   constructor(controller, params) {
 
     super(controller, params);
 
     var self = this;
 
-    var express = require('express');
+    var users = [
+          { id: 1, username: 'admin', password: 'secret', email: 'chuneault@gmail.com', apikey: 'asdasjsdgfhgdsfjkjhg' }
+      ];
+
+
+    var express = require('express'),
+        passport = require('passport'),
+        LocalStrategy = require('passport-localapikey').Strategy,
+        bodyParser = require('body-parser'),
+        appRoot = require('app-root-path'),
+        cookieParser = require('cookie-parser'),
+        session = require('express-session');
+
+
+
     var app = express();
-    var bodyParser = require('body-parser');
 
-    var appRoot = require('app-root-path');
 
-    //app.use(express.static(appRoot + '/html'));
+    function findById(id, fn) {
+          var idx = id - 1;
+          if (users[idx]) {
+              fn(null, users[idx]);
+          } else {
+              fn(new Error('User ' + id + ' does not exist'));
+          }
+      }
+
+    function findByApiKey(apikey, fn) {
+          for (var i = 0, len = users.length; i < len; i++) {
+              var user = users[i];
+              if (user.apikey === apikey) {
+                  return fn(null, user);
+              }
+          }
+          return fn(null, null);
+      }
+
+    passport.serializeUser(function(user, done) {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser(function(id, done) {
+        findById(id, function (err, user) {
+            done(err, user);
+        });
+    });
+
+    passport.use(new LocalStrategy(
+        function(apikey, done) {
+            // asynchronous verification, for effect...
+            process.nextTick(function () {
+                // Find the user by username.  If there is no user with the given
+                // username, or the password is not correct, set the user to `false` to
+                // indicate failure and set a flash message.  Otherwise, return the
+                // authenticated `user`.
+                findByApiKey(apikey, function(err, user) {
+                    if (err) { return done(err); }
+                    if (!user) { return done(null, false, { message: 'Unknown apikey : ' + apikey }); }
+                    // if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+                    return done(null, user);
+                })
+            });
+        }
+   ));
+
+      //app.use(express.static(appRoot + '/html'));
 
     //app.use('/static', express.static(appRoot + '/bower_components'));
     //app.use('/dist/colorpicker', express.static(appRoot + '/node_modules/bootstrap-colorpicker/dist'));
@@ -72,6 +130,9 @@ class httpServer extends plugins {
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);
+
+    app.use(cookieParser());
+    app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
 
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
@@ -95,6 +156,39 @@ class httpServer extends plugins {
       next();
     });
 
+    app.use(passport.initialize());
+
+    // persistent login sessions
+    app.use(passport.session());
+
+    app.use(express.static(appRoot + '/html'));
+
+    function ensureAuthenticated(req, res, next) {
+          if (req.isAuthenticated()) {
+              return next();
+          }
+          res.redirect('/unauthorized')
+      }
+
+    app.get('/unauthorized', function(req, res){
+        res.json({ message: "Authentication Error" })
+    });
+
+    app.post('/login',
+        passport.authenticate('localapikey', { failureRedirect: '/unauthorized' }),
+        function(req, res) {
+            res.json({ message: "Authenticated" })
+     });
+
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
+
+    app.all('/api/*', ensureAuthenticated, function(req, res, next){
+        next();
+    });
+
     app.get('/api', function (req, res) {
       res.send('Hello from myHomeSim!');
     });
@@ -102,8 +196,6 @@ class httpServer extends plugins {
     app.get('/', function (req, res) {
       res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
-
-    app.use(express.static(appRoot + '/html'));
 
     app.get('/dashboard', function (req, res) {
       res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
@@ -116,7 +208,6 @@ class httpServer extends plugins {
     app.get('/myUtils.js', function (req, res) {
       res.render(appRoot + '/html/js/myUtils.js', {myHomeSiteApiURL: self.params.apiUrl});
     });
-
 
     /*app.get('/jade', function (req, res) {
 
