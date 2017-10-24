@@ -75,28 +75,14 @@ server.on('sunrise', function(){
 
 server.on('sunset', function(){
     console.log('Close Aqua Led Strip');
-
     let sensor = server.vars['AQUALEDCOLOR'];
-
-    unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/40')
-      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-      .send({"value": "73763"})
-      .end(function (resp) {
-          console.log(resp.body);
-    });
-
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
     sensor = server.vars['AQUALEDBRIGHT'];
-    unirest.put('http://127.0.0.1:8080/api/sensor/'+sensor._id+'/23')
-      .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-      .send({"value": "63"})
-      .end(function (resp) {
-          console.log(resp.body);
-    });
-
-
-    //sensor = server.vars['AQUALEDCOLOR'];
-    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
 });
-
 
 getSunPhase();
