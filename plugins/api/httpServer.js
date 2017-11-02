@@ -166,11 +166,13 @@ class httpServer extends plugins {
     function ensureAuthenticated(req, res, next) {
           if (req.isAuthenticated())
               return next();
-          else
-            if (lookup(req.body, 'apikey') || lookup(req.query, 'apikey'))
-               passport.authenticate('localapikey', { failureRedirect: '/unauthorized' });
-            else
-              res.redirect('/unauthorized');
+          else {
+              console.log(req.query);
+              if (_.find(req.body, 'apikey') || _.find(req.query, 'apikey'))
+                  passport.authenticate('localapikey', {failureRedirect: '/unauthorized'});
+              else
+                  res.redirect('/unauthorized');
+          }
       }
 
     app.get('/unauthorized', function(req, res){
