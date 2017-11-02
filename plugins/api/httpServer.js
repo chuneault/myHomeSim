@@ -103,9 +103,10 @@ class httpServer extends plugins {
         });
     });
 
-    passport.use(new LocalStrategy({passReqToCallback: true},
+    passport.use(new LocalStrategy(
         function(apikey, done) {
-
+            // asynchronous verification, for effect...
+            process.nextTick(function () {
                 // Find the user by username.  If there is no user with the given
                 // username, or the password is not correct, set the user to `false` to
                 // indicate failure and set a flash message.  Otherwise, return the
@@ -116,9 +117,9 @@ class httpServer extends plugins {
                     // if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
                     return done(null, user);
                 })
-
-        })
-   );
+            });
+        }
+   ));
 
       //app.use(express.static(appRoot + '/html'));
 
@@ -165,15 +166,11 @@ class httpServer extends plugins {
     function ensureAuthenticated(req, res, next) {
           if (req.isAuthenticated())
               return next();
-          else {
-
-              if ((req.body.apikey) || (req.query.apikey)) {
-                  console.log('try authenticate');
-                  passport.authenticate('localapikey', {failureRedirect: '/unauthorized'});
-              }
-              else
-                  res.redirect('/unauthorized');
-          }
+          else
+            if ((req.query.apikey) && (_.find(users, {apikey: req.query.apikey})))
+               return next();
+            else
+              res.redirect('/unauthorized');
       }
 
     app.get('/unauthorized', function(req, res){
