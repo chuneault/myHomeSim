@@ -11,22 +11,23 @@ var hsDatabase = require('./lib/hsDatabase');
 function serverConfig() {
   switch (process.env.NODE_ENV) {
     case 'production':
+      break;
     case 'dev':
+
+      break;
     default:
   }
 }
 
 function start(logger) {
 
-  serverConfig();
-  var ctrl = new hsController(logger);
-
-  ctrl.on('loadDBCompleted', function() {
+  let options = serverConfig();
+  new hsController(logger, options)
+    on('loadDBCompleted', function() {
 
   });
 
-
-  var db = new hsDatabase(ctrl);
+  new hsDatabase(ctrl, options);
 
 }
 

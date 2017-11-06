@@ -17,16 +17,14 @@ class scripts extends plugins {
     var self = this;
 
     self.params.forEach(function(script){
-      if (script.script)
-        self.__controller.addVar(script.name, {__type: 'script', script: script.script});
-      else
-      if (script.scriptFileName)
-        self.__controller.addVar(script.name, {__type: 'script', scriptFileName: script.scriptFileName});
-
-      if (script.runAtLoad)
-          self.__controller.runScript(script.name);
-
-
+      if ((script.active == null) || (script.active == true)) {
+          if (script.script)
+              self.__controller.addVar(script.name, {__type: 'script', script: script.script});
+          else if (script.scriptFileName)
+              self.__controller.addVar(script.name, {__type: 'script', scriptFileName: script.scriptFileName});
+          if (script.runAtLoad)
+              self.__controller.runScript(script.name);
+      }
     });
 
     self.__controller.addObject('web', {class: self, httpGet: self.httpGet});
