@@ -2,9 +2,9 @@ const PouchDB = require('pouchdb');
 const PromisifyMe = require('promisify-me');
 const DataStore = PromisifyMe(require('nedb'), 'nedb');
 
-function importDB(dbName, callBackDoc) {
-    let db = new PouchDB('http://192.168.0.150:5984/'+dbName);
-    let nedbRows = new DataStore('./data/'+dbName+'.db');
+function importDB(srcDbName, destDBName, callBackDoc) {
+    let db = new PouchDB('http://192.168.0.150:5984/'+destDBName);
+    let nedbRows = new DataStore('./data/'+srcDbName+'.db');
     nedbRows.loadDatabase();
     let rows = nedbRows.find({});
 
@@ -22,17 +22,20 @@ function importDB(dbName, callBackDoc) {
 
 
 
-importDB('nodes', function(doc){
+importDB('nodes', 'myHomeSim', function(doc){
     doc.deviceId = doc._deviceId;
+    doc.type = 'nodes';
+
     delete doc._deviceId;
 });
 
-importDB('sensors', function(doc){
+importDB('sensors', 'myHomeSim', function(doc){
     doc.nodeId = doc._nodeId;
+    doc.type = 'sensors';
     delete doc._nodeId;
 });
 
-importDB('plugins', function(doc){
+importDB('plugins', 'myHomeSim', function(doc){
     //doc.nodeId = doc._nodeId;
     //delete doc._nodeId;
 });
