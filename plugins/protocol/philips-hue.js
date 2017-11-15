@@ -24,15 +24,18 @@ class philipsHueBridge extends plugins {
     });
   };
 
-
   registerLights(lights) {
-     console.log('registerLights', lights);
      let self = this;
-     _.forEach(lights.lights, function(light) {
-         console.log('update or add light', light);
-         self.__controller.addOrUpdateNode({_deviceId: self._id, id: light.id},
-             light, self);
-     });
+     self.__controller.addOrUpdateNode({_deviceId: self._id, id: self.params.id},
+         self.params, self,
+         function (error, node) {
+             if (node)
+               _.forEach(lights.lights, function(light) {
+                   self.__controller.addOrUpdateSensor({_nodeId: node._id, id: light.id}, light, node);
+               });
+
+          }
+     );
   }
 
   send(node, sensor, subType, msgVal) {
