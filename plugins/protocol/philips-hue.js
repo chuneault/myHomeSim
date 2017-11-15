@@ -4,7 +4,7 @@ const plugins = require("../../lib/hsPlugins.js");
 const hueApi  = require("node-hue-api").HueApi;
 const _       = require('lodash');
 
-    class philipsHueBridge extends plugins {
+class philipsHueBridge extends plugins {
 
   constructor(controller, params) {
     super(controller, params);
@@ -66,7 +66,7 @@ const _       = require('lodash');
 
 exports.connect = function(pluginType, params, callback) {
   callback({
-    name: 'philipsHue',
+    name: 'philips-hue',
     params: params,
     pluginClass: philipsHueBridge
   });
