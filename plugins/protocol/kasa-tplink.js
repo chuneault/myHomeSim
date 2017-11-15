@@ -1,8 +1,8 @@
 "use strict";
 
 const plugins = require("../../lib/hsPlugins.js");
-const Client  = require("tplink-smarthome-api");
-const client  = new Client();
+const { Client } = require('tplink-smarthome-api');
+const client = new Client();
 const _       = require('lodash');
 
 class kasaTplink extends plugins {
