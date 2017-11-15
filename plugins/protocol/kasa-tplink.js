@@ -26,6 +26,7 @@ class kasaTplink extends plugins {
      client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
           device.getSysInfo().then(
               function (device) {
+                  console.log(device);
                   self.__controller.addOrUpdateNode({id: device.deviceId},
                       {name: device.dev_name}, self,
                       function (error, node) {
