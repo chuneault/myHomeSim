@@ -19,7 +19,7 @@ class philipsHueBridge extends plugins {
         self.api = new hueApi(self.params.host, self.params.userName);
         self.api.lights(function(err, lights) {
             if (err) throw err;
-            self.registerLights(JSON.stringify(lights, null, 2));
+            self.registerLights(lights);
         });
     });
   };
