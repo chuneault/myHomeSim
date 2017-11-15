@@ -47,7 +47,7 @@ class kasaTplink extends plugins {
   send(node, sensor, msgType, msgVal) {
       let self = this;
       console.log('Send Message To Node', msgType, msgVal);
-      console.log(sensor.__deviceApi[msgType](msgVal));
+      sensor.__deviceApi[msgType](msgVal).then(console.log);
   }
 }
 
