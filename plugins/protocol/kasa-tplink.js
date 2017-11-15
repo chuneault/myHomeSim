@@ -31,6 +31,7 @@ class kasaTplink extends plugins {
                       function (error, node) {
                         if (node) {
                             deviceInfo.name = deviceInfo.alias;
+                            deviceInfo.__deviceApi = device;
                             self.__controller.addOrUpdateSensor({
                                 _nodeId: node._id,
                                 hwId: deviceInfo.hwId
@@ -46,7 +47,7 @@ class kasaTplink extends plugins {
   send(node, sensor, msgType, msgVal) {
       let self = this;
       console.log('Send Message To Node', msgType, msgVal);
-      sensor[msgType](msgVal);
+      sensor.__deviceApi[msgType](msgVal);
   }
 }
 
