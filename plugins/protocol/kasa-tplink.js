@@ -27,7 +27,7 @@ class kasaTplink extends plugins {
           device.getSysInfo().then(
               function (deviceInfo) {
                   console.log('Find Device', deviceInfo.deviceId);
-                  self.__controller.addOrUpdateNode({id: 1},
+                  self.__controller.addOrUpdateNode({id: deviceInfo.deviceId},
                       {name: deviceInfo.dev_name}, self,
                       function (error, node) {
                         if (node)
