@@ -27,7 +27,7 @@ class philipsHueBridge extends plugins {
 
   registerLights(lights) {
      let self = this;
-     self.__controller.addOrUpdateNode({_deviceId: self._id, id: self.params.id},
+     self.__controller.addOrUpdateNode({_deviceId: self._id, id: self.params.id, name: 'Philips Hue Bridge'},
          self.params, self,
          function (error, node) {
              if (node)
@@ -42,26 +42,12 @@ class philipsHueBridge extends plugins {
 
   send(node, sensor, msgType, msgVal) {
     var self = this;
-    var sendMessage = function(){
-      let msg = self.__msgToSendQueue[0];
-      console.log('Send Message To Node', msg );
-      let state = hue.lightState.create();
-      state[msg.msgType](msg.msgVal);
-      self.api.setLightState(sensor.id, state)
-            .then(function(result){ console.log(result);})
-            .done();
-      if (self.__msgToSendQueue.length > 0) {
-         setTimeout(function(){
-           self.__msgToSendQueue.shift();
-           if (self.__msgToSendQueue.length > 0)
-             sendMessage();
-         }, 1000);
-      }
-    };
-
-    this.__msgToSendQueue.push({msgType: msgType, msgVal: msgVal});
-    if (this.__msgToSendQueue.length <= 1)
-      sendMessage();
+    console.log('Send Message To Node', msg );
+    let state = hue.lightState.create();
+    state[msgType](msgVal);
+    self.api.setLightState(sensor.id, state)
+        .then(function(result){ console.log(result);})
+        .done();
   }
 }
 
