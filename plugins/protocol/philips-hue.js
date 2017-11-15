@@ -27,7 +27,7 @@ class philipsHueBridge extends plugins {
 
   registerLights(lights) {
      let self = this;
-     self.__controller.addOrUpdateNode({_deviceId: self._id, id: self.params.id, name: 'Philips Hue Bridge'},
+     self.__controller.addOrUpdateNode({id: self.params.id},
          self.params, self,
          function (error, node) {
              if (node)
