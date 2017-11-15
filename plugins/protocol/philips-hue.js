@@ -1,7 +1,8 @@
 "use strict";
 
 const plugins = require("../../lib/hsPlugins.js");
-const hueApi  = require("node-hue-api").HueApi;
+const hue  = require("node-hue-api");
+const hueApi = hue.HueApi;
 const _       = require('lodash');
 
 class philipsHueBridge extends plugins {
@@ -31,6 +32,7 @@ class philipsHueBridge extends plugins {
          function (error, node) {
              if (node)
                _.forEach(lights.lights, function(light) {
+                   console.log('update light', light);
                    self.__controller.addOrUpdateSensor({_nodeId: node._id, id: light.id}, light, node);
                });
 
@@ -38,12 +40,16 @@ class philipsHueBridge extends plugins {
      );
   }
 
-  send(node, sensor, subType, msgVal) {
-    /*var self = this;
+  send(node, sensor, msgType, msgVal) {
+    var self = this;
     var sendMessage = function(){
-      let msg = self.__msgToSendQueue[0].toString();
+      let msg = self.__msgToSendQueue[0];
       console.log('Send Message To Node', msg );
-      self.__client.write(msg);
+      let state = hue.lightState.create();
+      state[msg.msgType](msg.msgVal);
+      self.api.setLightState(sensor.id, state)
+            .then(function(result){ console.log(result);})
+            .done();
       if (self.__msgToSendQueue.length > 0) {
          setTimeout(function(){
            self.__msgToSendQueue.shift();
@@ -53,20 +59,10 @@ class philipsHueBridge extends plugins {
       }
     };
 
-    this.__msgToSendQueue.push(new this.__mySensor.message({
-      nodeId: node.id,
-      childSensorId: sensor.id,
-      messageType: this.__mySensor.protocol.messageType.set,
-      ack: 0,
-      subType: subType,
-      payLoad: msgVal
-    }));
-
+    this.__msgToSendQueue.push({msgType: msgType, msgVal: msgVal});
     if (this.__msgToSendQueue.length <= 1)
-      sendMessage();*/
+      sendMessage();
   }
-
-
 }
 
 exports.connect = function(pluginType, params, callback) {
