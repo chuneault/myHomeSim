@@ -15,7 +15,7 @@ class philipsHueBridge extends plugins {
 
     controller.on('loadDBCompleted', function(){
       /*controller.checkNodeHeartBeat();*/
-        self.log.info('Connecting to Philips Hue Bridge', self.params.url.bold);
+        self.log.info('Connecting to Philips Hue Bridge', self.params.host.bold);
         self.api = new hueApi(self.params.host, self.params.userName);
         self.api.lights(function(err, lights) {
             if (err) throw err;
