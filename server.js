@@ -22,7 +22,7 @@ function serverConfig() {
 function start(logger) {
 
   let options = serverConfig();
-  new hsController(logger, options)
+  new hsController(logger, options).
     on('loadDBCompleted', function() {
 
   });
