@@ -22,12 +22,12 @@ function serverConfig() {
 function start(logger) {
 
   let options = serverConfig();
-  new hsController(logger, options).
-    on('loadDBCompleted', function() {
+  let ctrl = new hsController(logger, options).
+      on('loadDBCompleted', function() {
 
   });
 
-  new hsDatabase(ctrl, options);
+  let db = new hsDatabase(ctrl, options);
 
 }
 
