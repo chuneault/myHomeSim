@@ -25,13 +25,13 @@ class kasaTplink extends plugins {
      self.log.info('Discovering TP_LINK Devices');
      client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
           device.getSysInfo().then(
-              function (device) {
-                  console.log(device);
-                  self.__controller.addOrUpdateNode({id: device.deviceId},
-                      {name: device.dev_name}, self,
+              function (deviceInfo) {
+                  console.log('Find Device', deviceInfo.deviceId);
+                  self.__controller.addOrUpdateNode({id: deviceInfo.deviceId},
+                      {name: deviceInfo.dev_name}, self,
                       function (error, node) {
                         if (node)
-                          self.__controller.addOrUpdateSensor({_nodeId: node._id, id: device.hwId}, device, node);
+                          self.__controller.addOrUpdateSensor({_nodeId: node._id, id: deviceInfo.hwId}, deviceInfo, node);
                       }
                   );
               });
