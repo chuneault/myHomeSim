@@ -26,6 +26,7 @@ class philipsHueBridge extends plugins {
 
 
   registerLights(lights) {
+     console.log('registerLights', lights);
      let self = this;
      _.forEach(lights.lights, function(light) {
          self.__controller.addOrUpdateNode({_deviceId: self.device._id, id: light.id},
