@@ -29,8 +29,13 @@ class kasaTplink extends plugins {
                   self.__controller.addOrUpdateNode({id: deviceInfo.deviceId},
                       {name: deviceInfo.dev_name, id: deviceInfo.deviceId}, self,
                       function (error, node) {
-                        if (node)
-                          self.__controller.addOrUpdateSensor({_nodeId: node._id, hwId: deviceInfo.hwId}, deviceInfo, node);
+                        if (node) {
+                            deviceInfo.name = deviceInfo.alias;
+                            self.__controller.addOrUpdateSensor({
+                                _nodeId: node._id,
+                                hwId: deviceInfo.hwId
+                            }, deviceInfo, node);
+                        }
                       }
                   );
               });
