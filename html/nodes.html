@@ -323,6 +323,7 @@
                     message: renderTemplate7($('#editFormTemplateAce'), data)
                 });
                 dialog.init(function(){
+                    debugger;
                     let editor = ace.edit(dialog.find('#editor'));
                     editor.setFontSize(16);
                     editor.renderer.setShowGutter(false);
