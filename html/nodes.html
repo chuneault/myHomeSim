@@ -246,7 +246,7 @@
 
         Template7.registerHelper('JSON',
                 function (val) {
-                    return JSON.stringify(val);
+                    return JSON.stringify(val, null, 4);
                 });
 
         var compiledTemplate = Template7.compile(template);
