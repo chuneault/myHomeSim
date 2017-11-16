@@ -107,6 +107,8 @@
             background: rgba(0,0,0,0.25);
             color: #ffffff;
         }
+
+        .class-with-width { width: 600px !important; }
     </style>
 </head>
 
@@ -168,7 +170,7 @@
 </script>
 
 <script id="editFormTemplateAce" type="text/template7">
-    <form id="nodeForm" method="post" style="width: 600px">
+    <form id="nodeForm" method="post">
         <div id="editor" style="width: 100%; height: 500px"></div>
     </form>
 </script>
@@ -308,6 +310,7 @@
                 let dialog = bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
                     message: renderTemplate7($('#editFormTemplateAce'), data),
+                    "class" : "class-with-width",
                     buttons: {
                         ok: {
                             label: 'Save',
