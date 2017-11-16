@@ -41,6 +41,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
 
     <script>
 
@@ -163,6 +164,46 @@
             </div>
         </div>
     </form>
+
+</script>
+
+<script id="editFormTemplateAce" type="text/template7">
+    <form id="nodeForm" method="post" class="form-horizontal">
+
+
+        <div class="form-group">
+            <div id="editor">
+                {
+                "_id": "BJ7VqeWZg",
+                "id": 162,
+                "mySensorsVersion": "2.0.1-beta",
+                "lastUpdate": 1482509260820,
+                "name": "DOOR SWITCH",
+                "lastHeartBeat": 1482509260820,
+                "version": 7.1,
+                "batteryLevel": 100,
+                "varName": null,
+                "maxDelayHeartBeat": null,
+                "deviceId": "SJ6k70j1",
+                "_rev": "1-287f370d852f48ed843784f8e048ed80"
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12 col-xs-offset-4">
+                <button type="submit" class="btn btn-primary"
+                        onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
+                </button>
+                <button class="btn btn-danger bootbox-close-button">Cancel</button>
+            </div>
+        </div>
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/json");
+        </script>
+    </form>
+
 
 </script>
 
@@ -300,7 +341,7 @@
                 };
                 bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
-                    message: renderTemplate7($('#editFormTemplate'), data)
+                    message: renderTemplate7($('#editFormTemplateAce'), data)
                 });
             });
         });
