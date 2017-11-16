@@ -441,7 +441,7 @@
         let editor = ace.edit($(form).find('#editor')[0]);
         let nodeDoc = JSON.parse(editor.getValue());
 
-        $.post('api/'+formType+'/'+node._id, nodeDoc, function(data) {
+        $.post('api/'+formType+'/'+nodeDoc._id, nodeDoc, function(data) {
             noty({
                 text: data,
                 layout: 'topCenter',
