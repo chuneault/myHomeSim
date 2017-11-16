@@ -310,6 +310,7 @@
                 let dialog = bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
                     message: renderTemplate7($('#editFormTemplateAce'), data),
+                    size:"large",
                     buttons: {
                         ok: {
                             label: 'Save',
@@ -329,8 +330,8 @@
                 dialog.init(function(){
                     dialog.find('.modal-content')
                         .css({'background-color': '#1f1f1f'})
-                        .css({'color': 'white'})
-                        .addClass("dialog-width");
+                        .css({'color': 'white'});
+                        //addClass("dialog-width");
                     let editor = ace.edit(dialog.find('#editor')[0]);
                     editor.setFontSize(18);
                     editor.renderer.setShowGutter(false);
