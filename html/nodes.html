@@ -323,9 +323,8 @@
                     message: renderTemplate7($('#editFormTemplateAce'), data)
                 });
                 dialog.init(function(){
-                    debugger;
                     let editor = ace.edit(dialog.find('#editor')[0]);
-                    editor.setFontSize(16);
+                    editor.setFontSize(18);
                     editor.renderer.setShowGutter(false);
                     editor.getSession().setMode("ace/mode/json");
                     editor.setTheme("ace/theme/ambiance");
@@ -392,10 +391,17 @@
                     val: dataVal,
                     formType: 'sensor'
                 };
-
-                bootbox.dialog({
+                let dialog = bootbox.dialog({
                     title: 'Edit Sensor ' + dataVal.name,
-                    message: renderTemplate7($('#editFormTemplate'), data)
+                    message: renderTemplate7($('#editFormTemplateAce'), data)
+                });
+                dialog.init(function(){
+                    let editor = ace.edit(dialog.find('#editor')[0]);
+                    editor.setFontSize(18);
+                    editor.renderer.setShowGutter(false);
+                    editor.getSession().setMode("ace/mode/json");
+                    editor.setTheme("ace/theme/ambiance");
+                    editor.setValue(JSON.stringify(dataVal, null, 2), 1);
                 });
             });
         });
