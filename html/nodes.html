@@ -434,8 +434,16 @@
 
     function submitUpdate(event, form, formType) {
         event.preventDefault();
-        var node = getFormData($(form).find('[readOnly]'));
-        var nodeDoc = $(form).find(':not([readOnly])').serialize();
+
+        /*var node = getFormData($(form).find('[readOnly]'));
+        var nodeDoc = $(form).find(':not([readOnly])').serialize();*/
+
+
+        let editor = ace.edit($(form).find('#editor')[0]);
+        let nodeDoc = editor.getValue();
+        debugger;
+        return false;
+
         $.post('api/'+formType+'/'+node._id, nodeDoc, function(data) {
             noty({
                 text: data,
