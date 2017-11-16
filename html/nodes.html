@@ -24,7 +24,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
 
-    <script src="//oss.maxcdn.com/bootbox/4.2.0/bootbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
@@ -169,8 +169,6 @@
 
 <script id="editFormTemplateAce" type="text/template7">
     <form id="nodeForm" method="post" class="form-horizontal">
-
-
         <div class="form-group">
             <div id="editor" style="width: 100%; height: 300px">
             </div>
@@ -183,14 +181,6 @@
                 <button class="btn btn-danger bootbox-close-button">Cancel</button>
             </div>
         </div>
-        <script>
-            var editor = ace.edit("editor");
-            editor.setFontSize(16);
-            editor.renderer.setShowGutter(false);
-            editor.getSession().setMode("ace/mode/json");
-            editor.setTheme("ace/theme/ambiance");
-            editor.setValue(`{{JSON this.val}}`, 1);
-        </script>
     </form>
 
 
@@ -328,9 +318,17 @@
                     val: dataVal,
                     formType: 'node'
                 };
-                bootbox.dialog({
+                let dialog = bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
                     message: renderTemplate7($('#editFormTemplateAce'), data)
+                });
+                dialog.init(function(){
+                    let editor = ace.edit(dialog.find('#editor'));
+                    editor.setFontSize(16);
+                    editor.renderer.setShowGutter(false);
+                    editor.getSession().setMode("ace/mode/json");
+                    editor.setTheme("ace/theme/ambiance");
+                    editor.setValue(JSON.stringify(dataVal, null, 2), 1);
                 });
             });
         });
