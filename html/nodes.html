@@ -185,7 +185,7 @@
         </div>
         <script>
             var editor = ace.edit("editor");
-            editor.setValue('{{val}}');
+            editor.setValue('{{JSON this.val}}');
             //editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/json");
         </script>
