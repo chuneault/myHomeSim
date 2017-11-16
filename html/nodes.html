@@ -168,17 +168,12 @@
 </script>
 
 <script id="editFormTemplateAce" type="text/template7">
-    <form id="nodeForm" method="post" class="form-horizontal">
-        <div class="form-group">
-            <div id="editor" style="width: 100%; height: 300px">
-            </div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary"
-                    onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
-            </button>
-             <button class="btn btn-danger bootbox-close-button">Cancel</button>
-        </div>
+    <form id="nodeForm" method="post">
+        <div id="editor" style="width: 100%; height: 300px"></div>
+        <button type="submit" class="btn btn-primary"
+             onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
+        </button>
+        <button class="btn btn-danger bootbox-close-button">Cancel</button>
     </form>
 </script>
 
