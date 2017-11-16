@@ -108,7 +108,7 @@
             color: #ffffff;
         }
 
-        .class-with-width { width: 600px !important; }
+        .dialog-width { width: 800px !important; }
     </style>
 </head>
 
@@ -310,7 +310,7 @@
                 let dialog = bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
                     message: renderTemplate7($('#editFormTemplateAce'), data),
-                    "class" : "class-with-width",
+                    "class" : "dialog-width",
                     buttons: {
                         ok: {
                             label: 'Save',
@@ -401,7 +401,22 @@
                 };
                 let dialog = bootbox.dialog({
                     title: 'Edit Sensor ' + dataVal.name,
-                    message: renderTemplate7($('#editFormTemplateAce'), data)
+                    message: renderTemplate7($('#editFormTemplateAce'), data),
+                    "class" : "dialog-width",
+                    buttons: {
+                        ok: {
+                            label: 'Save',
+                            className: 'btn-primary',
+                            callback: function(){
+                                submitUpdate(event, $(this).parents('#nodeForm'), 'sensor');
+                            }
+                        },
+                        cancel: {
+                            label: 'Cancel',
+                            className: 'btn-danger',
+                            callback: function(){}
+                        }
+                    }
                 });
                 dialog.init(function(){
                     let editor = ace.edit(dialog.find('#editor')[0]);
