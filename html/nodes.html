@@ -170,10 +170,12 @@
 <script id="editFormTemplateAce" type="text/template7">
     <form id="nodeForm" method="post">
         <div id="editor" style="width: 100%; height: 300px"></div>
+        <!--
         <button type="submit" class="btn btn-primary"
              onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
         </button>
         <button class="btn btn-danger bootbox-close-button">Cancel</button>
+        -->
     </form>
 </script>
 
@@ -311,7 +313,21 @@
                 };
                 let dialog = bootbox.dialog({
                     title: 'Edit Node ' + dataVal.name,
-                    message: renderTemplate7($('#editFormTemplateAce'), data)
+                    message: renderTemplate7($('#editFormTemplateAce'), data),
+                    buttons: {
+                        ok: {
+                            label: 'Save',
+                            className: 'btn-primary',
+                            callback: function(){
+                                submitUpdate(event, $(this).parents('#nodeForm'), 'node');
+                            }
+                        },
+                        cancel: {
+                            label: 'Save',
+                            className: 'btn-danger',
+                            callback: function(){}
+                        }
+                    }
                 });
                 dialog.init(function(){
                     let editor = ace.edit(dialog.find('#editor')[0]);
