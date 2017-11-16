@@ -170,12 +170,6 @@
 <script id="editFormTemplateAce" type="text/template7">
     <form id="nodeForm" method="post">
         <div id="editor" style="width: 100%; height: 300px"></div>
-        <!--
-        <button type="submit" class="btn btn-primary"
-             onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
-        </button>
-        <button class="btn btn-danger bootbox-close-button">Cancel</button>
-        -->
     </form>
 </script>
 
@@ -323,13 +317,15 @@
                             }
                         },
                         cancel: {
-                            label: 'Save',
+                            label: 'Cancel',
                             className: 'btn-danger',
                             callback: function(){}
                         }
                     }
                 });
+
                 dialog.init(function(){
+                    dialog.find('.modal-content').css({'background-color': '#1f1f1f'});
                     let editor = ace.edit(dialog.find('#editor')[0]);
                     editor.setFontSize(18);
                     editor.renderer.setShowGutter(false);
