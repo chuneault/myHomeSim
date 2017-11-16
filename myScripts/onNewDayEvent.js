@@ -71,6 +71,11 @@ server.on('sunrise', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
+
+    sensor = server.vars['aquaSalon'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
+
+
 });
 
 server.on('sunset', function(){
@@ -83,6 +88,10 @@ server.on('sunset', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
+
+    sensor = server.vars['aquaSalon'];
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
+
 });
 
 getSunPhase();
