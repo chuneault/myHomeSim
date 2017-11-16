@@ -1,24 +1,19 @@
-let unirest = require('unirest');
+const { Client } = require('tplink-smarthome-api');
+ 
+const client = new Client();
 
-/*unirest.put('http://myHomeSim:8080/api/sensor/ryQIQiQEF-/40')
-   .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-   .send({ "value": "ffffff" })
-   .end(function (resp) {
-       console.log(resp.body);
-   });*/
+// Client events `device-*` also have `bulb-*` and `plug-*` counterparts.
+// Use those if you want only events for those types and not all devices.
 
-/*unirest.put('http://127.0.0.1:8080/api/sensor/ryQIQiQEF-/40')
-    .headers({'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'})
-    .send({"value": "ffffff"})
-    .end(function (resp) {
-        console.log(resp.body);
-    });*/
+/*client.getDevice({host: '192.168.0.131'}).then((device) => {
+  device.getSysInfo().then(console.log);
+  device.setPowerState(false);
+  device.getSysInfo().then(console.log);
 
-unirest.put('http://127.0.0.1:8080/api/sensor/ryQIQiQEF-/40')
-        .headers({"Accept": "application/json",
-                  "content-type": "application/x-www-form-urlencoded",
-                  "value": "ffffff"})
-        .form({"value": "ffffff"})
-        .end(function (resp) {
-            console.log(resp.body);
-    });
+});*/
+
+client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
+  device.getSysInfo().then(function(device){console.log(device.deviceId)});
+  //device.setPowerState(true);
+});
+
