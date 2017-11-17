@@ -5,7 +5,7 @@ const _       = require('lodash');
 
 
 function importDB(srcDbName, destDBName, callBackDoc) {
-    let db = new PouchDB('http://127.0.0.1:5984/'+destDBName);
+    let db = new PouchDB('http://192.168.0.150:5984/'+destDBName);
     let nedbRows = new DataStore('./data/'+srcDbName+'.db');
     nedbRows.loadDatabase();
     let rows = nedbRows.find({});
@@ -91,7 +91,7 @@ importDB('sensors', 'myHomeSim', function(doc){
     newDoc.type = 'sensor';
     newDoc.name = doc.desc;
     newDoc =  _.extend(newDoc, _.pick(doc, ['_id', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']));
-    newDoc.vendor = _.omit(doc, ['_id', '_nodeId', ', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
+    newDoc.vendor = _.omit(doc, ['_id', '_nodeId', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
     return newDoc;
 });
 
