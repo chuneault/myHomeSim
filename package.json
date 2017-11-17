@@ -30,6 +30,8 @@
     "node-schedule": "^1.2.5",
     "passport-localapikey": "0.0.3",
     "plug": "^0.1.1",
+    "pouchdb": "^6.3.4",
+    "pouchdb-find": "^6.3.4",
     "promisify-me": "^0.1.1",
     "pushbullet": "^1.4.3",
     "q": "^1.4.1",

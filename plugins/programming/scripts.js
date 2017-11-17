@@ -19,9 +19,9 @@ class scripts extends plugins {
     self.params.forEach(function(script){
       if ((script.active == null) || (script.active == true)) {
           if (script.script)
-              self.__controller.addVar(script.name, {__type: 'script', script: script.script});
+              self.__controller.addVar(script.name, {type: 'script', script: script.script});
           else if (script.scriptFileName)
-              self.__controller.addVar(script.name, {__type: 'script', scriptFileName: script.scriptFileName});
+              self.__controller.addVar(script.name, {type: 'script', scriptFileName: script.scriptFileName});
           if (script.runAtLoad)
               self.__controller.runScript(script.name);
       }

@@ -28,7 +28,7 @@ class weather extends plugins {
                 });
 
 
-        });
+        };
     }
 
     checkweather(node) {

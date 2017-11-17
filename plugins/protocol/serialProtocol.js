@@ -207,34 +207,36 @@ class mySensors {
         //presentation
       case mySensorsProtocol.messageType.presentation :
         if (msg.subType == mySensorsProtocol.presentation.S_ARDUINO_NODE) //new Node
-          ctrl.addOrUpdateNode({_deviceId: self.device._id, id: msg.nodeId},
-              {id: msg.nodeId, mySensorsVersion: msg.payLoad}, self.device);
+          ctrl.addOrUpdateNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
+              {vendor: {id: msg.nodeId, mySensorsVersion: msg.payLoad}}, self.device);
         else if (msg.childSensorId != 255) {  //new Sensor
-          ctrl.addOrGetNode({_deviceId: self.device._id, id: msg.nodeId},
-              {id: msg.nodeId, name: 'unknown'}, self.device,
+          ctrl.addOrGetNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
+              {vendor: {id: msg.nodeId, name: 'unknown'}}, self.device,
               function (error, node) {
                 if (node)
-                  ctrl.addOrUpdateSensor({_nodeId: node._id, id: msg.childSensorId}, {
-                    id: msg.childSensorId,
-                    name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
-                    type: msg.subType,
-                    desc: msg.payLoad
+                  ctrl.addOrUpdateSensor({nodeId: node._id, vendor: {id: msg.childSensorId}}, {
+                    vendor: {
+                        id: msg.childSensorId,
+                        name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
+                        type: msg.subType,
+                        desc: msg.payLoad
+                    }
                   }, node);
               });
         }
         break;
 
       case mySensorsProtocol.messageType.set :
-        ctrl.addOrGetNode({_deviceId: self.device._id, id: msg.nodeId},
-            {id: msg.nodeId, name: 'unknown'}, self.device,
+        ctrl.addOrGetNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
+            {vendor: {id: msg.nodeId, name: 'unknown'}}, self.device,
             function (error, node) {
               if (node)
-                ctrl.findSensor({_nodeId: node._id, id: msg.childSensorId},
+                ctrl.findSensor({nodeId: node._id, vendor: {id: msg.childSensorId}},
                     function (notFound, sensor) {
                       if (notFound)
-                        sensor = ctrl.addSensor({
+                        sensor = ctrl.addSensor({vendor: {
                           id: msg.childSensorId,
-                          name: 'unknown'
+                          name: 'unknown'}
                         }, node);
                       ctrl.addSensorValue(sensor, msg.payLoad);
                       sensor.__log.info(serialMessage, {type: 'set'});
@@ -248,22 +250,22 @@ class mySensors {
       :
         switch (msg.subType) {
           case mySensorsProtocol.internal.I_SKETCH_NAME:
-            ctrl.findNode({_deviceId: self.device._id, id: msg.nodeId},
+            ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
                   if (node)
-                    ctrl.updateNode(node, {name: msg.payLoad});
+                    ctrl.updateNode(node, {vendor: {name: msg.payLoad}});
                 });
 
             break;
           case mySensorsProtocol.internal.I_SKETCH_VERSION:
-            ctrl.findNode({_deviceId: self.device._id, id: msg.nodeId},
+            ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
                   if (node)
-                    ctrl.updateNode(node, {version: msg.payLoad});
+                    ctrl.updateNode(node, {vendor: {version: msg.payLoad}});
                 });
             break;
           case mySensorsProtocol.internal.I_BATTERY_LEVEL:
-            ctrl.findNode({_deviceId: self.device._id, id: msg.nodeId},
+            ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
                   if (node)
                     ctrl.updateNode(node, {batteryLevel: msg.payLoad});
@@ -287,7 +289,7 @@ class mySensors {
           case mySensorsProtocol.internal.I_DISCOVER_RESPONSE:
             break;
           case mySensorsProtocol.internal.I_HEARTBEAT_RESPONSE:
-            ctrl.findNode({_deviceId: self.device._id, id: msg.nodeId},
+            ctrl.findNode({deviceId: self.device._id, id: msg.nodeId},
                 function (notFound, node) {
                   if (node) {
                     if (node.__msgToSend) {

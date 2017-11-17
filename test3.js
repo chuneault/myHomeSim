@@ -3,31 +3,37 @@ const PromisifyMe = require('promisify-me');
 const DataStore = PromisifyMe(require('nedb'), 'nedb');
 const _       = require('lodash');
 
+
 function importDB(srcDbName, destDBName, callBackDoc) {
-    let db = new PouchDB('http://192.168.0.150:5984/'+destDBName,  {timeout: 100000});
+    let db = new PouchDB('http://127.0.0.1:5984/'+destDBName);
     let nedbRows = new DataStore('./data/'+srcDbName+'.db');
     nedbRows.loadDatabase();
     let rows = nedbRows.find({});
     let allDoc = [];
 
     rows.exec().then(function (rows) {
+
         rows.forEach(function (doc) {
             if (callBackDoc)
                 doc = callBackDoc(doc);
             allDoc.push(doc);
-            /*db.post(doc, function(err, response) {
-                if (err) { return console.log(err); }
-                // handle response
-            });*/
         });
 
-        console.log('Adding', allDoc.length)
-
-        db.bulkDocs(allDoc, function(err, response) {
-            if (err) { return console.log(err); }
-            // handle result
-        });
-
+        var postDoc = function(allDoc) {
+            let docToPost = _.slice(allDoc, 0, 500);
+            allDoc = _.drop(allDoc, 500);
+                console.log('Adding', docToPost.length, 'pending', allDoc.length);
+                db.bulkDocs(docToPost).then(function (result) {
+                    console.log('done');
+                    if (allDoc.length > 0)
+                      postDoc(allDoc);
+                    else
+                      console.log('end');
+                }).catch(function (err) {
+                    console.log(err);
+                });
+        };
+        postDoc(allDoc);
     }).done(function () {});
 }
 
@@ -48,17 +54,17 @@ function importDB(srcDbName, destDBName, callBackDoc) {
 }
 */
 
-/*
+
 importDB('nodes', 'myHomeSim', function(doc){
     let newDoc = {vendor: {}};
     newDoc.deviceId = doc._deviceId;
-    newDoc.type = 'nodes';
+    newDoc.type = 'node';
     newDoc.name = doc.name;
     newDoc =  _.extend(newDoc, _.pick(doc, ['_id', 'lastUpdate', 'lastHeartBeat', 'varName', 'maxDelayHeartBeat', 'batteryLevel']));
     newDoc.vendor = _.omit(doc, ['_id', '_deviceId', 'lastUpdate', 'lastHeartBeat', 'varName', 'maxDelayHeartBeat', 'batteryLevel']);
     return newDoc;
 });
-*/
+
 
 /*
 {
@@ -78,29 +84,29 @@ importDB('nodes', 'myHomeSim', function(doc){
 }
 */
 
-/*
+
 importDB('sensors', 'myHomeSim', function(doc){
     let newDoc = {vendor: {}};
     newDoc.nodeId = doc._nodeId;
-    newDoc.type = 'sensors';
+    newDoc.type = 'sensor';
     newDoc.name = doc.desc;
     newDoc =  _.extend(newDoc, _.pick(doc, ['_id', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']));
-    newDoc.vendor = _.omit(doc, ['_id', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
+    newDoc.vendor = _.omit(doc, ['_id', '_nodeId', ', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
     return newDoc;
 });
-*/
 
-/*
+
 importDB('plugins', 'myHomeSim', function(doc){
     let newDoc;
     newDoc = _.extend({}, doc);
     //newDoc.nodeId = newDoc._nodeId;
     //delete newDoc._nodeId;
     newDoc.plugin = newDoc.type;
-    newDoc.type = 'plugins';
+    newDoc.type = 'plugin';
     return newDoc;
 });
-*/
+
+
 
 
 importDB('sensorsValues', 'sensorsValues', function(doc) {

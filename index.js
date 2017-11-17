@@ -11,4 +11,4 @@ var server = require('./server'),
 logger.addLogger('core', {fileName: config.logger.core, level: config.logger.level});
 
 logger['core'].info("Starting myHomeSim Server");
-server.start(logger);
+server.start(logger, config);

@@ -4,7 +4,7 @@
 
 module.exports = {
   secret: 'ilovescotchyscotch',
-  db: {mongodb: 'mongodb://127.0.0.1:27017/sscrestrh'},
+  db: {master: 'http://127.0.0.1:5984/myHomeSim', sensorsValues: 'http://127.0.0.1:5984/sensorsValues'},
   cryptoOptions: {iterations: 256, keylen: 512},
   logger: {
     core: './logs/cor.log',
