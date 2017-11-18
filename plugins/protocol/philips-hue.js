@@ -33,7 +33,7 @@ class philipsHueBridge extends plugins {
              if (node)
                _.forEach(lights.lights, function(light) {
                    console.log('update light', light);
-                   self.__controller.addOrUpdateSensor({nodeId: node._id, name: light.name, vendor: {light: {id: light.id}}}, {vendor: {light}}, node);
+                   self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}}, {name: light.name, vendor: {light}}, node);
                });
 
           }
