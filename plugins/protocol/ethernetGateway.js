@@ -83,8 +83,8 @@ class mySensorsEthernetDevice extends plugins {
     };
 
     this.__msgToSendQueue.push(new this.__mySensor.message({
-      nodeId: node.id,
-      childSensorId: sensor.id,
+      nodeId: node.vendor.id,
+      childSensorId: sensor.vendor.id,
       messageType: this.__mySensor.protocol.messageType.set,
       ack: 0,
       subType: subType,
@@ -98,7 +98,7 @@ class mySensorsEthernetDevice extends plugins {
   reboot(node, now) {
     this.log.info('Stack reboot node msg to ', node.name);
     var msg = new this.__mySensor.message({
-      nodeId: node.id,
+      nodeId: node.vendor.id,
       childSensorId: 0,
       messageType: this.__mySensor.protocol.messageType.internal,
       ack: 0,
