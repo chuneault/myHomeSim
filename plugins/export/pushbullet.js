@@ -98,6 +98,9 @@ class pushBullet extends plugins {
       /*console.log('pushbullet devices msg');
       console.log(error);
       console.log(response);*/
+      if (error)
+        console.log('PushBullet Error', error);
+      else {
       self.deviceSender = _.find(response.devices, {active: true, nickname: self.params.deviceSender}).iden;
       self.deviceName = _.find(response.devices, {active: true, nickname: self.params.deviceName});
       if (!self.deviceName)
@@ -108,7 +111,7 @@ class pushBullet extends plugins {
         });
       else
         self.createStream();
-
+      }
 
     });
 
