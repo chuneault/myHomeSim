@@ -28,12 +28,12 @@ class philipsHueBridge extends plugins {
   registerLights(lights) {
      let self = this;
      self.__controller.addOrUpdateNode({id: self.params.id},
-         {id: self.params.id, vendor: self.params}, self,
+         {id: self.params.id, name: self.params.name, vendor: self.params}, self,
          function (error, node) {
              if (node)
                _.forEach(lights.lights, function(light) {
                    console.log('update light', light);
-                   self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {id: light.id}}, {vendor: {light}}, node);
+                   self.__controller.addOrUpdateSensor({nodeId: node._id, name: light.name, vendor: {light: {id: light.id}}}, {vendor: {light}}, node);
                });
 
           }
