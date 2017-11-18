@@ -22,7 +22,7 @@ class publicIp extends plugins {
       ctrl.addOrGetNode({name: 'publicIp'}, {name: 'publicIp'}, null,
           function (error, node) {
             if (node) {
-              ctrl.addOrUpdateSensor({_nodeId: node._id, name: 'ip'}, {name: 'ip'}, node,
+              ctrl.addOrUpdateSensor({_nodeId: node._id, name: 'ip'}, {_nodeId: node._id, name: 'ip'}, node,
                   function (err, sensor) {
                     let checkIp = function () {
                       console.log('checking inet ip');
