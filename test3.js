@@ -90,8 +90,8 @@ importDB('sensors', 'myHomeSim', function(doc){
     newDoc.nodeId = doc._nodeId;
     newDoc.type = 'sensor';
     newDoc.name = doc.desc;
-    newDoc =  _.extend(newDoc, _.pick(doc, ['_id', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']));
-    newDoc.vendor = _.omit(doc, ['_id', '_nodeId', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
+    newDoc =  _.extend(newDoc, _.pick(doc, ['varName', '_id', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']));
+    newDoc.vendor = _.omit(doc, ['varName', '_id', '_nodeId', 'previousValue', 'previousValueDate', 'lastValue', 'lastDate', 'offset', 'precision', 'scriptOnChange']);
     return newDoc;
 });
 
@@ -108,7 +108,7 @@ importDB('plugins', 'myHomeSim', function(doc){
 
 
 
-
+/*
 importDB('sensorsValues', 'sensorsValues', function(doc) {
     let newDoc;
     newDoc = _.extend({}, doc);
@@ -118,5 +118,5 @@ importDB('sensorsValues', 'sensorsValues', function(doc) {
 
     return newDoc;
 });
-
+*/
 

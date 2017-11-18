@@ -62,6 +62,7 @@ server.on('newDay',function(){
 });
 
 server.on('sunrise', function(){
+    debugger;
     console.log('Open Aqua Led Strip');
     let sensor = server.vars['AQUALEDCOLOR'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
@@ -73,7 +74,7 @@ server.on('sunrise', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
 
     sensor = server.vars['aquaSalon'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
+    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
 
 
 });
@@ -90,7 +91,7 @@ server.on('sunset', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
 
     sensor = server.vars['aquaSalon'];
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
+    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
 
 });
 
