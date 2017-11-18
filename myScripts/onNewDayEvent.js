@@ -62,7 +62,6 @@ server.on('newDay',function(){
 });
 
 server.on('sunrise', function(){
-    debugger;
     console.log('Open Aqua Led Strip');
     let sensor = server.vars['AQUALEDCOLOR'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');

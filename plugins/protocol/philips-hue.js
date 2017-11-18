@@ -27,7 +27,6 @@ class philipsHueBridge extends plugins {
 
   registerLights(lights) {
      let self = this;
-     debugger;
      self.__controller.addOrUpdateNode({id: self.params.id},
          {id: self.params.id, vendor: self.params}, self,
          function (error, node) {
