@@ -228,7 +228,7 @@ class mySensors {
 
       case mySensorsProtocol.messageType.set :
         ctrl.addOrGetNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
-            {vendor: {id: msg.nodeId, name: 'unknown'}}, self.device,
+            {deviceId: self.device._id, vendor: {id: msg.nodeId, name: 'unknown'}}, self.device,
             function (error, node) {
               if (node)
                 ctrl.findSensor({nodeId: node._id, vendor: {id: msg.childSensorId}},
