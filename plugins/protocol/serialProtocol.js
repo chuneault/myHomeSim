@@ -289,7 +289,7 @@ class mySensors {
           case mySensorsProtocol.internal.I_DISCOVER_RESPONSE:
             break;
           case mySensorsProtocol.internal.I_HEARTBEAT_RESPONSE:
-            ctrl.findNode({deviceId: self.device._id, id: msg.nodeId},
+            ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
                   if (node) {
                     if (node.__msgToSend) {
