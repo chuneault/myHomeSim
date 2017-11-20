@@ -97,7 +97,7 @@ class mySensorsEthernetDevice extends plugins {
 
   reboot(node, now) {
     debugger;
-    this.log.info('Stack reboot node msg to ', node);
+    this.log.info('Stack reboot node msg to ', node._id);
     var msg = new this.__mySensor.message({
       nodeId: node.vendor.id,
       childSensorId: 0,
