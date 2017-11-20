@@ -345,6 +345,7 @@ class httpServer extends plugins {
     });
 
     app.get('/api/node/:_nodeId/reboot', function (request, response){
+      debugger;
       let node = ctrl.nodes[request.params._nodeId];
       if (node) {
         node.__ownerDevice.reboot(node, false);
