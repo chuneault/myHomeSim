@@ -215,6 +215,7 @@ class mySensors {
               function (error, node) {
                 if (node)
                   ctrl.addOrUpdateSensor({nodeId: node._id, vendor: {id: msg.childSensorId}}, {
+                    name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
                     vendor: {
                         id: msg.childSensorId,
                         name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
@@ -254,7 +255,7 @@ class mySensors {
                 function (notFound, node) {
                   console.log('udpate node from I_SKETCH_NAME');
                   if (node)
-                    ctrl.updateNode(node, {vendor: {name: msg.payLoad}});
+                    ctrl.updateNode(node, {name: msg.payLoad, vendor: {name: msg.payLoad}});
                 });
 
             break;
