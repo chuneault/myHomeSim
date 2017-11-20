@@ -30,7 +30,7 @@ class kasaTplink extends plugins {
                       {id: deviceInfo.deviceId, name: deviceInfo.dev_name}, self,
                       function (error, node) {
                         if (node) {
-                            deviceInfo.__deviceApi = device;
+                            //deviceInfo.__deviceApi = device;
                             self.__controller.addOrUpdateSensor({id: deviceInfo.deviceId}, {id: deviceInfo.deviceId, name: deviceInfo.alias, vendor: deviceInfo}, node);
                         }
                       }
