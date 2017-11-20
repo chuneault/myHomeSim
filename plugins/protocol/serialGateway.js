@@ -63,10 +63,10 @@ class mySensorsSerialDevice extends plugins {
   }
 
   reboot(node, now) {
-    this.log.info('Stack reboot node msg to ', node.name);
+    this.log.info('Stack reboot node msg to ', node);
     var msg = new this.__mySensor.message({
-      nodeId: node.id,
-      childSensorId: node.id,
+      nodeId: node.vendor.id,
+      childSensorId: node.vendor.id,
       messageType: this.__mySensor.protocol.messageType.internal,
       ack: 0,
       subType: this.__mySensor.protocol.internal.I_REBOOT,
