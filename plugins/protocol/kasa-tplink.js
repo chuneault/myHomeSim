@@ -38,6 +38,10 @@ class kasaTplink extends plugins {
               });
           //device.setPowerState(true);
       });
+
+      setTimeout(function(){self.__controller.vars['kasatplinkConnected'] = true;}, 10000);
+
+
   }
 
   send(node, sensor, msgType, msgVal) {
