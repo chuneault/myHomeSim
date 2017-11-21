@@ -72,7 +72,8 @@ server.on('sunrise', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
 
-    sensor = server.vars['aquaSalon'];
+    sensor = _.find(server.sensors, {name: "Aquarium Salon"});
+    console.log('find aquarium salon', sensor);
     //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
 
 
