@@ -452,23 +452,24 @@ class httpServer extends plugins {
        let where = {
             selector: {
                 sensorId: sensor._id,
-                valueDate: {$gte: _.parseInt(request.query.minValueDate), $lte: _.parseInt(request.query.maxValueDate)}
+                valueDate: {}
             }
             //sort: ['valueDate']
         };
+
+        if (request.query.minValueDate)
+            where.selector.valueDate.$gte = _.parseInt(request.query.minValueDate);
+
+        if (request.query.maxValueDate)
+            where.selector.valueDate.$lte = _.parseInt(request.query.maxValueDate);
+
         console.log(where);
+
         ctrl.__db.sensorsVal.find(where).then(function(vals){
             response.json(serializeObj(vals.docs));
         }).catch(function (err){
             console.log(err);
         });
-
-      /*var where =  {_sensorId: sensor._id};
-      if (request.query.minValueDate)
-        where.valueDate = {$gte: _.parseInt(request.query.minValueDate)};
-      if (request.query.maxValueDate)
-        where.valueDate = {$lte: _.parseInt(request.query.maxValueDate)};
-        */
 
       /*var sensorsVal = ctrl.__db.sensorsVal.find(where).sort({ valueDate: 1 }).limit(request.query.limit || 9999999999);
       sensorsVal.exec().then(function(vals) {
