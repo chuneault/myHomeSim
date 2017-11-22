@@ -451,11 +451,12 @@ class httpServer extends plugins {
        let sensor = ctrl.sensors[request.params._sensorId];
        let where = {
             selector: {
-                _id: sensor._id,
+                sensorId: sensor._id,
                 valueDate: {$gte: _.parseInt(request.query.minValueDate), $lte: _.parseInt(request.query.maxValueDate)}
-            },
-            sort: ['valueDate']
+            }
+            //sort: ['valueDate']
         };
+        console.log(where);
         ctrl.__db.sensorsVal.find(where).then(function(vals){
             response.json(serializeObj(vals.docs));
         }).catch(function (err){
