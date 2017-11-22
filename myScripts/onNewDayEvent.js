@@ -41,7 +41,7 @@ function getSunPhase() {
                 console.log('need to wait checkethernetGatewayConnected and kasatplinkConnected');
                 let checkethernetGatewayConnected = function(){
                     console.log('checkethernetGatewayConnected && kasatplinkConnected');
-                    if ((server.vars['ethernetGatewayConnected'] != true) && (server.vars['kasatplinkConnected'] != true))
+                    if ((server.vars['ethernetGatewayConnected'] != true) || (server.vars['kasatplinkConnected'] != true))
                         setTimeout(checkethernetGatewayConnected, 1000);
                     else {
                       if (callSunsetAfterLoad)
@@ -73,7 +73,7 @@ server.on('sunrise', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
 
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
 
 
 });
@@ -90,7 +90,7 @@ server.on('sunset', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
 
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
+    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
 
 });
 
