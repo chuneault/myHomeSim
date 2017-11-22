@@ -447,16 +447,32 @@ class httpServer extends plugins {
     });
 
     app.get('/api/sensor/:_sensorId/dbvalues', function (request, response){
-      var sensor = ctrl.sensors[request.params._sensorId];
-      var where =  {_sensorId: sensor._id};
+       debugger;
+       let sensor = ctrl.sensors[request.params._sensorId];
+       let where = {
+            selector: {
+                _id: sensor._id,
+                valueDate: {$gte: _.parseInt(request.query.minValueDate), $lte: _.parseInt(request.query.maxValueDate)}
+            },
+            sort: ['valueDate']
+        };
+        ctrl.__db.sensorsVal.find(where).then(function(vals){
+            response.json(serializeObj(vals.docs));
+        }).catch(function (err){
+            console.log(err);
+        });
+
+      /*var where =  {_sensorId: sensor._id};
       if (request.query.minValueDate)
         where.valueDate = {$gte: _.parseInt(request.query.minValueDate)};
       if (request.query.maxValueDate)
         where.valueDate = {$lte: _.parseInt(request.query.maxValueDate)};
-      var sensorsVal = ctrl.__db.sensorsVal.find(where).sort({ valueDate: 1 }).limit(request.query.limit || 9999999999);
+        */
+
+      /*var sensorsVal = ctrl.__db.sensorsVal.find(where).sort({ valueDate: 1 }).limit(request.query.limit || 9999999999);
       sensorsVal.exec().then(function(vals) {
         response.json(serializeObj(vals));
-      });
+      });*/
     });
 
     server.listen(self.params.port || 8080, function(){
