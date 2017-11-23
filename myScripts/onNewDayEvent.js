@@ -41,8 +41,8 @@ function getSunPhase() {
                 console.log('need to wait checkethernetGatewayConnected and kasatplinkConnected');
                 let checkethernetGatewayConnected = function(){
                     console.log('mySensorsEthernet ready && kasa-tplink ready');
-                    console.log(server.vars.ready);
-                    if ((server.vars.ready['mySensorsEthernet'] != true) || (server.vars.ready['kasa-tplink'] != true))
+                    //console.log(server.vars.ready);
+                    if ((server.vars.ready['ethernetGateway'] != true) || (server.vars.ready['kasa-tplink'] != true))
                         setTimeout(checkethernetGatewayConnected, 1000);
                     else {
                       if (callSunsetAfterLoad)
