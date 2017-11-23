@@ -253,7 +253,6 @@ class mySensors {
           case mySensorsProtocol.internal.I_SKETCH_NAME:
             ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
-                  console.log('udpate node from I_SKETCH_NAME');
                   if (node)
                     ctrl.updateNode(node, {name: msg.payLoad, vendor: {name: msg.payLoad}});
                 });
@@ -262,7 +261,6 @@ class mySensors {
           case mySensorsProtocol.internal.I_SKETCH_VERSION:
             ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
-                  console.log('udpate node from I_SKETCH_VERSION');
                   if (node)
                     ctrl.updateNode(node, {vendor: {version: msg.payLoad}});
                 });
@@ -270,7 +268,6 @@ class mySensors {
           case mySensorsProtocol.internal.I_BATTERY_LEVEL:
             ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
-                  console.log('udpate node from I_BATTERY_LEVEL');
                   if (node)
                     ctrl.updateNode(node, {batteryLevel: msg.payLoad});
                 });
