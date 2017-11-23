@@ -50,7 +50,7 @@ class mySensorsEthernetDevice extends plugins {
     this.__client.on('connect', function() {
        console.log('ethernetGatewayConnected');
        //self.__controller.vars['ethernetGatewayConnected'] = true;
-        this.ready();
+        super.ready();
     });
 
 
