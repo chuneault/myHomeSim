@@ -440,6 +440,9 @@
 
         let editor = ace.edit($(form).find('#editor')[0]);
         let nodeDoc = JSON.parse(editor.getValue());
+        console.log(nodeDoc);
+        debugger;
+        return false;
 
         $.post('api/'+formType+'/'+nodeDoc._id, nodeDoc, function(data) {
             noty({
