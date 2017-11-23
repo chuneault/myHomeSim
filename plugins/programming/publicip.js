@@ -26,8 +26,9 @@ class publicIp extends plugins {
                   function (err, sensor) {
                     let checkIp = function () {
                       console.log('checking inet ip');
+                      ctrl.log.info('Checking Inet Pulic IP');
                       getIP(function (err, ip) {
-                        console.log('ip is: ', ip);
+                        ctrl.log.info('Pulic IP is', ip);
                         if (sensor.lastValue != ip) {
                           ctrl.addSensorValue(sensor, ip);
                         }

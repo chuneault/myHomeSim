@@ -74,7 +74,8 @@ server.on('sunrise', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
 
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
+    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
+    sensor.turnOn();
 
 
 });
@@ -91,7 +92,8 @@ server.on('sunset', function(){
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
 
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
+    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
+    sensor.turnOff();
 
 });
 

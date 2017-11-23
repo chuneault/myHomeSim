@@ -31,7 +31,20 @@ class kasaTplink extends plugins {
                       function (error, node) {
                         if (node) {
                             node.__deviceApi = device;
-                            self.__controller.addOrUpdateSensor({id: deviceInfo.deviceId}, {id: deviceInfo.deviceId, name: deviceInfo.alias, vendor: deviceInfo}, node);
+                            self.__controller
+                                .addOrUpdateSensor({id: deviceInfo.deviceId},
+                                    {id: deviceInfo.deviceId, name: deviceInfo.alias, vendor: deviceInfo}, node,
+                                      function(err, sensor) {
+
+                                        sensor.turnOn = function(){
+                                            this.__ownerNode.__deviceApi.setPowerState(true).then(console.log);
+                                        };
+                                        sensor.turnOff = function(){
+                                            this.__ownerNode.__deviceApi.setPowerState(false).then(console.log);
+                                        };
+
+
+                                      });
                         }
                       }
                   );
