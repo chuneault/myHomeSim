@@ -25,7 +25,6 @@ class publicIp extends plugins {
               ctrl.addOrUpdateSensor({nodeId: node._id, name: 'ip'}, {nodeId: node._id, name: 'ip'}, node,
                   function (err, sensor) {
                     let checkIp = function () {
-                      console.log('checking inet ip');
                       ctrl.log.info('Checking Inet Pulic IP');
                       getIP(function (err, ip) {
                         ctrl.log.info('Pulic IP is', ip);
