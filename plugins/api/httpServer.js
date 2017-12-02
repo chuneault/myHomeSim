@@ -405,18 +405,29 @@ class httpServer extends plugins {
     app.put('/api/sensor/:_sensorId/:_msgType', function (request, response){
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
-        console.log('send message to node', request.body);
 
-        //send message 3 times
+
+        console.log('send message to node', request.body);
         sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
-        sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
-        sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
+        //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
+        //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, request.params._msgType, request.body.value);
 
         response.status(200).send('send message to node ' + sensor.__ownerNode.name+ ', msgType: ' + request.params._msgType + ', msgVal: ' + request.body.value);
       }
       else
         response.status(412).send('sensor not found');
     });
+
+      app.put('/api/sensor/function/:_sensorId/:_functionName', function (request, response){
+          var sensor = ctrl.sensors[request.params._sensorId];
+          if (sensor) {
+              console.log('call sensor function', request.params._functionName);
+              sensor[request.params._msgType](request.body.value);
+              response.status(200).send('call sensor function ' + request.params._functionName);
+          }
+          else
+              response.status(412).send('sensor not found');
+      });
 
     app.post('/api/sensor/:_sensorId', function (request, response){
 

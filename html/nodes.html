@@ -135,6 +135,9 @@
             <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
+            {{#arrayIn "this.functionType" "light"}}
+              <input id="binary-switch" type="checkbox" {evalVal} data-id="{{_id}}" data-toggle="toggle-relay">
+            {{/arrayIn}}
         </div>
     </div>
     {{/each}}
@@ -214,6 +217,14 @@
                     else
                         return options.inverse(this, options.data);
                 });
+
+        Template7.registerHelper('arrayIn',
+            function (key, compareWith, options) {
+                if (compareWith.indexOf(key) >= 0)
+                    return options.fn(this, options.data);
+                else
+                    return options.inverse(this, options.data);
+            });
 
         Template7.registerHelper('fieldVal',
                 function (key, val, type) {
@@ -376,6 +387,32 @@
               }
             });
           });
+        });
+
+        $('[data-toggle="toggle-relay"]').bootstrapToggle();
+        $('[data-toggle="toggle-relay"]').change(function () {
+
+            let sensorId =  $(this).attr('data-id');
+            $.ajax({
+                url: 'api/sensor/function/' + sensorId + '/' + $(this).prop('checked') ? 'turnOn' : 'turnOff', type: 'PUT',
+                //data: {value: $(this).prop('checked') ? 1 : 0},
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+
+            /*$.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
+                noty({
+                    text: data,
+                    layout: 'topCenter',
+                    type: 'success',
+                    timeout: 2500,
+                    animation: {
+                        open: 'animated bounceInDown', // Animate.css class names
+                        close: 'animated bounceOutUp' // Animate.css class names
+                    }
+                });
+            });*/
         });
 
         $('[data-toggle="edit-sensor"]').click(function () {

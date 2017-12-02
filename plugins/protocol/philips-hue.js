@@ -32,21 +32,35 @@ class philipsHueBridge extends plugins {
          function (error, node) {
              if (node)
                _.forEach(lights.lights, function(light) {
-                   self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}}, {name: light.name, vendor: {light}}, node);
+                   self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}},
+                       {name: light.name, functionType: ['light'], vendor: {light}}, node,
+                       function(err, sensor) {
+                           sensor.__sensorApi = light;
+                           sensor.turnOn = function(){
+                               self.write(this, 'on', true);
+                           };
+                           sensor.turnOff = function(){
+                               self.write(this, 'on', false);
+                           };
+                       });
                });
 
           }
      );
   }
 
+
+  write(sensor, msgType, msgVal) {
+      var self = this;
+      let state = hue.lightState.create();
+      state[msgType](msgVal);
+      self.api.setLightState(sensor.id, state)
+          .then(function(result){ console.log(result);})
+          .done();
+  }
+
   send(node, sensor, msgType, msgVal) {
-    var self = this;
-    console.log('Send Message To Node', msgType, msgVal );
-    let state = hue.lightState.create();
-    state[msgType](msgVal);
-    self.api.setLightState(sensor.id, state)
-        .then(function(result){ console.log(result);})
-        .done();
+    this.write(sensor, msgType, msgVal);
   }
 }
 
