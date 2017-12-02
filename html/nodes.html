@@ -135,7 +135,7 @@
             <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
-            {{#arrayIn "this.functionType" "light"}}
+            {{#arrayIn this.functionType "light"}}
               <input id="binary-switch" type="checkbox" {evalVal} data-id="{{_id}}" data-toggle="toggle-relay">
             {{/arrayIn}}
         </div>
