@@ -393,26 +393,9 @@
         $('[data-toggle="toggle-relay"]').change(function () {
 
             let sensorId =  $(this).attr('data-id');
-            $.ajax({
-                url: 'api/sensor/function/' + sensorId + '/' + $(this).prop('checked') ? 'turnOn' : 'turnOff', type: 'PUT',
-                //data: {value: $(this).prop('checked') ? 1 : 0},
-                success: function (data) {
-                    console.log(data);
-                }
-            });
+            $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                {}, function(data) { console.log(data); });
 
-            /*$.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
-                noty({
-                    text: data,
-                    layout: 'topCenter',
-                    type: 'success',
-                    timeout: 2500,
-                    animation: {
-                        open: 'animated bounceInDown', // Animate.css class names
-                        close: 'animated bounceOutUp' // Animate.css class names
-                    }
-                });
-            });*/
         });
 
         $('[data-toggle="edit-sensor"]').click(function () {
