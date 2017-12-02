@@ -286,7 +286,7 @@
     }*/
 
 
-    $.getJSON('/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
+    $.getJSON($$myHomeSiteApiURL + '/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
 
         var dataTemplate = {type: 'type'.urlParamValue(), items: data};
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
@@ -300,7 +300,7 @@
         });
 
         $('[data-toggle="edit-node"]').click(function () {
-            $.getJSON('/api/node/' + $(this).attr('data-id'), function (dataVal) {
+            $.getJSON($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id'), function (dataVal) {
                 var data = {
                     field: [{fieldName: 'name', readOnly: true},
                         {fieldName: 'id', readOnly: true},
@@ -399,7 +399,7 @@
         });
 
         $('[data-toggle="edit-sensor"]').click(function () {
-            $.getJSON('/api/sensor/' + $(this).attr('data-id'), function (dataVal) {
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + $(this).attr('data-id'), function (dataVal) {
                 var data = {
                     field: [
                         {fieldName: 'name', readOnly: true},
