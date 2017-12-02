@@ -179,6 +179,11 @@
 </script>
 
 <script>
+    $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
+        console.log('Authentificate api')
+        console.log(data);
+    });
+
     var $grid;
 
     String.prototype.urlParamValue = function() {
@@ -284,6 +289,7 @@
         event.preventDefault();
         filerGridData( _.toUpper($('#navSearch').val()));
     }*/
+
 
 
     $.getJSON($$myHomeSiteApiURL + '/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
