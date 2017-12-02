@@ -136,7 +136,11 @@
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
             {{#arrayIn this.functionType "light"}}
-              <input style="margin-top: 5px;" id="binary-switch" type="checkbox" {evalVal} data-id="{{_id}}" data-toggle="toggle-relay">
+              <span style="margin-top: 5px;"><input id="binary-switch" type="checkbox"
+                      {{#js_compare "this.stateOn == true"}}
+                         checked
+                      {{/js_compare}}
+                     data-id="{{_id}}" data-toggle="toggle-relay"></span>
             {{/arrayIn}}
         </div>
     </div>
@@ -295,6 +299,7 @@
     $.getJSON($$myHomeSiteApiURL + '/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
 
         var dataTemplate = {type: 'type'.urlParamValue(), items: data};
+
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
         $("[data-data]").each(function (index, elem) {
