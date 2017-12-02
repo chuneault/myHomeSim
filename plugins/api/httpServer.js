@@ -422,7 +422,7 @@ class httpServer extends plugins {
           var sensor = ctrl.sensors[request.params._sensorId];
           if (sensor) {
               console.log('call sensor function', request.params._functionName);
-              sensor[request.params._msgType](request.body.value);
+              sensor[request.params._functionName](request.body.value);
               response.status(200).send('call sensor function ' + request.params._functionName);
           }
           else
