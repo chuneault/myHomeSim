@@ -136,7 +136,7 @@
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
             {{#arrayIn this.functionType "light"}}
-              <input id="binary-switch" type="checkbox" {evalVal} data-id="{{_id}}" data-toggle="toggle-relay">
+              <input style="margin-top: 5px;" id="binary-switch" type="checkbox" {evalVal} data-id="{{_id}}" data-toggle="toggle-relay">
             {{/arrayIn}}
         </div>
     </div>
