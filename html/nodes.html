@@ -430,7 +430,7 @@
             }
        */
 
-        setTimeout(5000, function() {
+        setTimeout(function() {
             $('.slider').slider({
                 formatter: function (value) {
                     return value;
@@ -438,7 +438,7 @@
             }).on('change', function (oldVal, newVal) {
                 console.log(oldVal, newVal);
             });
-        });
+        }, 5000);
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
