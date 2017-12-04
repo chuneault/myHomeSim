@@ -433,12 +433,13 @@
             formatter: function(value) {
                 return value;
             },
-            change: function(oldVal,newVal){
-              console.log('test');
-            }
+
 
         });
 
+        $('.slider').slider.on('change', function(oldVal,newVal){
+            console.log('test');
+        });
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
