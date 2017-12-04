@@ -69,8 +69,9 @@ class mySensorsEthernetDevice extends plugins {
   };
 
   send(node, sensor, subType, msgVal) {
-    var self = this;
-    var sendMessage = function(){
+    let self = this;
+
+    let sendMessage = function(){
       let msg = self.__msgToSendQueue[0].toString();
       console.log('Send Message To Node', msg );
       self.__client.write(msg);
@@ -94,7 +95,7 @@ class mySensorsEthernetDevice extends plugins {
       }));
     }
 
-    //if (this.__msgToSendQueue.length <= 3)
+    if (this.__msgToSendQueue.length <= 3)
       sendMessage();
   }
 
