@@ -141,7 +141,9 @@
               </div>
             {{/arrayIn}}
             {{#arrayIn this.functionType "brightness"}}
-              <input data-id="{{_id}}" id="ex{{_id}}" data-slider-id="ex{{_id}}Slider" class="slider" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
+              <input data-id="{{_id}}" id="ex{{_id}}"
+                     data-slider-id="ex{{_id}}Slider" class="slider"
+                     type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
             {{/arrayIn}}
         </div>
         <div class="panel-body">
@@ -417,12 +419,8 @@
                 {}, function(data) { console.log(data); });
         });
 
-        $('.slider').slider({
-            formatter: function(value) {
-                return value;
-            }
-        })
-        .on('change',
+
+        $('.slider').on('change',
             function(oldValue, newValue) {
                 let sensorId =  $(this).attr('data-id');
                 console.log('brightness change ', sensorId)
@@ -430,6 +428,13 @@
                     {}, function(data) { console.log(data); });*/
             }
         );
+
+        $('.slider').slider({
+            formatter: function(value) {
+                return value;
+            }
+        });
+
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
