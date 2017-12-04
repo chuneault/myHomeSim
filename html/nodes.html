@@ -238,7 +238,7 @@
 
         Template7.registerHelper('arrayIn',
             function (key, compareWith, options) {
-                console.log(arrayIn, key, compareWith);
+                console.log('arrayIn', key, compareWith);
                 if (compareWith.indexOf(key) >= 0)
                     return options.fn(this, options.data);
                 else
