@@ -37,6 +37,10 @@ class kasaTplink extends plugins {
                                         functionType: ['switch'], vendor: deviceInfo}, node,
                                       function(err, sensor) {
 
+                                        deviceInfo.on('power-update', function(newSate) {
+                                            console.log('power-update', newSate )
+                                        });
+
                                         sensor.turnOn = function(){
                                             this.__ownerNode.__deviceApi.setPowerState(true).then(console.log);
                                         };
