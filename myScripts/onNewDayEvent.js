@@ -66,17 +66,14 @@ server.on('sunrise', function(){
     console.log('Open Aqua Led Strip');
     let sensor = server.vars['AQUALEDCOLOR'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', 'ffffff');
     sensor = server.vars['AQUALEDBRIGHT'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 255);
-
+    console.log('Open Aquarium Salon');
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', true);
     sensor.turnOn();
-
+    console.log('Open Aquarium Bureau');
+    sensor = _.find(server.sensors, {name: "Aquarium Bureau"});
+    sensor.turnOn();
 
 });
 
@@ -84,17 +81,14 @@ server.on('sunset', function(){
     console.log('Close Aqua Led Strip');
     let sensor = server.vars['AQUALEDCOLOR'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '40', '73763');
     sensor = server.vars['AQUALEDBRIGHT'];
     sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
-    sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, '23', 63);
-
+    console.log('Close Aquarium Salon');
     sensor = _.find(server.sensors, {name: "Aquarium Salon"});
-    //sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 'setPowerState', false);
     sensor.turnOff();
-
+    console.log('Close Aquarium Bureau');
+    sensor = _.find(server.sensors, {name: "Aquarium Bureau"});
+    sensor.turnOff();
 });
 
 getSunPhase();

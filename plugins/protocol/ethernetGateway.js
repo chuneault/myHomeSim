@@ -83,14 +83,16 @@ class mySensorsEthernetDevice extends plugins {
       }
     };
 
-    this.__msgToSendQueue.push(new this.__mySensor.message({
-      nodeId: node.vendor.id,
-      childSensorId: sensor.vendor.id,
-      messageType: this.__mySensor.protocol.messageType.set,
-      ack: 0,
-      subType: subType,
-      payLoad: msgVal
-    }));
+    for (let i=0; i<3; i++) {
+      this.__msgToSendQueue.push(new this.__mySensor.message({
+        nodeId: node.vendor.id,
+        childSensorId: sensor.vendor.id,
+        messageType: this.__mySensor.protocol.messageType.set,
+        ack: 0,
+        subType: subType,
+        payLoad: msgVal
+      }));
+    }
 
     if (this.__msgToSendQueue.length <= 1)
       sendMessage();
