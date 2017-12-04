@@ -416,12 +416,11 @@
                 {}, function(data) { console.log(data); });
         });
 
-        $('[data-toggle="toggle-silder"]').slider({
+        $('[data-toggle="toggle-slider"]').slider({
             formatter: function(value) {
                 return value;
             }
-        });
-        $('[data-toggle="toggle-silder"]').on('change',
+        }).on('change',
             function(e) {
                 let sensorId =  $(this).attr('data-id');
                 console.log('brightness change ', sensorId)
