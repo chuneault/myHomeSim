@@ -128,6 +128,13 @@
         <div class="panel-heading">
             <h5 class="panel-title">{{name}}</h5>
             <h7 class="panel-title">{{desc}}</h7>
+            {{#arrayIn this.functionType "switch"}}
+            <div class="panel-title"><input id="binary-switch" type="checkbox"
+                                                  {{#js_compare "this.stateOn == true"}}
+                         checked
+                      {{/js_compare}}
+                     data-id="{{_id}}" data-toggle="toggle-relay"></div>
+            {{/arrayIn}}
         </div>
         <div class="panel-body">
             <p>{{lastValue}}</p>
@@ -136,13 +143,6 @@
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
-            {{#arrayIn this.functionType "switch"}}
-              <span style="margin-top: 5px;"><input id="binary-switch" type="checkbox"
-                      {{#js_compare "this.stateOn == true"}}
-                         checked
-                      {{/js_compare}}
-                     data-id="{{_id}}" data-toggle="toggle-relay"></span>
-            {{/arrayIn}}
         </div>
     </div>
     {{/each}}
