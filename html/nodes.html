@@ -420,9 +420,9 @@
             formatter: function(value) {
                 return value;
             }
-        });
-        $('[data-toggle="toggle-silder"]').on('change',
-            function(e) {
+        })
+        .on('change',
+            function(oldValue, newValue) {
                 let sensorId =  $(this).attr('data-id');
                 console.log('brightness change ', sensorId)
                 /*$.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
