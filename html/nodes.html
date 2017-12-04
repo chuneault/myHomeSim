@@ -470,12 +470,26 @@
         var nodeDoc = $(form).find(':not([readOnly])').serialize();*/
 
         let editor = ace.edit($(form).find('#editor')[0]);
-        let nodeDoc = JSON.parse(editor.getValue());
-        console.log(nodeDoc);
-        debugger;
-        return false;
+        try {
+            let nodeDoc = JSON.parse(editor.getValue());
+        }
+        catch(err) {
+            noty({
+                text: err.message,
+                layout: 'topRight',
+                type: 'error',
+                animation: {
+                    open: 'animated bounceInRight', // Animate.css class names
+                    close: 'animated bounceOutRight', // Animate.css class names
+                    easing: 'swing', // unavailable - no need
+                    speed: 500 // unavailable - no need
+                }
+            });
+            return false;
 
-        $.post('api/'+formType+'/'+nodeDoc._id, nodeDoc, function(data) {
+        }
+
+        $.post($$myHomeSiteApiURL + '/api/'+formType+'/'+nodeDoc._id, nodeDoc, function(data) {
             noty({
                 text: data,
                 layout: 'topCenter',
