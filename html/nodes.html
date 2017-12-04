@@ -412,7 +412,7 @@
             let sensorId =  $(this).attr('data-id');
             bootbox.prompt("Enter Function Name",
                 function(result){
-                    $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + result,
+                    $.put($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/' + result,
                         {}, function(data) { console.log(data); });
             });
         });
