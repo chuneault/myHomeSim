@@ -129,11 +129,15 @@
             <h5 class="panel-title">{{name}}</h5>
             <h7 class="panel-title">{{desc}}</h7>
             {{#arrayIn this.functionType "switch"}}
-            <div class="panel-title"><input id="binary-switch" type="checkbox"
-                                                  {{#js_compare "this.stateOn == true"}}
-                         checked
-                      {{/js_compare}}
-                     data-id="{{_id}}" data-toggle="toggle-relay"></div>
+              <div class="panel-title"><input id="binary-switch" type="checkbox"
+                  {{#js_compare "this.stateOn == true"}}
+                     checked
+                  {{/js_compare}}
+                 data-id="{{_id}}" data-toggle="toggle-relay">
+              </div>
+            {{/arrayIn}}
+            {{#arrayIn this.functionType "brightness"}}
+              <input  data-id="{{_id}}" data-toggle="toggle-slider" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
             {{/arrayIn}}
         </div>
         <div class="panel-body">
@@ -407,6 +411,19 @@
             $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
                 {}, function(data) { console.log(data); });
         });
+
+        $('[data-toggle="toggle-silder"]').slider({
+            formatter: function(value) {
+                return value;
+            }
+        }).on('change',
+            function(e) {
+                let sensorId =  $(this).attr('data-id');
+                console.log('brightness change ', sensorId)
+                /*$.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                    {}, function(data) { console.log(data); });*/
+            }
+        );
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
