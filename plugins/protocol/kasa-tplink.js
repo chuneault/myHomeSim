@@ -56,7 +56,7 @@ class kasaTplink extends plugins {
           //device.setPowerState(true);
       });
 
-      setTimeout(function(){self.ready();}, 10000);
+      setTimeout(function(){self.ready();}, 15000);
 
   }
 
