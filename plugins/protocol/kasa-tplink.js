@@ -45,7 +45,7 @@ class kasaTplink extends plugins {
 
                                         device.startPolling(5000);
                                         device.on('power-update', function(newSate) {
-                                            console.log('power-update', newSate )
+                                            console.log('power-update', newSate, this );
                                         });
 
                                       });
