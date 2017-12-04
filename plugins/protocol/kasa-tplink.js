@@ -36,11 +36,6 @@ class kasaTplink extends plugins {
                                     {id: deviceInfo.deviceId, name: deviceInfo.alias, stateOn: deviceInfo.relay_state == 1,
                                         functionType: ['switch'], vendor: deviceInfo}, node,
                                       function(err, sensor) {
-
-                                          device.on('power-update', function(newSate) {
-                                            console.log('power-update', newSate )
-                                        });
-
                                         sensor.turnOn = function(){
                                             this.__ownerNode.__deviceApi.setPowerState(true).then(console.log);
                                         };
@@ -48,6 +43,10 @@ class kasaTplink extends plugins {
                                             this.__ownerNode.__deviceApi.setPowerState(false).then(console.log);
                                         };
 
+                                        device.startPolling(5000);
+                                        device.on('power-update', function(newSate) {
+                                            console.log('power-update', newSate )
+                                        });
 
                                       });
                         }
