@@ -135,6 +135,7 @@
             <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
+            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
             {{#arrayIn this.functionType "switch"}}
               <span style="margin-top: 5px;"><input id="binary-switch" type="checkbox"
                       {{#js_compare "this.stateOn == true"}}
@@ -402,11 +403,18 @@
 
         $('[data-toggle="toggle-relay"]').bootstrapToggle();
         $('[data-toggle="toggle-relay"]').change(function () {
-
             let sensorId =  $(this).attr('data-id');
             $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
                 {}, function(data) { console.log(data); });
+        });
 
+        $('[data-toggle="toggle-send"]').click(function () {
+            let sensorId =  $(this).attr('data-id');
+            bootbox.prompt("Enter Function Name",
+                function(result){
+                    $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + result,
+                        {}, function(data) { console.log(data); });
+            });
         });
 
         $('[data-toggle="edit-sensor"]').click(function () {
