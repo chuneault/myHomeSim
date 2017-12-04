@@ -43,9 +43,14 @@ class kasaTplink extends plugins {
                                             this.__ownerNode.__deviceApi.setPowerState(false).then(console.log);
                                         };
 
-                                        device.startPolling(5000);
+                                        device.__sensor = sensor;
+                                        device.startPolling(10000);
                                         device.on('power-update', function(newSate) {
-                                            console.log('power-update', newSate, this );
+                                            if (device.__sensor.lastValue != newSate) {
+                                              self.__controller.addSensorValue(device.__sensor, newSate);
+                                              device.__sensor.stateOn = newSate
+                                              //console.log('power-update', newSate, this );
+                                            }
                                         });
 
                                       });
