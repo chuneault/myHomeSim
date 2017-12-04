@@ -1027,24 +1027,6 @@
                 {_id: "rJlXKCuRC", type: "sensor", html: "{icon.tint} {value} %"}
             ]
         },
-        {
-            id: 12,
-            'class': 'grid-item--med',
-            headerTitle: [ //RELAY
-                {type: "node", _id: "SyjZsgMXe", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
-                {type: "sensor", _id: "BJesbjgMXe", html: "{value} V"},
-                {type: "sensor", _id: "SJ-fieM7x", html: "{icon.ok} {value}"},
-                {type: "sensor", _id: "r1xGoefXl", html: "{icon.exclamation} {value}"}
-            ],
-            sensors: [{
-                type: "sensor", _id: "Hyg-pxz7g",
-                html: '<input id="binary-switch" type="checkbox" {evalVal} data-toggle="toggle">',
-                eval: '{value} == 0 ? "" : "checked"',
-                java: "toggleBinarySwitch()"
-            }
-
-            ]
-        },
 
         {
           id: 13,

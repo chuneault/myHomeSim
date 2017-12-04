@@ -55,7 +55,7 @@ class philipsHueBridge extends plugins {
       let state = hue.lightState.create();
       state[msgType](msgVal);
       self.api.setLightState(sensor.vendor.light.id, state)
-          .then(function(result){ console.log(result);})
+          .then(function(result){})
           .done();
   }
 
