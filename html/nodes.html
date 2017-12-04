@@ -430,14 +430,14 @@
             }
        */
 
-        $('.slider').slider({
-            formatter: function(value) {
-                return value;
-            },
-
-
-        }).on('slide', function(oldVal,newVal){
-            console.log(oldVal, newVal);
+        setTimeout(5000, function() {
+            $('.slider').slider({
+                formatter: function (value) {
+                    return value;
+                }
+            }).on('change', function (oldVal, newVal) {
+                console.log(oldVal, newVal);
+            });
         });
 
         $('[data-toggle="toggle-send"]').click(function () {
