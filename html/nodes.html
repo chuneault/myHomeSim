@@ -468,10 +468,11 @@
 
         /*var node = getFormData($(form).find('[readOnly]'));
         var nodeDoc = $(form).find(':not([readOnly])').serialize();*/
+        let nodeDoc;
 
         let editor = ace.edit($(form).find('#editor')[0]);
         try {
-            let nodeDoc = JSON.parse(editor.getValue());
+            nodeDoc = JSON.parse(editor.getValue());
         }
         catch(err) {
             noty({
