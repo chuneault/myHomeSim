@@ -94,7 +94,7 @@ class mySensorsEthernetDevice extends plugins {
       }));
     }
 
-    if (this.__msgToSendQueue.length <= 1)
+    //if (this.__msgToSendQueue.length <= 3)
       sendMessage();
   }
 
