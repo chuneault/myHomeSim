@@ -420,7 +420,8 @@
             formatter: function(value) {
                 return value;
             }
-        }).on('change',
+        });
+        $('[data-toggle="toggle-silder"]').on('change',
             function(e) {
                 let sensorId =  $(this).attr('data-id');
                 console.log('brightness change ', sensorId)
