@@ -124,7 +124,7 @@
 
 <script id="nodesCard" type="text/template7">
     {{#each items}}
-    <div class="panel panel-default panel-black" data-data='{{JSON this}}'>
+    <div class="panel panel-default panel-black" data-data='{{@index}}'>
         <div class="panel-heading">
             <h5 class="panel-title">{{name}}</h5>
             <h7 class="panel-title">{{desc}}</h7>
@@ -304,7 +304,7 @@
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
         $("[data-data]").each(function (index, elem) {
-            $(elem).data('data', JSON.parse($(elem).attr('data-data')));
+            $(elem).data('data', data[($(elem).attr('data-data'))]);
         });
 
         $grid = $('.grid').isotope({
