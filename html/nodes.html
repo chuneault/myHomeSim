@@ -420,14 +420,15 @@
         });
 
 
+       /*
         $('.slider').on('change',
             function(oldValue, newValue) {
                 let sensorId =  $(this).attr('data-id');
                 console.log('brightness change ', sensorId)
                 /*$.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
-                    {}, function(data) { console.log(data); });*/
+                    {}, function(data) { console.log(data); });
             }
-        );
+       */
 
         $('.slider').slider({
             formatter: function(value) {
@@ -435,10 +436,8 @@
             },
 
 
-        });
-
-        $('.slider').slider.on('change', function(oldVal,newVal){
-            console.log('test');
+        }).on('slide', function(oldVal,newVal){
+            console.log(oldVal, newVal);
         });
 
         $('[data-toggle="toggle-send"]').click(function () {
