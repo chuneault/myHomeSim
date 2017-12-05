@@ -123,16 +123,6 @@
 
 <div class="container">
     <h2 id="title" style="color: white">Nodes</h2>
-
-    <div>
-    <input id="slider"
-           data-slider-id="slider" class="slider"
-           type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
-        <input id="slider"
-               data-slider-id="slider" class="slider"
-               type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
-    </div>
-
     <div class="grid"></div>
 </div>
 
@@ -151,8 +141,7 @@
               </div>
             {{/arrayIn}}
             {{#arrayIn this.functionType "brightness"}}
-              <input id="slider"
-                     data-slider-id="slider" class="slider"
+              <input data-id="{{_id}}" class="slider"
                      type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
             {{/arrayIn}}
         </div>
@@ -324,13 +313,15 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
-        $('.slider').slider({
+        $('.slider').each(function(i,e){
+           e.slider({
             formatter: function (value) {
-                //console.log(value);
+                console.log(value);
                 return value;
             }
-        }).on('change', function (oldVal, newVal) {
-            console.log(oldVal, newVal);
+           }).on('change', function (oldVal, newVal) {
+             console.log(oldVal, newVal);
+           });
         });
 
         $("[data-data]").each(function (index, elem) {
