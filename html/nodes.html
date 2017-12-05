@@ -123,6 +123,13 @@
 
 <div class="container">
     <h2 id="title" style="color: white">Nodes</h2>
+
+    <div>
+    <input id="slider"
+           data-slider-id="slider" class="slider"
+           type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
+    </div>
+
     <div class="grid"></div>
 </div>
 
@@ -141,9 +148,6 @@
               </div>
             {{/arrayIn}}
             {{#arrayIn this.functionType "brightness"}}
-              <input id="slider"
-                     data-slider-id="slider" class="slider"
-                     type="text" data-slider-min="0" data-slider-max="100" data-slider-step="25" data-slider-value="0"/>
             {{/arrayIn}}
         </div>
         <div class="panel-body">
