@@ -50,8 +50,8 @@ class philipsHueBridge extends plugins {
                            };
                            sensor.brightness = function(value){
                                self.write(this, 'brightness', parseInt(value));
-                               this.stateBrigthness = parseInt(value)*255/100;
-                               console.log('new stateBrigthness', this.stateBrigthness);
+                               this.stateBrigthness = parseInt(value);
+                               //console.log('new stateBrigthness', this.stateBrigthness);
                            };
                        });
                });
