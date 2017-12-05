@@ -321,7 +321,7 @@
            }).on('change', function (event) {
              let sensorId =  $(this).attr('data-id');
              $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/brightness',
-                 event.value.newValue,
+                 {value: event.value.newValue},
                function(data) {
                  console.log(data);
              });
