@@ -44,6 +44,9 @@ class philipsHueBridge extends plugins {
                            sensor.turnOff = function(){
                                self.write(this, 'on', false);
                            };
+                           sensor.brightness = function(value){
+                               self.write(this, 'brightness', value);
+                           };
                        });
                });
 

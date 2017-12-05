@@ -318,8 +318,13 @@
             /*formatter: function (value) {
                 return value;
             }*/
-           }).on('change', function (oldVal, newVal) {
-             console.log(oldVal, newVal);
+           }).on('change', function (event) {
+             $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/brightness',
+                 event.value.newValue,
+               function(data) {
+                 console.log(data);
+             });
+
            });
         });
 
@@ -427,19 +432,6 @@
             $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
                 {}, function(data) { console.log(data); });
         });
-
-
-       /*
-        $('.slider').on('change',
-            function(oldValue, newValue) {
-                let sensorId =  $(this).attr('data-id');
-                console.log('brightness change ', sensorId)
-                /*$.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
-                    {}, function(data) { console.log(data); });
-            }
-       */
-
-
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
