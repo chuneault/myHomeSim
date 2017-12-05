@@ -314,7 +314,7 @@
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
         $('.slider').each(function(i,e){
-           e.slider({
+           $(e).slider({
             formatter: function (value) {
                 console.log(value);
                 return value;
