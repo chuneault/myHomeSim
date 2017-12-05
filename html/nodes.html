@@ -314,6 +314,15 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
+        $('.slider').slider({
+            formatter: function (value) {
+                console.log(value);
+                return value;
+            }
+        }).on('change', function (oldVal, newVal) {
+            console.log(oldVal, newVal);
+        });
+
         $("[data-data]").each(function (index, elem) {
             $(elem).data('data', data[($(elem).attr('data-data'))]);
         });
@@ -430,13 +439,7 @@
             }
        */
 
-            $('.slider').slider({
-                formatter: function (value) {
-                    return value;
-                }
-            }).on('change', function (oldVal, newVal) {
-                console.log(oldVal, newVal);
-            });
+
 
         $('[data-toggle="toggle-send"]').click(function () {
             let sensorId =  $(this).attr('data-id');
