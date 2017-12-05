@@ -40,9 +40,13 @@ class philipsHueBridge extends plugins {
                            sensor.__sensorApi = light;
                            sensor.turnOn = function(){
                                self.write(this, 'on', true);
+                               self.__controller.addSensorValue(this, true);
+                               this.stateOn = true;
                            };
                            sensor.turnOff = function(){
                                self.write(this, 'on', false);
+                               self.__controller.addSensorValue(this, false);
+                               this.stateOn = false;
                            };
                            sensor.brightness = function(value){
                                self.write(this, 'brightness', value);
