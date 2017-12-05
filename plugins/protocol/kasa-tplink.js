@@ -73,7 +73,10 @@ class kasaTplink extends plugins {
           msgVal =  false;
       if (msgVal == 'true')
           msgVal =  true;
-      node.__deviceApi[msgType](msgVal).then(console.log);
+      node.__deviceApi[msgType](msgVal).then(console.log).catch(function(e) {
+          console.log('error kasa tp-link', e); // "zut !"
+      })
+
   }
 }
 

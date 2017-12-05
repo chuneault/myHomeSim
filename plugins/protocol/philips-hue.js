@@ -67,6 +67,9 @@ class philipsHueBridge extends plugins {
       state[msgType](msgVal);
       self.api.setLightState(sensor.vendor.light.id, state)
           .then(function(result){})
+          .catch(function(e) {
+              console.log('error api philips hue', e); // "zut !"
+          })
           .done();
   }
 
