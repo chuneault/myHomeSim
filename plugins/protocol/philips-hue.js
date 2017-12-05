@@ -34,7 +34,7 @@ class philipsHueBridge extends plugins {
                _.forEach(lights.lights, function(light) {
                    self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}},
                        {name: light.name, functionType: [self.__controller.sensorFunctionType.switch, self.__controller.sensorFunctionType.brightness],
-                           stateOn: light.state.on, vendor: {light}}, node,
+                           stateOn: light.state.on, stateBrigthness: light.state.bri, vendor: {light}}, node,
                        function(err, sensor) {
 
                            sensor.__sensorApi = light;
@@ -50,6 +50,7 @@ class philipsHueBridge extends plugins {
                            };
                            sensor.brightness = function(value){
                                self.write(this, 'brightness', value);
+                               this.stateBrigthness = value;
                            };
                        });
                });
