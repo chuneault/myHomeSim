@@ -421,7 +421,7 @@ class httpServer extends plugins {
       app.put('/api/sensor/function/:_sensorId/:_functionName', function (request, response){
           var sensor = ctrl.sensors[request.params._sensorId];
           if (sensor) {
-              console.log('call sensor function', request.params._functionName);
+              console.log('call sensor function', request.params._functionName, request.body);
               sensor[request.params._functionName](request.body.value);
               response.status(200).send('call sensor function ' + request.params._functionName);
           }
