@@ -315,10 +315,9 @@
 
         $('.slider').each(function(i,e){
            $(e).slider({
-            formatter: function (value) {
-                console.log(value);
+            /*formatter: function (value) {
                 return value;
-            }
+            }*/
            }).on('change', function (oldVal, newVal) {
              console.log(oldVal, newVal);
            });
