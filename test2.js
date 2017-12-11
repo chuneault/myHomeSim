@@ -4,7 +4,7 @@ const hueApi = hue.HueApi;
 const _       = require('lodash');
 
 function testPhilipsHue(){
-  let api = new hueApi(self.params.host, self.params.userName);
+  let api = new hueApi('192.168.0.178', 'uZR5pbc3P2aUmCtdn6JQzOn-gEXipyA4ZU9m1TR6');
   api.lights(function(err, light) {
       if (err) throw err;
       console.log(lights)
