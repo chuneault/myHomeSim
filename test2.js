@@ -13,7 +13,7 @@ const client = new Client();
 });*/
 
 client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
-  device.getSysInfo().then(function(device){console.log(device.deviceId)});
+  device.getSysInfo().then(function(device){console.log(device)});
   //device.setPowerState(true);
 });
 
