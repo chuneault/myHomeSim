@@ -14,7 +14,7 @@ class sonoff extends plugins {
     controller.addDevice(this);
 
     controller.on('loadDBCompleted', function(){
-        self.log.info('Connecting to Simple Sonoff Server', self.params.host.bold);
+        self.log.info('Connecting to Simple Sonoff Server', self.params.serverUrl.bold);
         unirest.get(params.serverUrl + '/devices')
             .end(function (resp) {
                 self.log.info(resp.body);
