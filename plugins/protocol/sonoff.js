@@ -17,7 +17,7 @@ class sonoff extends plugins {
         self.log.info('Connecting to Simple Sonoff Server', self.params.serverUrl.bold);
         unirest.get(params.serverUrl + '/devices')
             .end(function (resp) {
-                self.log.info(resp.body);
+                self.log.info(resp);
                 _.each(resp.body, function(sonoffDevice){
                     self.log.info(sonoffDevice);
                     self.registerSonoffDevice(sonoffDevice);
