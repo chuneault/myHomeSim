@@ -10,9 +10,7 @@ class sonoff extends plugins {
     super(controller, params);
     let self = this;
     self.log = params.logger.addLogger('sonoff', {fileName: './logs/sonoff.log'});
-
     controller.addDevice(this);
-
     controller.on('loadDBCompleted', function(){
         self.log.info('Connecting to Simple Sonoff Server', self.params.serverUrl.bold);
         unirest.get(self.params.serverUrl + '/devices')
@@ -34,26 +32,23 @@ class sonoff extends plugins {
              if (node)
                    self.__controller.addOrUpdateSensor({nodeId: node._id, id: sonoffDevice.id},
                        {id: sonoffDevice.id, functionType: [self.__controller.sensorFunctionType.switch], vendor: sonoffDevice,
-                           stateOn: sonoffDevice == 'on', }, node,
+                           stateOn: sonoffDevice.state == 'on', }, node,
                        function(err, sensor) {
                            sensor.__sensorUrl = self.params.serverUrl + '/devices/'+ sensor.id;
                            sensor.turnOn = function(){
                                self.write(this, true);
-                               self.__controller.addSensorValue(this, 'on');
+                               self.__controller.addSensorValue(this, true);
                                this.stateOn = true;
                            };
                            sensor.turnOff = function(){
                                self.write(this,  false);
-                               self.__controller.addSensorValue(this, 'off');
+                               self.__controller.addSensorValue(this, false);
                                this.stateOn = false;
                            };
                        });
-
-
           }
      );
   }
-
 
   write(sensor, msgType, msgVal) {
       unirest.get(sensor.__sensorUrl + '/' + msgType)
