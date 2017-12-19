@@ -507,6 +507,7 @@
         let editor = ace.edit($(form).find('#editor')[0]);
         try {
             nodeDoc = JSON.parse(editor.getValue());
+            console.log(nodeDoc);
         }
         catch(err) {
             noty({
@@ -537,7 +538,7 @@
                 }
             });
             console.log(data);
-        },  'json') .fail(function(res) {
+        }) .fail(function(res) {
             noty({
                 text: res,
                 layout: 'topRight',
