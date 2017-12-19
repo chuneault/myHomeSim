@@ -430,6 +430,7 @@ class httpServer extends plugins {
       });
 
     app.post('/api/sensor/:_sensorId', function (request, response){
+      console.log(request.body);
 
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
@@ -442,7 +443,7 @@ class httpServer extends plugins {
               request.body[key] = Number(val);
         });
 
-        console.log(request.body);
+        //console.log(request.body);
 
         ctrl.updateSensor(sensor, request.body);
         response.status(200).send('sensor updated');

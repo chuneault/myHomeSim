@@ -537,7 +537,7 @@
                 }
             });
             console.log(data);
-        }) .fail(function(res) {
+        },  'json') .fail(function(res) {
             noty({
                 text: res,
                 layout: 'topRight',
