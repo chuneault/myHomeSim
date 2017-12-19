@@ -36,12 +36,12 @@ class sonoff extends plugins {
                        function(err, sensor) {
                            sensor.__sensorUrl = self.params.serverUrl + '/devices/'+ sensor.id;
                            sensor.turnOn = function(){
-                               self.write(this, true);
+                               self.write(this, 'on');
                                self.__controller.addSensorValue(this, true);
                                this.stateOn = true;
                            };
                            sensor.turnOff = function(){
-                               self.write(this,  false);
+                               self.write(this,  'off');
                                self.__controller.addSensorValue(this, false);
                                this.stateOn = false;
                            };
