@@ -196,6 +196,12 @@ class httpServer extends plugins {
       res.send('Hello from myHomeSim!');
     });
 
+      app.get('/espeasy', function (req, res) {
+          console.log('Hello from espeasy!');
+          console.log(req.query);
+      });
+
+
     app.get('/', function (req, res) {
       res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
