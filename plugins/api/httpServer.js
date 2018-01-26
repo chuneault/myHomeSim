@@ -199,6 +199,7 @@ class httpServer extends plugins {
       app.get('/espeasy', function (req, res) {
           console.log('Hello from espeasy!');
           console.log(req.query);
+          res.send('OK');
       });
 
 
