@@ -196,9 +196,15 @@ class httpServer extends plugins {
       res.send('Hello from myHomeSim!');
     });
 
-      app.get('/espeasy', function (req, res) {
+      app.get('/espeasy/:sysname', function (req, res) {
           console.log('Hello from espeasy!');
-          console.log(req.query);
+          console.log(req.params.sysname);
+          res.send('OK');
+      });
+
+      app.get('/espeasy/:sysname/:taskname/:valname/:value', function (req, res) {
+          console.log('Hello from espeasy!');
+          console.log(req.params);
           res.send('OK');
       });
 
