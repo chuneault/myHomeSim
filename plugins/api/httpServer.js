@@ -134,7 +134,7 @@ class httpServer extends plugins {
     app.use(cookieParser());
     app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
 
-    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
 
     //app.set('view engine', 'pug');

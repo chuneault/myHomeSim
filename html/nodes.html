@@ -509,7 +509,7 @@
         let editor = ace.edit($(form).find('#editor')[0]);
         try {
             nodeDoc = JSON.parse(editor.getValue());
-            console.log('1', nodeDoc);
+            console.log('update ', nodeDoc);
         }
         catch(err) {
             noty({
@@ -527,8 +527,7 @@
 
         }
 
-        console.log('2', JSON.stringify(nodeDoc, null, 2));
-        $.post($$myHomeSiteApiURL + '/api/'+formType+'/'+nodeDoc._id,  JSON.stringify(nodeDoc, null, 2), function(data) {
+        $.post($$myHomeSiteApiURL + '/api/'+formType+'/'+nodeDoc._id,  nodeDoc, function(data) {
             noty({
                 text: data,
                 layout: 'topCenter',
