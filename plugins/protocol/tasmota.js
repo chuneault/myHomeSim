@@ -96,7 +96,7 @@ class tasmota extends plugins {
 
 
     write(sensor, cmd, cmdVal) {
-        self.__controller.mqttBroker.server.publish({
+        this.__controller.mqttBroker.server.publish({
             topic: 'cmnd/'+sensor.__ownerNode.name+'/'+cmd,
             payload: cmdVal, // or a Buffer
             qos: 0, // 0, 1, or 2
