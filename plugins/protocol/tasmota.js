@@ -76,9 +76,8 @@ class tasmota extends plugins {
                                 stateOn: jsonPayload.POWER}, node,
                             function (err, sensor) {
 
-                                //sensor.__sensorApi = light;
                                 sensor.turnOn = function(){
-                                    //self.write(this, 'on', true);
+                                    self.write(this, 'power', ''ON);
                                     self.__controller.addSensorValue(this, true);
                                     this.stateOn = true;
                                 };
@@ -96,21 +95,16 @@ class tasmota extends plugins {
     }
 
 
-    write(sensor, msgType, msgVal) {
-        /*var self = this;
-        let state = hue.lightState.create();
-        state[msgType](msgVal);
-        self.api.setLightState(sensor.vendor.light.id, state)
-            .then(function(result){})
-            .catch(function(e) {
-                console.log('error api philips hue', e); // "zut !"
-            })
-            .done();*/
+    write(sensor, cmd, cmdVal) {
+        self.__controller.mqttBroker.server.publish({
+            topic: 'cmnd/'+sensor.__ownerNode.name+'/'+cmd,
+            payload: cmdVal, // or a Buffer
+            qos: 0, // 0, 1, or 2
+            retain: false // or true
+        });
     }
 
-    send(node, sensor, msgType, msgVal) {
-        //this.write(sensor, msgType, msgVal);
-    }
+
 }
 
 exports.connect = function(pluginType, params, callback) {
