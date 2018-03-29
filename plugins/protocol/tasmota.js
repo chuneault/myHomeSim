@@ -62,7 +62,7 @@ class tasmota extends plugins {
                               name: 'DS18B20', functionType: [self.__controller.sensorFunctionType.temperature],
                                 Temperature: jsonPayload.DS18B20.Temperature, tempUnit: jsonPayload.TempUnit}, node,
                             function (err, sensor) {
-                                self.__controller.addSensorValue(this, jsonPayload.DS18B20.Temperature);
+                                self.__controller.addSensorValue(sensor, jsonPayload.DS18B20.Temperature);
                             });
 
                 }
@@ -84,7 +84,7 @@ class tasmota extends plugins {
                                 name: 'POWER', functionType: [self.__controller.sensorFunctionType.switch],
                                 stateOn: jsonPayload.POWER == 'ON'}, node,
                             function (err, sensor) {
-                                self.__controller.addSensorValue(this, jsonPayload.POWER == 'ON');
+                                self.__controller.addSensorValue(sensor, jsonPayload.POWER == 'ON');
                                 if (!sensor.turnOn)
                                   sensor.turnOn = function(){
                                     self.write(this, 'power', 'ON');
