@@ -10,6 +10,8 @@ class tasmota extends plugins {
         let self = this;
         self.log = params.logger.addLogger('tasmota', {fileName: './logs/tasmota.log'});
 
+        controller.addDevice(this);
+
         self.clients = {};
 
         controller.on('mqtt-newclient', function(client){
