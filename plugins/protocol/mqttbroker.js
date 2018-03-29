@@ -23,9 +23,9 @@ class mqttbroker extends plugins {
         };
 
         let server = new mosca.Server(moscaSettings);
-
         self.server = server;
         server.on('ready', setup);
+        controller.mqttBroker = self;
 
         function setup() {
             self.log.info('mqtt broker server is up and running');
