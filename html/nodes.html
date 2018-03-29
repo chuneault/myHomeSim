@@ -144,6 +144,9 @@
               <input data-id="{{_id}}" class="slider"
                      type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateBrigthness}}"/>
             {{/arrayIn}}
+            {{#arrayIn this.functionType "temperature"}}
+              <span data-id="{{_id}}">{{Temperature}} {{tempUnit}}</span>
+            {{/arrayIn}}
         </div>
         <div class="panel-body">
             <p>{{lastValue}}</p>
