@@ -24,13 +24,13 @@ class tasmota extends plugins {
                 self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
 
                 if (_.endsWith(packet.topic, 'SENSOR'))
-                    self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toSource());
+                    self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toString());
                 else
                   if (_.endsWith(packet.topic, 'STATE'))
-                      self.updateTasmotaState(client.id, packet.topic, packet.payload.toSource());
+                      self.updateTasmotaState(client.id, packet.topic, packet.payload.toString());
                   else
                     if (_.endsWith(packet.topic, 'POWER'))
-                        self.updateTasmotaState(client.id, packet.topic, '{"POWER": "'+ packet.payload.toSource() +'"}');
+                        self.updateTasmotaState(client.id, packet.topic, '{"POWER": "'+ packet.payload.toString() +'"}');
 
             }
         });
