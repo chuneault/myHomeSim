@@ -39,7 +39,9 @@ class tasmota extends plugins {
                   else
                     if (_.endsWith(packet.topic, 'POWER'))
                         self.updateTasmotaState(client.id, packet.topic, '{"POWER": "'+ packet.payload.toString() +'"}');
-
+                    else
+                      if  (_.endsWith(packet.topic, 'INFO1') || _.endsWith(packet.topic, 'INFO2'))
+                          self.updateTasmotaState(client.id, packet.topic,  packet.payload.toString() );
             }
         });
 
@@ -79,7 +81,7 @@ class tasmota extends plugins {
                     if (jsonPayload.POWER)
                         self.__controller.addOrUpdateSensor({name: 'POWER'}, {
                                 name: 'POWER', functionType: [self.__controller.sensorFunctionType.switch],
-                                stateOn: jsonPayload.POWER}, node,
+                                stateOn: jsonPayload.POWER == 'ON'}, node,
                             function (err, sensor) {
 
                                 sensor.turnOn = function(){
