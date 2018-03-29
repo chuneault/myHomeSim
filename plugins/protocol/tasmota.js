@@ -22,6 +22,12 @@ class tasmota extends plugins {
         });
 
         controller.on('mqtt-published', function(packet, client){
+
+            if (client && client.id && !self.clients[client.id]) {
+                self.clients[client.id] = client;
+                self.log.info('new tasmota client', client.id);
+            }
+
             if (client && client.id && self.clients[client.id]){
                 self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
 
