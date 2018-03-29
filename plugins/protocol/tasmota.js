@@ -77,12 +77,12 @@ class tasmota extends plugins {
                             function (err, sensor) {
 
                                 sensor.turnOn = function(){
-                                    self.write(this, 'power', ''ON);
+                                    self.write(this, 'power', 'ON');
                                     self.__controller.addSensorValue(this, true);
                                     this.stateOn = true;
                                 };
                                 sensor.turnOff = function(){
-                                    //self.write(this, 'on', false);
+                                    self.write(this, 'power', 'OFF');
                                     self.__controller.addSensorValue(this, false);
                                     this.stateOn = false;
                                 };
