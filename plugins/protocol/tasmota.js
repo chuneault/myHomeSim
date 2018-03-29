@@ -22,46 +22,77 @@ class tasmota extends plugins {
         controller.on('mqtt-published', function(packet, client){
             if (client && client.id && self.clients[client.id]){
                 self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
+
+                if (_.endsWith(packet.topic, 'SENSOR'))
+                    self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toSource());
+                else
+                  if (_.endsWith(packet.topic, 'STATE'))
+                      self.updateTasmotaState(client.id, packet.topic, packet.payload.toSource());
+                  else
+                    if (_.endsWith(packet.topic, 'POWER'))
+                        self.updateTasmotaState(client.id, packet.topic, '{"POWER": "'+ packet.payload.toSource() +'"}');
+
             }
         });
+
+
     };
 
-    /*
-    registerLights(lights) {
+    //Published tele/aquatempswitch/SENSOR {"Time":"2018-03-28T15:49:37","DS18B20":{"Temperature":24.4},"TempUnit":"C"}
+    updateTasmotaSensor(clientId, topic, payload) {
         let self = this;
-        self.__controller.addOrUpdateNode({id: self.params.id},
-            {id: self.params.id, name: self.params.name, vendor: self.params}, self,
+        let jsonPayload = JSON.parse(payload);
+        let topics = topic.split('/');
+        self.__controller.addOrUpdateNode({id: clientId},
+            {id: clientId, name: topics[1]}, self,
             function (error, node) {
-                if (node)
-                    _.forEach(lights.lights, function(light) {
-                        self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}},
-                            {name: light.name, functionType: [self.__controller.sensorFunctionType.switch, self.__controller.sensorFunctionType.brightness],
-                                stateOn: light.state.on, stateBrigthness: light.state.bri/255*100, vendor: {light}}, node,
-                            function(err, sensor) {
+                if (node) {
+                    if (jsonPayload.DS18B20)
+                        self.__controller.addOrUpdateSensor({name: 'DS18B20'}, {
+                              name: 'DS18B20', functionType: [self.__controller.sensorFunctionType.temperature],
+                                Temperature: jsonPayload.DS18B20.Temperature, tempUnit: jsonPayload.TempUnit}, node,
+                            function (err, sensor) {
+                            });
 
-                                sensor.__sensorApi = light;
+                }
+            }
+        );
+    }
+
+    //Published tele/aquatempswitch/STATE {"Time":"2018-03-28T15:49:37","Uptime":"0T00:00:20","Vcc":3.422,"POWER":"ON","Wifi":{"AP":1,"SSId":"chalwifi","RSSI":48,"APMac":"04:BF:6D:57:7B:74"}}
+    updateTasmotaState(clientId, topic, payload) {
+        let self = this;
+        let jsonPayload = JSON.parse(payload);
+        let topics = topic.split('/');
+        self.__controller.addOrUpdateNode({id: clientId},
+            {id: clientId, name: topics[1], vendor: jsonPayload}, self,
+            function (error, node) {
+                if (node) {
+                    if (jsonPayload.POWER)
+                        self.__controller.addOrUpdateSensor({name: 'POWER'}, {
+                                name: 'POWER', functionType: [self.__controller.sensorFunctionType.switch],
+                                stateOn: jsonPayload.POWER}, node,
+                            function (err, sensor) {
+
+                                //sensor.__sensorApi = light;
                                 sensor.turnOn = function(){
-                                    self.write(this, 'on', true);
+                                    //self.write(this, 'on', true);
                                     self.__controller.addSensorValue(this, true);
                                     this.stateOn = true;
                                 };
                                 sensor.turnOff = function(){
-                                    self.write(this, 'on', false);
+                                    //self.write(this, 'on', false);
                                     self.__controller.addSensorValue(this, false);
                                     this.stateOn = false;
                                 };
-                                sensor.brightness = function(value){
-                                    self.write(this, 'brightness', parseInt(value));
-                                    this.stateBrigthness = parseInt(value);
-                                    //console.log('new stateBrigthness', this.stateBrigthness);
-                                };
-                            });
-                    });
 
+                            });
+
+                }
             }
         );
     }
-*/
+
 
     write(sensor, msgType, msgVal) {
         /*var self = this;
