@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>myHomeSim Dashboard V2</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.3.1/template7.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/myUtils.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
+
+    <script src="https://use.fontawesome.com/4d5fdbd653.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
+    <script src="/js/moment-transform.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <!--<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> /!-->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script src="https://npmcdn.com/draggabilly@2.1/dist/draggabilly.pkgd.js"></script>
+
+    <link rel="stylesheet" href="/css/tooltipster.bundle.min.css"/>
+    <script src="/js/tooltipster.bundle.min.js"></script>
+    <script src="/js/jquery.ba-resize.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css" />
+
+
+    <script>
+
+        var icon = {
+            'thermometer': "<i class='fa fa-thermometer' aria-hidden='true'></i>",
+            'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
+            'bars': "<i class='fa fa-bars' aria-hidden='true'></i>",
+            'ok': "<i class='fa fa-check' aria-hidden='true'></i>",
+            'fire': "<i class='fa fa-fire'></i>",
+            'cancel': "<i class='fa fa-times' aria-hidden='true'></i>",
+            'exclamation': "<i class='fa fa-exclamation-circle' aria-hidden='true'></i>",
+            'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
+            "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
+            "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
+            "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+        };
+
+
+        function getFormData($form) {
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+            $.map(unindexed_array, function (n, i) {
+                indexed_array[n['name']] = n['value'];
+            });
+            return indexed_array;
+        }
+
+    </script>
+
+
+    <style>
+        body {
+            background-color: #222222;
+            font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
+            font-weight: normal;
+            padding-top: 50px;
+        }
+
+        @media screen and (min-width: 1800px) {
+            .container {
+                width: 1870px;
+            }
+        }
+
+        .panel {
+            width: 250px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+
+        .panel-black {
+            background-color:  rgba(57,57,57,0.50);
+            border-color: #000000 ;
+            color: #ffffff ;
+        }
+
+        .panel-expired {
+            background: #ff000c !important;
+        }
+
+        .panel-default > .panel-heading {
+            border-color: #000000;
+            background: rgba(0,0,0,0.25);
+            color: #ffffff;
+        }
+
+        .dialog-width { width: 800px !important; }
+    </style>
+</head>
+
+<body>
+
+<div id="templates" data-template="templates.html"></div>
+<div id="navBar"></div>
+
+<div class="container">
+    <h2 id="title" style="color: white">Nodes</h2>
+    <div class="grid"></div>
+</div>
+
+<script id="nodesCard" type="text/template7">
+    {{#each items}}
+    <div class="panel panel-default panel-black" data-data='{{@index}}'>
+        <div class="panel-heading">
+            <h5 class="panel-title">{{name}}</h5>
+            <h7 class="panel-title">{{desc}}</h7>
+            {{#arrayIn this.functionType "switch"}}
+            <div class="panel-title"><input id="binary-switch" type="checkbox"
+                                            {{#js_compare "this.stateOn == true"}}
+                checked
+                {{/js_compare}}
+                data-id="{{_id}}" data-toggle="toggle-relay" data-onstyle="success" data-offstyle="danger">
+            </div>
+            {{/arrayIn}}
+            {{#arrayIn this.functionType "brightness"}}
+            <input data-id="{{_id}}" class="slider"
+                   type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateBrigthness}}"/>
+            {{/arrayIn}}
+            {{#arrayIn this.functionType "temperature"}}
+            <span data-id="{{_id}}"><i class='fa fa-thermometer' aria-hidden='true'></i> {{Temperature}} {{tempUnit}}</span>
+            {{/arrayIn}}
+        </div>
+        <div class="panel-body">
+            <p>{{lastValue}}</p>
+            <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
+            {{#js_compare "this.type != 'sensor'"}}
+            <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
+            <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
+            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
+            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
+            {{/js_compare}}
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+
+<script id="editFormTemplate" type="text/template7">
+    <form id="nodeForm" method="post" class="form-horizontal">
+
+        {{#each field}}
+        <div class="form-group">
+            <label class="col-xs-4 control-label">{{this.fieldName}}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" name={{this.fieldName}}
+                       {{#js_compare "this.readOnly == true"}}
+                readonly=true
+                {{/js_compare}}
+                value="{{fieldVal this.fieldName ../val this.type}}"
+                />
+            </div>
+        </div>
+        {{/each}}
+        <div class="form-group">
+            <div class="col-xs-12 col-xs-offset-4">
+                <button type="submit" class="btn btn-primary"
+                        onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
+                </button>
+                <button class="btn btn-danger bootbox-close-button">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+</script>
+
+<script id="editFormTemplateAce" type="text/template7">
+    <form id="nodeForm" method="post">
+        <div id="editor" style="width: 100%; height: 500px"></div>
+    </form>
+</script>
+
+<script>
+    $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
+        console.log('Authentificate api')
+        console.log(data);
+    });
+
+    var $grid;
+
+    String.prototype.urlParamValue = function() {
+        var desiredVal = null;
+        var paramName = this.valueOf();
+        window.location.search.substring(1).split('&').some(function(currentValue, _, _) {
+            var nameVal = currentValue.split('=');
+            if ( decodeURIComponent(nameVal[0]) === paramName ) {
+                desiredVal = decodeURIComponent(nameVal[1]);
+                return true;
+            }
+            return false;
+        });
+        return desiredVal;
+    };
+
+    var typeView = 'type'.urlParamValue();
+    $('#title').html(_.upperFirst(typeView) + 's');
+
+    function renderTemplate7(template, data, container) {
+        var template = $(template).html();
+        // compile it with Template7
+
+        Template7.registerHelper('compare',
+            function (key, compareWith, options) {
+                if (key === compareWith)
+                    return options.fn(this, options.data);
+                else
+                    return options.inverse(this, options.data);
+            });
+
+        Template7.registerHelper('ifIn',
+            function (key, compareWith, options) {
+                if (compareWith.split('|').indexOf(key) >= 0)
+                    return options.fn(this, options.data);
+                else
+                    return options.inverse(this, options.data);
+            });
+
+        Template7.registerHelper('arrayIn',
+            function (key, compareWith, options) {
+                //console.log('arrayIn', key, compareWith);
+                if ((key) && (key.indexOf(compareWith) >= 0))
+                    return options.fn(this, options.data);
+                else
+                    return options.inverse(this, options.data);
+            });
+
+        Template7.registerHelper('fieldVal',
+            function (key, val, type) {
+                var returnVal = val[key] != null ? val[key] : '';
+
+                if ((type == 'date') && (returnVal != ''))
+                    returnVal = moment(returnVal).format();
+
+                return returnVal;
+            });
+
+        Template7.registerHelper('JSON',
+            function (val) {
+                return JSON.stringify(val, null, 2);
+            });
+
+        var compiledTemplate = Template7.compile(template);
+        // Now we may render our compiled template by passing required context
+        var html = compiledTemplate(data);
+        if (container)
+            container.append(html);
+        else
+            return html;
+    }
+
+    //load templates
+    $('#templates').load($('#templates').attr('data-template'),
+        function() {
+            var data = {settings: 'active', searchKeyUp: 'searchChange(event);'};
+            data[typeView+'s'] = 'active';
+            renderTemplate7($('#navBarTemplate'),
+                data, $('#navBar'));
+
+
+
+        }
+    );
+
+    function filerGridData(search) {
+        $grid.isotope({
+            // filter element with numbers greater than 50
+            filter: function() {
+                if (search == '')
+                    return true;
+                var data = $(this).data('data');
+                // return true to show, false to hide
+                return (_.toUpper(data.name).indexOf(search) >= 0);
+            }
+        })
+    }
+
+    function searchChange(){
+        filerGridData( _.toUpper($('#navSearch').val()));
+    }
+
+    /*function navFormSubmit(event){
+        event.preventDefault();
+        filerGridData( _.toUpper($('#navSearch').val()));
+    }*/
+
+
+
+    $.getJSON($$myHomeSiteApiURL + '/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
+
+        var dataTemplate = {type: 'type'.urlParamValue(), items: data};
+
+        renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
+
+        $('.slider').each(function(i,e){
+            $(e).slider({
+                /*formatter: function (value) {
+                    return value;
+                }*/
+            }).on('change', function (event) {
+                let sensorId =  $(this).attr('data-id');
+                $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/brightness',
+                    {value: event.value.newValue},
+                    function(data) {
+                        console.log(data);
+                    });
+
+            });
+        });
+
+        $("[data-data]").each(function (index, elem) {
+            $(elem).data('data', data[($(elem).attr('data-data'))]);
+        });
+
+        $grid = $('.grid').isotope({
+            itemSelector: '.panel',
+        });
+
+        $('[data-toggle="edit-node"]').click(function () {
+            $.getJSON($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id'), function (dataVal) {
+                var data = {
+                    field: [{fieldName: 'name', readOnly: true},
+                        {fieldName: 'id', readOnly: true},
+                        {fieldName: '_id', readOnly: true},
+                        {fieldName: '_deviceId', readOnly: true},
+                        {fieldName: 'mySensorsVersion', readOnly: true},
+                        {fieldName: 'version', readOnly: true},
+                        {fieldName: 'batteryLevel', readOnly: true},
+                        {fieldName: 'lastUpdate', type: 'date', readOnly: true},
+                        {fieldName: 'lastHeartBeat', type: 'date', readOnly: true},
+                        {fieldName: 'varName', readOnly: false},
+                        {fieldName: 'maxDelayHeartBeat', readOnly: false},
+                        {fieldName: 'note', readOnly: false}
+                    ],
+                    val: dataVal,
+                    formType: 'node'
+                };
+                let dialog = bootbox.dialog({
+                    title: 'Edit Node ' + dataVal.name,
+                    message: renderTemplate7($('#editFormTemplateAce'), data),
+                    size:"large",
+                    buttons: {
+                        ok: {
+                            label: 'Save',
+                            className: 'btn-primary',
+                            callback: function(){
+                                submitUpdate(event, $(this), 'node');
+                            }
+                        },
+                        cancel: {
+                            label: 'Cancel',
+                            className: 'btn-danger',
+                            callback: function(){}
+                        }
+                    }
+                });
+
+                dialog.init(function(){
+                    dialog.find('.modal-content')
+                        .css({'background-color': '#1f1f1f'})
+                        .css({'color': 'white'});
+                    //addClass("dialog-width");
+                    let editor = ace.edit(dialog.find('#editor')[0]);
+                    editor.setFontSize(18);
+                    editor.renderer.setShowGutter(false);
+                    editor.getSession().setMode("ace/mode/json");
+                    editor.setTheme("ace/theme/ambiance");
+                    console.log(dataVal);
+                    editor.setValue(JSON.stringify(dataVal, null, 2), 1);
+                });
+            });
+        });
+
+        $('[data-toggle="delete-node"]').click(function () {
+            let panel = $(this).parents('.panel');
+            $.delete('/api/node/' + $(this).attr('data-id'), {}, function (data) {
+                panel.remove();
+                $('.grid').isotope({
+                    itemSelector: '.panel',
+                });
+                noty({
+                    text: data,
+                    layout: 'topCenter',
+                    type: 'success',
+                    timeout: 2500,
+                    animation: {
+                        open: 'animated bounceInDown', // Animate.css class names
+                        close: 'animated bounceOutUp' // Animate.css class names
+
+                    }
+                });
+            });
+        });
+
+        $('[data-toggle="reboot-node"]').click(function () {
+            $.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
+                noty({
+                    text: data,
+                    layout: 'topCenter',
+                    type: 'success',
+                    timeout: 2500,
+                    animation: {
+                        open: 'animated bounceInDown', // Animate.css class names
+                        close: 'animated bounceOutUp' // Animate.css class names
+                    }
+                });
+            });
+        });
+
+        $('[data-toggle="toggle-relay"]').bootstrapToggle();
+        $('[data-toggle="toggle-relay"]').change(function () {
+            let sensorId =  $(this).attr('data-id');
+            $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                {}, function(data) { console.log(data); });
+        });
+
+        $('[data-toggle="toggle-send"]').click(function () {
+            let sensorId =  $(this).attr('data-id');
+            bootbox.prompt("Enter Function Name",
+                function(result){
+                    $.put($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/' + result,
+                        {}, function(data) { console.log(data); });
+                });
+        });
+
+        $('[data-toggle="edit-sensor"]').click(function () {
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + $(this).attr('data-id'), function (dataVal) {
+                var data = {
+                    field: [
+                        {fieldName: 'name', readOnly: true},
+                        {fieldName: 'desc', readOnly: true},
+                        {fieldName: 'id', readOnly: true},
+                        {fieldName: '_id', readOnly: true},
+                        {fieldName: 'type', readOnly: true},
+                        {fieldName: '_nodeId', readOnly: true},
+                        {fieldName: 'lastValue', readOnly: true},
+                        {fieldName: 'lastDate', type: 'date', readOnly: true},
+                        {fieldName: 'previousValue', readOnly: true},
+                        {fieldName: 'previousValueDate', type: 'date', readOnly: true},
+
+                        {fieldName: 'precision', readOnly: false},
+                        {fieldName: 'offset', readOnly: false},
+                        {fieldName: 'scriptOnChange', readOnly: false}
+                    ],
+                    val: dataVal,
+                    formType: 'sensor'
+                };
+                let dialog = bootbox.dialog({
+                    title: 'Edit Sensor ' + dataVal.name,
+                    message: renderTemplate7($('#editFormTemplateAce'), data),
+                    "class" : "dialog-width",
+                    buttons: {
+                        ok: {
+                            label: 'Save',
+                            className: 'btn-primary',
+                            callback: function(){
+                                submitUpdate(event, $(this), 'sensor');
+                            }
+                        },
+                        cancel: {
+                            label: 'Cancel',
+                            className: 'btn-danger',
+                            callback: function(){}
+                        }
+                    }
+                });
+                dialog.init(function(){
+                    let editor = ace.edit(dialog.find('#editor')[0]);
+                    editor.setFontSize(18);
+                    editor.renderer.setShowGutter(false);
+                    editor.getSession().setMode("ace/mode/json");
+                    editor.setTheme("ace/theme/ambiance");
+                    console.log(dataVal);
+                    editor.setValue(JSON.stringify(dataVal, null, 2), 1);
+                });
+            });
+        });
+
+    });
+
+    function submitUpdate(event, form, formType) {
+        event.preventDefault();
+
+        /*var node = getFormData($(form).find('[readOnly]'));
+        var nodeDoc = $(form).find(':not([readOnly])').serialize();*/
+        let nodeDoc;
+
+        let editor = ace.edit($(form).find('#editor')[0]);
+        try {
+            nodeDoc = JSON.parse(editor.getValue());
+            console.log('update ', nodeDoc);
+        }
+        catch(err) {
+            noty({
+                text: err.message,
+                layout: 'topRight',
+                type: 'error',
+                animation: {
+                    open: 'animated bounceInRight', // Animate.css class names
+                    close: 'animated bounceOutRight', // Animate.css class names
+                    easing: 'swing', // unavailable - no need
+                    speed: 500 // unavailable - no need
+                }
+            });
+            return false;
+
+        }
+
+        $.post($$myHomeSiteApiURL + '/api/'+formType+'/'+nodeDoc._id,  nodeDoc, function(data) {
+            noty({
+                text: data,
+                layout: 'topCenter',
+                type: 'success',
+                timeout: 2500,
+                animation: {
+                    open: 'animated bounceInDown', // Animate.css class names
+                    close: 'animated bounceOutUp' // Animate.css class names
+
+                }
+            });
+            console.log(data);
+        }) .fail(function(res) {
+            noty({
+                text: res,
+                layout: 'topRight',
+                type: 'error',
+                animation: {
+                    open: 'animated bounceInRight', // Animate.css class names
+                    close: 'animated bounceOutRight', // Animate.css class names
+                    easing: 'swing', // unavailable - no need
+                    speed: 500 // unavailable - no need
+                }
+            });
+            console.log(res);
+        })
+    }
+
+    $(document).ready(function () {
+
+    });
+
+</script>
+
+
+</body>
+</html>
