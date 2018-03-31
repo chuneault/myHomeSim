@@ -151,10 +151,12 @@
         <div class="panel-body">
             <p>{{lastValue}}</p>
             <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
-            <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
-            <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
-            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
-            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
+            {{#js_compare "this.type != 'sensor'"}}
+              <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
+              <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
+              <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
+              <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
+            {{/js_compare}}
         </div>
     </div>
     {{/each}}
