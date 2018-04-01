@@ -343,7 +343,16 @@ class httpServer extends plugins {
       if  (request.params.filter)
         result = _.filter(ctrl.nodes, request.params.filter);
       _.forEach(ctrl.nodes, function(node){
-        result.push(serializeObj(node));
+        let resultNode = serializeObj(node);
+        if (request.params.includeSensors) {
+            let sensors = [];
+            _.forEach(node.__sensors, function (sensor) {
+                  sensors.push(serializeObj(sensor))
+                }
+            );
+            resultNode.sensors = sensors;
+        }
+        result.push(resultNode);
       });
       response.json(result);
     });
