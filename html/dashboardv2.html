@@ -150,7 +150,7 @@
             {{#each sensors}}
                 <li class="list-group-item" style="line-height: 28px; min-width: max-content;" id={{_id}}>
                     <span>{{name}}</span>
-                    <span class="pull-right">
+                    <span class="pull-right" style="padding-left: 8px;">
                       {{#arrayIn this.functionType "switch"}}
                         <input id="binary-switch" type="checkbox"
                           {{#js_compare "this.stateOn == true"}}
