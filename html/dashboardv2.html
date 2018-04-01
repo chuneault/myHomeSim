@@ -137,7 +137,7 @@
     {{#each items}}
     <div class="panel panel-default panel-black" data-data='{{@index}}'>
         <div class="panel-heading">
-            <h5 class="panel-title" ">
+            <h5 class="panel-title" style="line-height: 30px">
                 {{name}}
                 <span class="pull-right">
                     <a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}"><i class='fa fa-edit' aria-hidden='true'></i></a>
@@ -148,7 +148,7 @@
         <div class="panel-body">
             <ul class="list-group">
             {{#each sensors}}
-                <li class="list-group-item" style="height: 50px" id={{_id}}>
+                <li class="list-group-item" style="line-height: 28px" id={{_id}}>
                     <span>{{name}}</span>
                     <span class="pull-right">
                       {{#arrayIn this.functionType "switch"}}
