@@ -149,7 +149,12 @@
             <ul class="list-group">
             {{#each sensors}}
                 <li class="list-group-item" style="line-height: 28px; min-width: max-content;" id={{_id}}>
-                    <span>{{name}}</span>
+                    {{#if vendor.desc}}
+                      <span>{{vendor.desc}}</span>
+                    {{else}}
+                      <span>{{name}}</span>
+                    {{/if}}
+
                     <span class="pull-right" style="padding-left: 8px;">
                       {{#arrayIn this.functionType "switch"}}
                         <input id="binary-switch" type="checkbox"
