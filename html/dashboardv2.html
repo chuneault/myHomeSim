@@ -315,7 +315,7 @@
 
 
 
-    $.getJSON($$myHomeSiteApiURL + '/api/nodes&includeSensors=True', function (data) {
+    $.getJSON($$myHomeSiteApiURL + '/api/nodes/?includeSensors=True', function (data) {
 
         var dataTemplate = {items: data};
 
