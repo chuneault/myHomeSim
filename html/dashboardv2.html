@@ -132,6 +132,8 @@
         <div class="panel-heading">
             <h5 class="panel-title">{{name}}</h5>
             <h7 class="panel-title">{{desc}}</h7>
+
+
             {{#arrayIn this.functionType "switch"}}
             <div class="panel-title"><input id="binary-switch" type="checkbox"
                                             {{#js_compare "this.stateOn == true"}}
@@ -140,28 +142,29 @@
                 data-id="{{_id}}" data-toggle="toggle-relay" data-onstyle="success" data-offstyle="danger">
             </div>
             {{/arrayIn}}
+
             {{#arrayIn this.functionType "brightness"}}
             <input data-id="{{_id}}" class="slider"
                    type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateBrigthness}}"/>
             {{/arrayIn}}
+
             {{#arrayIn this.functionType "temperature"}}
             <span data-id="{{_id}}"><i class='fa fa-thermometer' aria-hidden='true'></i> {{Temperature}} {{tempUnit}}</span>
             {{/arrayIn}}
         </div>
         <div class="panel-body">
             <p>{{lastValue}}</p>
-            <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
-            {{#js_compare "this.type != 'sensor'"}}
+            <a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}">Edit</a>
+
             <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
             <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
             <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
-            {{/js_compare}}
+
         </div>
     </div>
     {{/each}}
 </script>
-
 
 <script id="editFormTemplate" type="text/template7">
     <form id="nodeForm" method="post" class="form-horizontal">
@@ -219,8 +222,8 @@
         return desiredVal;
     };
 
-    var typeView = 'type'.urlParamValue();
-    $('#title').html(_.upperFirst(typeView) + 's');
+    /*var typeView = 'type'.urlParamValue();
+    $('#title').html(_.upperFirst(typeView) + 's');*/
 
     function renderTemplate7(template, data, container) {
         var template = $(template).html();
@@ -312,9 +315,9 @@
 
 
 
-    $.getJSON($$myHomeSiteApiURL + '/api/' + 'type'.urlParamValue() + 's/' + 'id'.urlParamValue(), function (data) {
+    $.getJSON($$myHomeSiteApiURL + '/api/nodes&includeSensors=True', function (data) {
 
-        var dataTemplate = {type: 'type'.urlParamValue(), items: data};
+        var dataTemplate = {items: data};
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
