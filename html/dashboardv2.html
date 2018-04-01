@@ -130,36 +130,11 @@
     {{#each items}}
     <div class="panel panel-default panel-black" data-data='{{@index}}'>
         <div class="panel-heading">
-            <h5 class="panel-title">{{name}}</h5>
+            <h5 class="panel-title">{{name}} <span><a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}">Edit</a></span></h5>
             <h7 class="panel-title">{{desc}}</h7>
-
-
-            {{#arrayIn this.functionType "switch"}}
-            <div class="panel-title"><input id="binary-switch" type="checkbox"
-                                            {{#js_compare "this.stateOn == true"}}
-                checked
-                {{/js_compare}}
-                data-id="{{_id}}" data-toggle="toggle-relay" data-onstyle="success" data-offstyle="danger">
-            </div>
-            {{/arrayIn}}
-
-            {{#arrayIn this.functionType "brightness"}}
-            <input data-id="{{_id}}" class="slider"
-                   type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateBrigthness}}"/>
-            {{/arrayIn}}
-
-            {{#arrayIn this.functionType "temperature"}}
-            <span data-id="{{_id}}"><i class='fa fa-thermometer' aria-hidden='true'></i> {{Temperature}} {{tempUnit}}</span>
-            {{/arrayIn}}
         </div>
         <div class="panel-body">
-            <p>{{lastValue}}</p>
-            <a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}">Edit</a>
 
-            <a href="/nodes?type=sensor&id={{_id}}" class="btn btn-info" data-toggle="node-sensors" data-id="{{_id}}">Sensors</a>
-            <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
-            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
-            <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
 
         </div>
     </div>
@@ -282,7 +257,7 @@
     $('#templates').load($('#templates').attr('data-template'),
         function() {
             var data = {settings: 'active', searchKeyUp: 'searchChange(event);'};
-            data[typeView+'s'] = 'active';
+            data['node'] = 'active';
             renderTemplate7($('#navBarTemplate'),
                 data, $('#navBar'));
 
