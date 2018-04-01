@@ -130,7 +130,11 @@
     {{#each items}}
     <div class="panel panel-default panel-black" data-data='{{@index}}'>
         <div class="panel-heading">
-            <h5 class="panel-title">{{name}} <span><a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}">Edit</a></span></h5>
+            <h5 class="panel-title">{{name}}
+                <span class="pull-right">
+                    <a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}"><i class='fa fa-edit' aria-hidden='true'></i></a>
+                </span>
+            </h5>
             <h7 class="panel-title">{{desc}}</h7>
         </div>
         <div class="panel-body">
