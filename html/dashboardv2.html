@@ -148,7 +148,7 @@
             <ul class="list-group">
             {{#each sensors}}
                 <li class="list-group-item" id={{_id}}>{{name}}
-                    <span class="pull-right">
+                    <div class="pull-right">
                       {{#arrayIn this.functionType "switch"}}
                         <input id="binary-switch" type="checkbox"
                           {{#js_compare "this.stateOn == true"}}
@@ -157,7 +157,7 @@
                           data-id="{{_id}}" data-toggle="toggle-relay">
                       {{/arrayIn}}
                     {{lastValue}}
-                    </span>
+                    </div>
                 </li>
             {{/each}}
             </ul>
