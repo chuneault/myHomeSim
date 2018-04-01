@@ -137,8 +137,8 @@
     {{#each items}}
     <div class="panel panel-default panel-black" data-data='{{@index}}'>
         <div class="panel-heading">
-            <h5 class="panel-title" style="height: 50px">
-                <span>{{name}}</span>
+            <h5 class="panel-title" ">
+                {{name}}
                 <span class="pull-right">
                     <a href="#" class="btn btn-primary" data-toggle="edit-node" data-id="{{_id}}"><i class='fa fa-edit' aria-hidden='true'></i></a>
                 </span>
@@ -148,8 +148,9 @@
         <div class="panel-body">
             <ul class="list-group">
             {{#each sensors}}
-                <li class="list-group-item" id={{_id}}>{{name}}
-                    <div class="pull-right">
+                <li class="list-group-item" style="height: 50px" id={{_id}}>
+                    <span>{{name}}</span>
+                    <span class="pull-right">
                       {{#arrayIn this.functionType "switch"}}
                         <input id="binary-switch" type="checkbox"
                           {{#js_compare "this.stateOn == true"}}
@@ -158,7 +159,7 @@
                           data-id="{{_id}}" data-size="small" data-toggle="toggle-relay">
                       {{/arrayIn}}
                     {{lastValue}}
-                    </div>
+                    </span>
                 </li>
             {{/each}}
             </ul>
