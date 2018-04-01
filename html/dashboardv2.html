@@ -138,8 +138,11 @@
             <h7 class="panel-title">{{desc}}</h7>
         </div>
         <div class="panel-body">
-
-
+            <ul class="list-group">
+            {{#each sensors}}
+                <li class="list-group-item" id={{_id}}>{{name}} </li>
+            {{/each}}
+            </ul>
         </div>
     </div>
     {{/each}}
