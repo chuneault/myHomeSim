@@ -911,7 +911,7 @@
                 {_id: "ryebOROCA", type: "sensor", html: "{icon.tint} {value} %"}
             ]
         },
-        {
+        /*{
             //Door Switch
             id: 7,
             'class': 'grid-item--med',
@@ -938,7 +938,7 @@
                            {value} == 0 ? "{icon.ok}" :  "{icon.exclamation} Porte ouverte"`
                 }
             ]
-        },
+        },*/
         {
             id: 8,
             'class': 'grid-item--med',
@@ -998,7 +998,7 @@
             ]
         },
         {
-            //Salle à diner
+            //Charline
             id: 10,
             'class': 'grid-item--medlarge',
             headerTitle: [
@@ -1055,7 +1055,35 @@
         sensors: [{type: "sensor", _id: "SJErU1A1f", html: "{value}" }]
 
 
-      }
+      },
+
+        {
+            //Charline
+            id: 15,
+            'class': 'grid-item--medlarge',
+            headerTitle: [
+                {type: "node", _id: "HkeqgJ7jM", html: "{data.name} {icon.battery} {data.batteryLevel}%"},
+                {type: "sensor", _id: "HJ-f9l1XsM", html: "{value} V"},
+                {type: "sensor", _id: "rJfMqgJXjM", html: "{icon.ok} {value}"},
+                {type: "sensor", _id: "BkU9eJ7iM", html: "{icon.exclamation} {value}"}
+            ],
+            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart2",
+                    dataChartId: "rylfceyQjG"
+                },
+                {
+                    "class": "flipControl pull-right fa fa-bar-chart",
+                    dataChart: "genChart4",
+                    dataChartId: "rylfceyQjG"
+                }
+            ],
+            sensors: [{type: "sensor", _id: "rylfceyQjG", html: "{icon.thermometer} {value} °C"},
+                {_id: "Byf5gkQoG", type: "sensor", html: "{icon.tint} {value} %"}
+            ]
+        }
+
     ];
 
     function updateWunderground() {
