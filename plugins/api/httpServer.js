@@ -93,6 +93,20 @@ class httpServer extends plugins {
           return fn(null, null);
       }
 
+    function checkIntegerProp(obj) {
+
+        _.forEach(obj, function(val, key){
+            if ((typeof obj[key] == 'string') && (val == ''))
+                obj[key] = null;
+            else
+            if ((typeof obj[key] == 'string') && (Number(val) + 0 == val))
+                obj[key] = Number(val);
+            else
+            if (typeof obj[key] == 'object')
+                checkIntegerProp(obj[key]);
+        });
+    }
+
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
@@ -388,14 +402,7 @@ class httpServer extends plugins {
       var node = ctrl.nodes[request.params._nodeId];
       if (node) {
 
-        _.forEach(request.body, function(val, key){
-          if ((typeof request.body[key] == 'string') && (val == ''))
-            request.body[key] = null;
-          else
-            if ((typeof request.body[key] == 'string') && (Number(val) + 0 == val))
-              request.body[key] = Number(val);
-        });
-
+        checkIntegerProp(request.body);
         console.log(request.body);
 
         ctrl.updateNode(node, request.body);
@@ -467,14 +474,7 @@ class httpServer extends plugins {
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
 
-        _.forEach(request.body, function(val, key){
-          if ((typeof request.body[key] == 'string') && (val == ''))
-           request.body[key] = null;
-          else
-            if ((typeof request.body[key] == 'string') && (Number(val) + 0 == val))
-              request.body[key] = Number(val);
-        });
-
+        checkIntegerProp(request.body);
         //console.log(request.body);
 
         ctrl.updateSensor(sensor, request.body);
