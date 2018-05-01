@@ -13,7 +13,7 @@ unirest.get('https://api.vultr.com/v1/dns/records')
       var dnsHome = _.find(response.body, {name: 'home'});
       if ((dnsHome) && (dnsHome.RECORDID)) {
         unirest.post('https://api.vultr.com/v1/dns/update_record')
-          .headers({'API-Key': '7JPMNZFXC3LFSZ7TZWKSAU7FYOVP2PZ2XZUA'})
+          .headers({'API-Key': 'BS5VUHUUFOBUMUOXBYWBKO5KNDK5QCIX4BYQ'})
           .send({RECORDID: dnsHome.RECORDID, data: sensor.lastValue, domain: 'huneault.ca' })
           .end(function (response) {
             //console.log(response.body);
