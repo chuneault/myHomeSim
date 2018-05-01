@@ -7,7 +7,7 @@ let unirest = require('unirest');
 try {
 
 unirest.get('https://api.vultr.com/v1/dns/records')
-    .headers({'API-Key': '7JPMNZFXC3LFSZ7TZWKSAU7FYOVP2PZ2XZUA'})
+    .headers({'API-Key': 'BS5VUHUUFOBUMUOXBYWBKO5KNDK5QCIX4BYQ'})
     .query({domain: "huneault.ca"})
     .end(function (response) {
       var dnsHome = _.find(response.body, {name: 'home'});
