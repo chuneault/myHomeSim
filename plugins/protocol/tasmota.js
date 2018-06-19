@@ -51,7 +51,7 @@ class tasmota extends plugins {
     getClientInfo(client) {
         let self = this;
         let unirest = require('unirest');
-        self.log.info('client info', client);
+        console.log(client);
     }
 
 
