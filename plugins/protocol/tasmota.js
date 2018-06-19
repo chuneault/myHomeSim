@@ -18,6 +18,7 @@ class tasmota extends plugins {
             //if tasmota client //todo
             self.clients[client.id] = client;
             self.log.info('new tasmota client', client.id);
+            self.getClientInfo(client, packet);
 
         });
 
@@ -25,8 +26,6 @@ class tasmota extends plugins {
 
             if (client && client.id && !self.clients[client.id]) {
                 self.clients[client.id] = client;
-                self.log.info('!!!! new tasmota client !!!!', client);
-                self.getClientInfo(client, packet);
             }
 
             if (client && client.id && self.clients[client.id]){
