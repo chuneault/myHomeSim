@@ -26,6 +26,7 @@ class tasmota extends plugins {
             if (client && client.id && !self.clients[client.id]) {
                 self.clients[client.id] = client;
                 self.log.info('new tasmota client', client.id);
+                getClientInfo(client, packet);
             }
 
             if (client && client.id && self.clients[client.id]){
@@ -47,6 +48,13 @@ class tasmota extends plugins {
 
 
     };
+
+    getClientInfo(client) {
+        let self = this;
+        let unirest = require('unirest');
+        self.log.info('client info', client);
+    }
+
 
     //Published tele/aquatempswitch/SENSOR {"Time":"2018-03-28T15:49:37","DS18B20":{"Temperature":24.4},"TempUnit":"C"}
     updateTasmotaSensor(clientId, topic, payload) {
@@ -105,7 +113,6 @@ class tasmota extends plugins {
         );
     }
 
-
     write(sensor, cmd, cmdVal) {
         this.__controller.mqttBroker.server.publish({
             topic: 'cmnd/'+sensor.__ownerNode.name+'/'+cmd,
@@ -114,7 +121,6 @@ class tasmota extends plugins {
             retain: false // or true
         });
     }
-
 
 }
 
