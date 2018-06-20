@@ -345,6 +345,9 @@
                                  {{#js_compare "this.type == 'sensor'"}}
                                    data-toggle="tooltip-sensor"
                                  {{/js_compare}}>
+                                 {{#js_compare "this.type == 'html'"}}
+                                   {{html}}
+                                 {{/js_compare}}>
                            </span>
                 {{/each}}
                 </span>
@@ -796,32 +799,20 @@
                 {_id: "r1lQnAuRC", type: "sensor", html: "{icon.bars} {value} hPa"}
             ]
         },
-        /*{
+        {
             //Bureau
             id: 2,
             'class': 'grid-item--med',
             headerTitle: [
-                {type: "node",   _id: "BkrMD9k-x",  html: "{data.name} {icon.battery} {data.batteryLevel}%"},
-                {type: "sensor", _id: "HJuGv51bl",  html: "{value} V"},
-                {type: "sensor", _id: "rJWdGv51Wl", html: "{icon.ok} {value}"},
-                {type: "sensor", _id: "rJldMwqkZe", html: "{icon.exclamation} {value}"}
+                {type: "html",  html: "mes Aquariums"},
             ],
-            headerButtons: [{"class": "fa fa-question", dataToggle: "tooltip-node"},
-                {
-                    "class": "flipControl pull-right fa fa-bar-chart",
-                    dataChart: "genChart2",
-                    dataChartId: "B1gPMw5yWl"
-                },
-                {
-                    "class": "flipControl pull-right fa fa-bar-chart",
-                    dataChart: "genChart4",
-                    dataChartId: "B1gPMw5yWl"
-                }
-            ],
-            sensors: [{type: "sensor", _id: "B1gPMw5yWl", html: "{icon.thermometer} {value} °C"},
-                {_id: "BkDGDcy-e", type: "sensor", html: "{icon.tint} {value} %"}
+            sensors: [
+                {type: "sensor", _id: "BJOy6aw-7", html: "{icon.thermometer} Salon    {value} °F"},
+                {type: "sensor", _id: "rJeeT8Rq5G", html: "{icon.thermometer} Cave     {value} °F"},
+                {type: "sensor", _id: "B1gPMw5yWl", html: "{icon.thermometer} Bureau   {value} °F"},
+                {type: "sensor", _id: "BkHnWSZ-X", html: "{icon.thermometer} Bureau 2 {value} °F"},
             ]
-        },*/
+        },
         {
             //Lauralie
             id: 3,
@@ -1381,7 +1372,8 @@
             elem = $(elem);
             var dataAttr = JSON.parse(elem.attr('data-myHomeSim'));
             elem.data('myHomeSim', dataAttr);
-            $.getJSON($$myHomeSiteApiURL + '/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
+            if (dataAttr.type != 'html')
+              $.getJSON($$myHomeSiteApiURL + '/api/' + dataAttr.type + '/' + dataAttr._id, function (data) {
                 if (dataAttr.initJava)
                   new Function("elem", "data", dataAttr.initJava).call(this, elem, data);
                 if (dataAttr.type == 'node')
