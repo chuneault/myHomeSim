@@ -31,8 +31,8 @@
         socket.on('newSensorValue', function (data) {
             var notyDefault = {
                 layout: 'topCenter',
-                type: 'error',
-                timeout: 2500,
+                type: 'information',
+                timeout: 1000,
                 animation: {
                     open: 'animated bounceInDown', // Animate.css class names
                     close: 'animated bounceOutUp' // Animate.css class names
@@ -43,8 +43,8 @@
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
                 noty($.extend(notyDefault, {
-                            text: '<span style="font-size: x-large"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + data.lastValue + '</span>',
-                        })
+                            text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>' + data.lastValue + '</span>'
+                     })
                 );
             }
 
