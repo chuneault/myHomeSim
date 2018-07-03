@@ -15,6 +15,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
 
     <script>
 
@@ -38,6 +41,7 @@
 
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
+                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
                 noty($.extend(notyDefault, {
                             text: '<span style="font-size: x-large"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + data.lastValue + '</span>',
                         })
@@ -48,8 +52,8 @@
         });
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
-            console.log(data);
             $('#pooltemp').html('&nbsp;' + data.lastValue + ' °F&nbsp;');
+            $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
     </script>
@@ -76,5 +80,6 @@
 
 <body>
   <center class="poollbl"><i class="fas fa-thermometer-half"></i><span id="pooltemp">??</span><i class="fas fa-swimming-pool"></i></center>
+  <center class="poolupdatelbl">dernière mise à jour: ??</center>
 </body>
 </html>
