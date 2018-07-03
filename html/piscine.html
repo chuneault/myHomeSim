@@ -49,8 +49,7 @@
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             console.log(data);
-            $('#pooltemp').html(
-                '&nbsp;' + data.lastValue + '°F';
+            $('#pooltemp').html('&nbsp;' + data.lastValue + '°F');
         });
 
     </script>
