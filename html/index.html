@@ -372,12 +372,16 @@
             <div class="panel-body panel-black">
                 <ul class="list-group">
                     {{#each sensors}}
-                    <li class="list-group-item" id={{_id}}
+                      <li class="list-group-item" id={{_id}}
                         data-myHomeSim='{{JSON this}}'
                         {{#js_compare "this.type == 'sensor'"}}
                           data-toggle="tooltip-sensor"
                         {{/js_compare}}>
-                    </li>
+
+
+
+
+                      </li>
                     {{/each}}
                 </ul>
             </div> <!-- end panel body -->
@@ -755,6 +759,16 @@
                   return '&#x' + ((61589 + parseInt(val / 1.05)).toString(16));
                 });
 
+        Template7.registerHelper('arrayIn',
+            function (key, compareWith, options) {
+                //console.log('arrayIn', key, compareWith);
+                if ((key) && (key.indexOf(compareWith) >= 0))
+                    return options.fn(this, options.data);
+                else
+                    return options.inverse(this, options.data);
+            });
+
+
         var compiledTemplate = Template7.compile(template);
         // Now we may render our compiled template by passing required context
         var html = compiledTemplate(data);
@@ -808,10 +822,9 @@
                 {type: "html",  html: "mes Aquariums"},
             ],
             sensors: [
-                {type: "sensor", _id: "BJOy6aw-7", html: "{icon.thermometer} Salon    {value} °F"},
-                {type: "sensor", _id: "rJeeT8Rq5G", html: "{icon.thermometer} Cave     {value} °F"},
-                {type: "sensor", _id: "HJNiOwLZX", html: "{icon.thermometer} Bureau   {value} °F"},
-                {type: "sensor", _id: "BkHnWSZ-X", html: "{icon.thermometer} Bureau 2 {value} °F"},
+                {type: "sensor", _id: "BJOy6aw-7", html: "{icon.thermometer} Salon {value} °F"},
+                {type: "sensor", _id: "rJeeT8Rq5G", html: "{icon.thermometer} Cave {value} °F"},
+                {type: "sensor", _id: "BkHnWSZ-X", html: "{icon.thermometer} Bureau Guppy {value} °F"},
             ]
         },
         {

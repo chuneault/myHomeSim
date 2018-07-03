@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>myHomeSim Pool</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+    <script src="/js/template7.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/myUtils.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/template7.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
+    <script src="https://use.fontawesome.com/4d5fdbd653.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
+
+    <script>
+        var socket = io.connect($$myHomeSiteApiURL);
+        socket.on('newSensorValue', function (data) {
+            var value = data.lastValue;
+            var notyDefault = {
+                layout: 'topCenter',
+                type: 'error',
+                timeout: 2500,
+                animation: {
+                    open: 'animated bounceInDown', // Animate.css class names
+                    close: 'animated bounceOutUp' // Animate.css class names
+                }
+            };
+
+            if (data._id == 'B1h5_PUZX')  {
+                $('#pooltemp').html(value);
+                noty($.extend(notyDefault, {
+                            text: '<span style="font-size: x-large"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + data.lastValue + '</span>',
+                        })
+                );
+            }
+
+
+        });
+
+    </script>
+
+
+    <style>
+
+        body {
+            background-color: #222222;
+            font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
+            font-weight: normal;
+            padding-top: 60px;
+            background: url(img/pool-water.jpg) no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            opacity: 0.9;
+        }
+        .poollbl {
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+
+    </style>
+
+
+<body>
+  <center class="poollbl">Température de la piscine</center>
+  <center class="poollbl" id="pooltemp">78.5</center>
+</body>
+</html>
