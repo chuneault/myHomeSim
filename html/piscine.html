@@ -49,14 +49,12 @@
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             console.log(data);
-            $('#pooltemp').html('&nbsp;' + data.lastValue + '°F');
+            $('#pooltemp').html('&nbsp;' + data.lastValue + ' °F&nbsp;');
         });
 
     </script>
 
-
     <style>
-
         body {
             background-color: #222222;
             font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
@@ -74,12 +72,9 @@
             font-size: 60px;
             font-weight: bold;
         }
-
-
     </style>
 
-
 <body>
-  <center class="poollbl"><i class="fas fa-swimming-pool"></i><span id="pooltemp">??</span><i class="fas fa-thermometer-half"></i></center>
+  <center class="poollbl"><i class="fas fa-thermometer-half"></i><span id="pooltemp">??</span><i class="fas fa-swimming-pool"></i></center>
 </body>
 </html>
