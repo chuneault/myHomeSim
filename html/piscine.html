@@ -19,7 +19,6 @@
     <script>
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
-            var value = data.lastValue;
             var notyDefault = {
                 layout: 'topCenter',
                 type: 'error',
@@ -31,7 +30,7 @@
             };
 
             if (data._id == 'B1h5_PUZX')  {
-                $('#pooltemp').html(value);
+                $('#pooltemp').html(data.lastValue;);
                 noty($.extend(notyDefault, {
                             text: '<span style="font-size: x-large"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' + data.lastValue + '</span>',
                         })
@@ -39,6 +38,10 @@
             }
 
 
+        });
+
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/B1h5_PUZX', function (data) {
+            $('#pooltemp').html(data.lastValue);
         });
 
     </script>
@@ -69,6 +72,6 @@
 
 <body>
   <center class="poollbl">Température de la piscine</center>
-  <center class="poollbl" id="pooltemp">78.5</center>
+  <center class="poollbl" id="pooltemp">??</center>
 </body>
 </html>
