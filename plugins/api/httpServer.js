@@ -235,6 +235,10 @@ class httpServer extends plugins {
         res.render(appRoot + '/html/dashboardv2.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
+    app.get('/piscine', function (req, res) {
+        res.render(appRoot + '/html/piscine.html', {myHomeSiteApiURL: self.params.apiUrl});
+    });
+
     app.get('/nodes', function (req, res) {
       res.render(appRoot + '/html/nodes.html', {myHomeSiteApiURL: self.params.apiUrl});
     });

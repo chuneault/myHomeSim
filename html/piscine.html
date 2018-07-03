@@ -18,7 +18,11 @@
 
     <script>
 
-        var $$myHomeSiteApiURL = 'http://192.168.0.50:8080';
+        $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
+            console.log('Authentificate api')
+            console.log(data);
+        });
+
 
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
