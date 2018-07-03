@@ -18,6 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.10/packaged/jquery.noty.packaged.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
     <script>
 
@@ -43,7 +44,7 @@
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
                 noty($.extend(notyDefault, {
-                            text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>' + data.lastValue + '</span>'
+                            text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>'
                      })
                 );
             }
