@@ -17,6 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
 
     <script>
+
+        var $$myHomeSiteApiURL = 'http://127.0.0.1';
+
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
             var notyDefault = {
