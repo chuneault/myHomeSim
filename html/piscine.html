@@ -18,7 +18,7 @@
 
     <script>
 
-        var $$myHomeSiteApiURL = 'http://127.0.0.1';
+        var $$myHomeSiteApiURL = 'http://192.168.0.50:8080';
 
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
@@ -44,6 +44,7 @@
         });
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/B1h5_PUZX', function (data) {
+            console.log(data);
             $('#pooltemp').html(data.lastValue);
         });
 
