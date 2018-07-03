@@ -13,7 +13,7 @@
     <script src="/js/template7.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
-    <script src="https://use.fontawesome.com/4d5fdbd653.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
 
     <script>
@@ -49,7 +49,8 @@
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             console.log(data);
-            $('#pooltemp').html(data.lastValue);
+            $('#pooltemp').html(
+                '&nbsp;' + data.lastValue + '°F';
         });
 
     </script>
@@ -64,6 +65,7 @@
             padding-top: 60px;
             background: url(img/pool-water.jpg) no-repeat center center fixed;
             background-size: cover;
+            color: white;
         }
 
         .container {
@@ -79,7 +81,6 @@
 
 
 <body>
-  <center class="poollbl">Température de la piscine</center>
-  <center class="poollbl" id="pooltemp">??</center>
+  <center class="poollbl"><i class="fas fa-swimming-pool"></i><span id="pooltemp">??</span><i class="fas fa-thermometer-half"></i></center>
 </body>
 </html>
