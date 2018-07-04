@@ -44,7 +44,10 @@
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
 
-                new Noty({
+                $('#pooltemp').data('lastValue', data.lastValue);
+                $('#pooltemp').addClass('flash');
+
+                /*new Noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
                     timeout: 1500,
                     killer: true,
@@ -55,7 +58,7 @@
                         open: 'animated bounceInDown', // Animate.css class names
                         close: 'animated bounceOutUp' // Animate.css class names
                     }
-                }).show();
+                }).show();*/
             }
 
 
