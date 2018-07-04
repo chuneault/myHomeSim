@@ -42,7 +42,16 @@
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
-                var n = noty({
+
+                new Noty({
+                    text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
+                    animation: {
+                        open: 'animated bounceInRight', // Animate.css class names
+                        close: 'animated bounceOutRight' // Animate.css class names
+                    }
+                }).show();
+
+                /*var n = noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
                     animation: {
                         open: {height: 'toggle'},
