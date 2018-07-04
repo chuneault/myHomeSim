@@ -35,6 +35,7 @@
         });
 
 
+
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
 
@@ -48,8 +49,8 @@
                     timeout: 2500,
                     killer: true,
                     animation: {
-                        open: 'animated bounceInTop', // Animate.css class names
-                        close: 'animated bounceOutTop' // Animate.css class names
+                        open: 'animated bounceInDown', // Animate.css class names
+                        close: 'animated bounceOutUp' // Animate.css class names
                     }
                 }).show();
 
