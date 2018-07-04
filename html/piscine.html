@@ -125,6 +125,24 @@
           };
 
           var socket = io.connect($$myHomeSiteApiURL);
+
+
+
+          function updateSensor(elem, data) {
+              data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
+              let html = idFound.elem.data('origHtml');
+              $(elem).html(format(html, {icon, data: data}));
+              let tooltipex = $(elem).attr('data-tooltipex');
+              if (tooltipex) {
+                  $(elem).tooltipster({
+                      theme: 'tooltipster-shadow',
+                      content: format(eval(format(tooltipex, {icon, data: data})), {icon, data: data})
+                  });
+              }
+              $(elem).animateCss('bounce', function() {});
+          }
+
+
           var idToUpdate = [];
           socket.on('newSensorValue', function (data) {
 
@@ -132,14 +150,8 @@
 
               if (idFound )  {
 
-                  var html = idFound.elem.data('origHtml');
-                  data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
-                  idFound.elem.html(format(html, {
-                      icon,
-                      data: data
-                  }));
+                  updateSensor(idFound.elem, data);
 
-                  idFound.elem.animateCss('bounce', function() {});
 
                   //$('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
 
@@ -160,25 +172,10 @@
 
           $("[data-myHomeSim]").each(function (index, elem) {
               var id = $(elem).attr('data-myHomeSim');
-              var html = $(elem).html();
-
-              $(elem).data('origHtml', html);
-
-
+              $(elem).data('origHtml', $(elem).html());
               $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
-                  data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
-                  $(elem).html(format(html, {icon, data: data}));
-                  let tooltipex = $(elem).attr('data-tooltipex');
-                  if (tooltipex) {
-                      $(elem).tooltipster({
-                          theme: 'tooltipster-shadow',
-                          content: format(eval(format(tooltipex, {icon, data: data})), {icon, data: data})
-                      });
-                  }
-                  idToUpdate.push({id: id, elem: $(elem)});
-
-
-
+                updateSensor(elem, data);
+                idToUpdate.push({id: id, elem: $(elem)});
               });
 
           });
