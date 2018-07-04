@@ -26,14 +26,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+
+
 
     <script>
 
         $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
-            console.log('Authentificate api')
             console.log(data);
         });
-
 
 
         var socket = io.connect($$myHomeSiteApiURL);
@@ -42,7 +45,7 @@
 
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
-                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
+                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('MMMM Do, h:mm:ss a'));
 
                 $('#pooltemp').data('lastValue', data.lastValue);
                 $('.poollbl').animateCss('bounce', function() {
@@ -62,13 +65,15 @@
                     }
                 }).show();*/
             }
-
-
         });
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             $('#pooltemp').html(data.lastValue);
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
+
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-shadow'
+            });
         });
 
     </script>
@@ -97,7 +102,12 @@
     </style>
 
 <body>
-  <center class="poollbl"><i class="fas fa-thermometer-half">&nbsp;</i><span id="pooltemp">??</span><span>°F&nbsp;</span><i class="fas fa-swimming-pool"></i></center>
+  <center class="poollbl tooltip" data-tooltip-content="test">
+      <i class="fas fa-thermometer-half">&nbsp;</i>
+      <span id="pooltemp">??</span>
+      <span>°F&nbsp;</span>
+      <i class="fas fa-swimming-pool"></i>
+  </center>
   <center id="poolupdatelbl">dernière mise à jour: ??</center>
 </body>
 </html>
