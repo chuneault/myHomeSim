@@ -87,7 +87,7 @@
         }
         
         .aqualbl {
-            font-size: 24px;
+            font-size: 42px;
         }
     </style>
 
@@ -97,7 +97,7 @@
       <div class="row">
           <div class="col-sm poolBox" style="text-align: center">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue - 32) * 0.5556 ),2) + '°C'" data-myHomeSim="HJNiOwLZX">
-                   <span class="poollbl">{icon.thermometer} {data.lastValue} °F {icon.pool}</span>
+                   <span class="poollbl">{icon.thermometer} {data.lastValue} °F {icon.pool} Piscine</span>
                    <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -106,7 +106,7 @@
       <div class="row">
           <div class="col-sm meteoBox" style="text-align: center">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="BJM3Cd00">
-                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
+                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C Météo</span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -115,7 +115,7 @@
       <div class="row">
           <div class="col-sm homeBox" style="text-align: center">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="rkgvOxjh-e">
-                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
+                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C Maison</span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -123,9 +123,9 @@
 
       <div class="row">
           <div class="col-sm aquaBox" style="text-align: center">
-             <div data-myHomeSim="rJeeT8Rq5G" class="aqualbl">Scalaire Coupe: {icon.thermometer} {data.lastValue} °F </div>
-             <div data-myHomeSim="BkHnWSZ-X" class="aqualbl">Guppy: {icon.thermometer} {data.lastValue} °F </div>
-             <div data-myHomeSim="BJOy6aw-7" class="aqualbl">Salon: {icon.thermometer} {data.lastValue} °F </div>
+             <div data-myHomeSim="rJeeT8Rq5G" class="aqualbl">{icon.thermometer} {data.lastValue} °F Scalaire Coupe</div>
+             <div data-myHomeSim="BkHnWSZ-X" class="aqualbl">{icon.thermometer} {data.lastValue} °F Guppy</div>
+             <div data-myHomeSim="BJOy6aw-7" class="aqualbl">{icon.thermometer} {data.lastValue} °F Salon</div>
           </div>
       </div>
 
