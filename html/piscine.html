@@ -84,7 +84,7 @@
   <div class="container">
       <div class="row">
           <div class="col-sm poolBox" style="text-align: center">
-              <div class="tooltipex" title="??" data-myHomeSim="HJNiOwLZX">
+              <div class="tooltipex" data-tooltipex="((data.lastValue - 32) * 0.5556 ) + '°C'" data-myHomeSim="HJNiOwLZX">
                    <span class="poollbl">{icon.thermometer} {data.lastValue} °F {icon.pool}</span>
                    <div id="poolupdatelbl">dernière mise à jour: {data.lastDate}</div>
               </div>
@@ -166,20 +166,18 @@
 
 
               $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
-
                   data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
-                  $(elem).html(format(html, {
-                      icon,
-                      data: data
-                  }));
-
+                  $(elem).html(format(html, {icon, data: data}));
+                  let tooltipex = $(elem).attr('data-tooltipex');
+                  if (tooltipex) {
+                      $(elem).tooltipster({
+                          theme: 'tooltipster-shadow',
+                          content: format(eval(format(tooltipex, {icon, data: data})), {icon, data: data})
+                      });
+                  }
                   idToUpdate.push({id: id, elem: $(elem)});
 
-                  /*
-                  $('.tooltipex').tooltipster({
-                      theme: 'tooltipster-shadow',
-                      content: ((data.lastValue - 32) * 0.5556 ) + '°C'
-                  });*/
+
 
               });
 
