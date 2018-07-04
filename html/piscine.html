@@ -86,25 +86,24 @@
           <div class="col-sm poolBox" style="text-align: center">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue - 32) * 0.5556 ),2) + '°C'" data-myHomeSim="HJNiOwLZX">
                    <span class="poollbl">{icon.thermometer} {data.lastValue} °F {icon.pool}</span>
-                   <div id="poolupdatelbl">dernière mise à jour: {data.lastDate}</div>
+                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
       </div>
-  </div>
-<!--
+
       <div class="row">
           <div class="col-sm meteoBox" style="text-align: center">
-              <div class="meteolbl" title="">
-                  <i class="fas fa-thermometer-half"></i>
-                  <span>40 °C</span>
+              <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue + 32) / 0.5556 ),2) + '°F'" data-myHomeSim="BJM3Cd00">
+                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
+                  <div>dernière mise à jour: {data.lastDate}</div>
               </div>
-              <div id="poolupdatelbl">dernière mise à jour: ??</div>
           </div>
       </div>
 
+
+
   </div>
 
-  !-->
 
       <script>
 
