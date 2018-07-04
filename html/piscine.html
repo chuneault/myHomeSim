@@ -45,7 +45,7 @@
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
 
                 $('#pooltemp').data('lastValue', data.lastValue);
-                $('#pooltemp').addClass('flash');
+                $('.poollbl').addClass('flash');
 
                 /*new Noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
@@ -65,7 +65,7 @@
         });
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
-            $('#pooltemp').html('&nbsp;' + data.lastValue + ' °F&nbsp;');
+            $('#pooltemp').html(data.lastValue);
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
@@ -92,7 +92,7 @@
     </style>
 
 <body>
-  <center class="poollbl"><i class="fas fa-thermometer-half"></i><span id="pooltemp">??</span><i class="fas fa-swimming-pool"></i></center>
+  <center class="poollbl"><i class="fas fa-thermometer-half">&nbsp;</i><span id="pooltemp">??</span><i class="fas fa-swimming-pool"> °F&nbsp;</i></center>
   <center id="poolupdatelbl">dernière mise à jour: ??</center>
 </body>
 </html>
