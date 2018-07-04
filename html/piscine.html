@@ -45,9 +45,11 @@
 
                 new Noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
+                    timeout: 2500,
+                    killer: true,
                     animation: {
-                        open: 'animated bounceInRight', // Animate.css class names
-                        close: 'animated bounceOutRight' // Animate.css class names
+                        open: 'animated bounceInTop', // Animate.css class names
+                        close: 'animated bounceOutTop' // Animate.css class names
                     }
                 }).show();
 
