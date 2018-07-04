@@ -70,7 +70,7 @@
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             $('#pooltemp').html(data.lastValue);
 
-            $('.tooltipex').title((data.lastValue - 32) * 0.5556 );
+            $('.tooltipex').attr('title',((data.lastValue - 32) * 0.5556 ) + '°C');
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
