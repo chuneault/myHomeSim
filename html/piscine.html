@@ -132,13 +132,16 @@
 
               if (idFound )  {
 
-                  $('#pooltemp').html(data.lastValue);
-                  $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('D MMMM, h:mm:ss a'));
-                  $('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
-                  $('#pooltemp').data('lastValue', data.lastValue);
-                  $('.poollbl').animateCss('bounce', function() {
-                      // Do somthing after animation
-                  });
+                  var html = idFound.elem.html();
+                  data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
+                  idFound.elem.html(format(html, {
+                      icon,
+                      data: data
+                  }));
+
+                  idFound.elem.animateCss('bounce', function() {});
+
+                  //$('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
 
                   /*new Noty({
                       text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
