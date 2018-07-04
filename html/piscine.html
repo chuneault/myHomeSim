@@ -46,7 +46,7 @@
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('MMMM Do, h:mm:ss a'));
-
+                $('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
                 $('#pooltemp').data('lastValue', data.lastValue);
                 $('.poollbl').animateCss('bounce', function() {
                     // Do somthing after animation
@@ -69,17 +69,13 @@
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             $('#pooltemp').html(data.lastValue);
-
-            $('.tooltipex').attr('title',((data.lastValue - 32) * 0.5556 ) + '°C');
             $('.tooltipex').tooltipster({
                 theme: 'tooltipster-shadow',
+                content: ((data.lastValue - 32) * 0.5556 ) + '°C'
             });
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
-        $(document).ready(function() {
-
-        });
 
     </script>
 
