@@ -128,7 +128,6 @@
           var idToUpdate = [];
           socket.on('newSensorValue', function (data) {
 
-              debugger;
               idFound =_.find(idToUpdate, { 'id': data._id });
 
               if (idFound )  {
