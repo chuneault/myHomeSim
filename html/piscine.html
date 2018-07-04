@@ -77,6 +77,11 @@
         .col-sm {
             padding-bottom: 10px;
         }
+
+        .homeBox {
+            background: url(img/home.jpg) no-repeat center center fixed;
+
+        }
     </style>
 
 <body>
@@ -94,6 +99,15 @@
       <div class="row">
           <div class="col-sm meteoBox" style="text-align: center">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="BJM3Cd00">
+                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
+                  <div>dernière mise à jour: {data.lastDate}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-sm homeBox" style="text-align: center">
+              <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="rkgvOxjh-e">
                   <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
