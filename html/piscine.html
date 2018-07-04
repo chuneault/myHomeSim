@@ -43,6 +43,21 @@
             console.log(data);
         });
 
+        var icon = {
+            'thermometer': "<i class='fas fa-thermometer-half></i>",
+            'pool': "<i class='fas fa-swimming-pool'></i>",
+            'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
+            'bars': "<i class='fa fa-bars' aria-hidden='true'></i>",
+            'ok': "<i class='fa fa-check' aria-hidden='true'></i>",
+            'fire': "<i class='fa fa-fire'></i>",
+            'cancel': "<i class='fa fa-times' aria-hidden='true'></i>",
+            'exclamation': "<i class='fa fa-exclamation-circle' aria-hidden='true'></i>",
+            'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
+            "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
+            "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
+            "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+        };
+
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
 
@@ -71,14 +86,28 @@
             }
         });
 
-        $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
-            $('#pooltemp').html(data.lastValue);
-            $('.tooltipex').tooltipster({
-                theme: 'tooltipster-shadow',
-                content: ((data.lastValue - 32) * 0.5556 ) + '°C'
+        $("[data-myHomeSim]").each(function (index, elem) {
+            var id = $(elem).attr('data-myHomeSim');
+            var html = $(elem).html();
+
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
+
+                $(elem).html(format(html, {
+                    icon,
+                    data: data
+                }));
+
+                /*$('#pooltemp').html(data.lastValue);
+                $('.tooltipex').tooltipster({
+                    theme: 'tooltipster-shadow',
+                    content: ((data.lastValue - 32) * 0.5556 ) + '°C'
+                });
+                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('D MMMM, h:mm:ss a'));*/
             });
-            $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('D MMMM, h:mm:ss a'));
+
         });
+
+
 
 
     </script>
@@ -126,16 +155,14 @@
   <div class="container">
       <div class="row">
           <div class="col-sm poolBox" style="text-align: center">
-              <div class="poollbl tooltipex"  title="??">
-                  <i class="fas fa-thermometer-half"></i>
-                  <span id="pooltemp">??</span>
-                  <span>°F</span>
-                  <i class="fas fa-swimming-pool"></i>
+              <div class="poollbl tooltipex" title="??" data-myHomeSim="HJNiOwLZX">
+                   <span>{icon.thermometer} {data.lastValue} °F {icon.pool}"></span>
+                   <div id="poolupdatelbl">dernière mise à jour: {data.lastValue}</div>
               </div>
-              <div id="poolupdatelbl">dernière mise à jour: ??</div>
           </div>
       </div>
 
+<!--
       <div class="row">
           <div class="col-sm meteoBox" style="text-align: center">
               <div class="meteolbl" title="">
@@ -147,6 +174,8 @@
       </div>
 
   </div>
+
+  !-->
 
 </body>
 </html>
