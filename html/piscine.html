@@ -37,8 +37,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 
-
-
     <script>
 
         $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
@@ -110,12 +108,16 @@
     </style>
 
 <body>
-  <center class="poollbl tooltipex"  title="??">
-      <i class="fas fa-thermometer-half"></i>
-      <span id="pooltemp">??</span>
-      <span>°F</span>
-      <i class="fas fa-swimming-pool"></i>
-  </center>
-  <center id="poolupdatelbl">dernière mise à jour: ??</center>
+
+  <div class="container">
+    <div class="poollbl tooltipex"  title="??">
+        <i class="fas fa-thermometer-half"></i>
+        <span id="pooltemp">??</span>
+        <span>°F</span>
+        <i class="fas fa-swimming-pool"></i>
+    </div>
+    <div id="poolupdatelbl">dernière mise à jour: ??</div>
+  </div>
+
 </body>
 </html>
