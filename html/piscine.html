@@ -69,14 +69,14 @@
 
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             $('#pooltemp').html(data.lastValue);
+
+            $('.tooltipex').title((data.lastValue - 32) * 0.5556 );
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
         $(document).ready(function() {
             $('.tooltipex').tooltipster({
                 theme: 'tooltipster-shadow',
-                trigger: 'hover'
-
             });
         });
 
@@ -106,13 +106,11 @@
     </style>
 
 <body>
-  <center class="poollbl">
-      <span class="tooltipex" title="allo">
+  <center class="poollbl" class="tooltipex" title="">
       <i class="fas fa-thermometer-half"></i>
       <span id="pooltemp">??</span>
       <span>°F</span>
       <i class="fas fa-swimming-pool"></i>
-      </span>
   </center>
   <center id="poolupdatelbl">dernière mise à jour: ??</center>
 </body>
