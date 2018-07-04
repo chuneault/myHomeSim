@@ -46,36 +46,16 @@
 
                 new Noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
-                    timeout: 2500,
+                    timeout: 1500,
                     killer: true,
+                    type: 'information',
+                    theme: 'relax',
+                    layout: 'topCenter',
                     animation: {
                         open: 'animated bounceInDown', // Animate.css class names
                         close: 'animated bounceOutUp' // Animate.css class names
                     }
                 }).show();
-
-                /*var n = noty({
-                    text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
-                    animation: {
-                        open: {height: 'toggle'},
-                        close: {height: 'toggle'},
-                        easing: 'swing',
-                        speed: 500 // opening & closing animation speed
-                    }
-                });
-                /*noty({
-                    layout: 'topCenter',
-                    type: 'information',
-                    timeout: 2500,
-                    killer: true,
-                    animation: {
-                        open: 'animated bounceInDown', // Animate.css class names
-                        close: 'animated bounceOutUp' // Animate.css class names
-                    },
-
-                            text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>'
-                     });*/
-
             }
 
 
