@@ -95,16 +95,18 @@
             color: white;
         }
 
-        .container {
-            opacity: 0.9;
-        }
         .poollbl {
             font-size: 60px;
             font-weight: bold;
             -webkit-animation-duration: 3s;
             -webkit-animation-delay: 2s;
             /*-webkit-animation-iteration-count: infinite;*/
+
+        }
+
+        .poolBox {
             background: url(img/pool-water.jpg) no-repeat center center fixed;
+
         }
     </style>
 
@@ -112,7 +114,7 @@
 
   <div class="container">
       <div class="row">
-          <div class="col-sm" style="text-align: center">
+          <div class="col-sm poolBox" style="text-align: center">
               <div class="poollbl tooltipex"  title="??">
                   <i class="fas fa-thermometer-half"></i>
                   <span id="pooltemp">??</span>
