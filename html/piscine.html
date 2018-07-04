@@ -79,8 +79,15 @@
         }
 
         .homeBox {
-            background: url(img/home.jpg) repeat center center fixed;
+            background: url(img/home.jpg) repeat center center;
 
+        }
+        .homeBox {
+            background: url(img/aqua.jpg) repeat center center;
+        }
+        
+        .aqualbl {
+            font-style: 24px;
         }
     </style>
 
@@ -111,6 +118,14 @@
                   <span class="meteolbl">{icon.thermometer} {data.lastValue} °C </span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-sm aquaBox" style="text-align: center">
+             <div data-myHomeSim="rJeeT8Rq5G" class="aqualbl">Scalaire Coupe: {icon.thermometer} {data.lastValue} °F </div>
+             <div data-myHomeSim="BkHnWSZ-X" class="aqualbl">Guppy: {icon.thermometer} {data.lastValue} °F </div>
+             <div data-myHomeSim="BJOy6aw-7" class="aqualbl">Salon: {icon.thermometer} {data.lastValue} °F </div>
           </div>
       </div>
 
