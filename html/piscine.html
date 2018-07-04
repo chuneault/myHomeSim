@@ -30,21 +30,21 @@
 
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
-            $.noty.defaults = {
-                layout: 'topCenter',
-                type: 'information',
-                timeout: 2500,
-                killer: true,
-                animation: {
-                    open: 'animated bounceInDown', // Animate.css class names
-                    close: 'animated bounceOutUp' // Animate.css class names
-                }
-            };
+
 
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
                 noty({
+                    layout: 'topCenter',
+                    type: 'information',
+                    timeout: 2500,
+                    killer: true,
+                    animation: {
+                        open: 'animated bounceInDown', // Animate.css class names
+                        close: 'animated bounceOutUp' // Animate.css class names
+                    },
+
                             text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>'
                      });
 
