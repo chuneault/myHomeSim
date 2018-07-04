@@ -45,7 +45,9 @@
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
 
                 $('#pooltemp').data('lastValue', data.lastValue);
-                $('.poollbl').addClass('animated flash');
+                $('.poollbl').animateCss('bounce', function() {
+                    // Do somthing after animation
+                });
 
                 /*new Noty({
                     text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
@@ -88,9 +90,9 @@
         .poollbl {
             font-size: 60px;
             font-weight: bold;
-            -vendor-animation-duration: 3s;
-            -vendor-animation-delay: 2s;
-            -vendor-animation-iteration-count: infinite;
+            -webkit-animation-duration: 3s;
+            -webkit-animation-delay: 2s;
+            -webkit-animation-iteration-count: infinite;
         }
     </style>
 
