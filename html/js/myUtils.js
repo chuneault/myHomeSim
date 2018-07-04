@@ -3,6 +3,15 @@
  */
   var $$myHomeSiteApiURL = '<%= myHomeSiteApiURL %>';
 
+  function roundNumber(num, scale) {
+    var number = Math.round(num * Math.pow(10, scale)) / Math.pow(10, scale);
+    if(num - number > 0) {
+        return (number + Math.floor(2 * Math.round((num - number) * Math.pow(10, (scale + 1))) / 10) / Math.pow(10, scale));
+    } else {
+        return number;
+    }
+  }
+
   $.each(["put", "delete"], function (i, method) {
     jQuery[method] = function (url, data, callback, type) {
       if (jQuery.isFunction(data)) {
