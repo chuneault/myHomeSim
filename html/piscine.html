@@ -130,7 +130,7 @@
 
           function updateSensor(elem, data) {
               data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
-              let html = idFound.elem.data('origHtml');
+              let html = $(elem).data('origHtml');
               $(elem).html(format(html, {icon, data: data}));
               let tooltipex = $(elem).attr('data-tooltipex');
               if (tooltipex) {
