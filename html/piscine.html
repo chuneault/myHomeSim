@@ -84,8 +84,8 @@
   <div class="container">
       <div class="row">
           <div class="col-sm poolBox" style="text-align: center">
-              <div class="poollbl tooltipex" title="??" data-myHomeSim="HJNiOwLZX">
-                   <span>{icon.thermometer} {data.lastValue} °F {icon.pool}</span>
+              <div class="tooltipex" title="??" data-myHomeSim="HJNiOwLZX">
+                   <span class="poollbl">{icon.thermometer} {data.lastValue} °F {icon.pool}</span>
                    <div id="poolupdatelbl">dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -132,7 +132,7 @@
 
               if (idFound )  {
 
-                  var html = idFound.elem.html();
+                  var html = idFound.elem.data('origHtml');
                   data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
                   idFound.elem.html(format(html, {
                       icon,
@@ -160,8 +160,10 @@
 
           $("[data-myHomeSim]").each(function (index, elem) {
               var id = $(elem).attr('data-myHomeSim');
-              idToUpdate.push({id: id, elem: $(elem)});
               var html = $(elem).html();
+
+              $(elem).data('origHtml', html);
+
 
               $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
 
@@ -170,6 +172,8 @@
                       icon,
                       data: data
                   }));
+
+                  idToUpdate.push({id: id, elem: $(elem)});
 
                   /*
                   $('.tooltipex').tooltipster({
