@@ -45,7 +45,7 @@
 
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
-                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('MMMM Do, h:mm:ss a'));
+                $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('D MMMM, h:mm:ss a'));
                 $('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
                 $('#pooltemp').data('lastValue', data.lastValue);
                 $('.poollbl').animateCss('bounce', function() {
@@ -73,7 +73,7 @@
                 theme: 'tooltipster-shadow',
                 content: ((data.lastValue - 32) * 0.5556 ) + '°C'
             });
-            $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
+            $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format('D MMMM, h:mm:ss a'));
         });
 
 
