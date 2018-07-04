@@ -70,9 +70,13 @@
         $.getJSON($$myHomeSiteApiURL + '/api/sensor/HJNiOwLZX', function (data) {
             $('#pooltemp').html(data.lastValue);
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
+        });
 
+        $(document).ready(function() {
             $('.tooltip').tooltipster({
-                theme: 'tooltipster-shadow'
+                theme: 'tooltipster-shadow',
+                trigger: 'hover'
+
             });
         });
 
