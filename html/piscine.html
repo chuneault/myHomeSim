@@ -43,7 +43,6 @@
             console.log(data);
         });
 
-
         var socket = io.connect($$myHomeSiteApiURL);
         socket.on('newSensorValue', function (data) {
 
@@ -89,9 +88,6 @@
             background-color: #222222;
             font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
             font-weight: normal;
-            /*padding-top: 60px;*/
-
-
             color: white;
         }
 
@@ -107,6 +103,14 @@
         .poolBox {
             background: url(img/pool-water.jpg) no-repeat center center fixed;
 
+        }
+
+        .meteoBox {
+            background: url(img/sky.jpg) no-repeat center center fixed;
+
+        }
+        .row {
+            padding-bottom: 20px;
         }
     </style>
 
@@ -125,13 +129,11 @@
           </div>
       </div>
 
-      <div class="row">
+      <div class="row meteoBox">
           <div class="col-sm" style="text-align: center">
               <div class="" title="">
                   <i class="fas fa-thermometer-half"></i>
-
-                  <span>TEST</span>
-                  <i class="fas fa-swimming-pool"></i>
+                  <span>40 °C</span>
               </div>
               <div id="poolupdatelbl">dernière mise à jour: ??</div>
           </div>
