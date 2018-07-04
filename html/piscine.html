@@ -35,7 +35,16 @@
             if (data._id == 'HJNiOwLZX')  {
                 $('#pooltemp').html(data.lastValue);
                 $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
-                noty({
+                var n = noty({
+                    text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
+                    animation: {
+                        open: {height: 'toggle'},
+                        close: {height: 'toggle'},
+                        easing: 'swing',
+                        speed: 500 // opening & closing animation speed
+                    }
+                });
+                /*noty({
                     layout: 'topCenter',
                     type: 'information',
                     timeout: 2500,
@@ -46,7 +55,7 @@
                     },
 
                             text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>'
-                     });
+                     });*/
 
             }
 
