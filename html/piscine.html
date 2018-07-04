@@ -71,13 +71,14 @@
             $('#pooltemp').html(data.lastValue);
 
             $('.tooltipex').attr('title',((data.lastValue - 32) * 0.5556 ) + '°C');
+            $('.tooltipex').tooltipster({
+                theme: 'tooltipster-shadow',
+            });
             $('#poolupdatelbl').html('dernière mise à jour: '+ moment(data.lastDate).format());
         });
 
         $(document).ready(function() {
-            $('.tooltipex').tooltipster({
-                theme: 'tooltipster-shadow',
-            });
+
         });
 
     </script>
