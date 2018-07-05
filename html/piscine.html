@@ -49,44 +49,28 @@
             color: white;
         }
 
-        .poollbl {
-
+        .labelHeader {
             font-size: 60px;
             font-weight: bold;
-            -webkit-animation-duration: 3s;
-            -webkit-animation-delay: 2s;
-            /*-webkit-animation-iteration-count: infinite;*/
-
         }
 
         .poolBox {
             background: url(img/pool-water.jpg) no-repeat center center fixed;
-
         }
 
         .meteoBox {
             background: url(img/sky.jpg) no-repeat center center fixed;
-
-        }
-
-        .meteolbl{
-            font-size: 60px;
-            font-weight: bold;
-
-        }
-        .col-sm {
-            padding-bottom: 10px;
         }
 
         .homeBox {
             background: url(img/home.jpg) repeat center center;
-
         }
+
         .aquaBox {
             background: url(img/aqua.jpg) repeat center center;
         }
         
-        .aqualbl {
+        .labelFooter {
             font-size: 42px;
         }
 
@@ -103,8 +87,8 @@
       <div class="box">
           <div class="poolBox">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue - 32) * 0.5556 ),2) + '°C'" data-myHomeSim="HJNiOwLZX">
-                   <h1>{icon.thermometer} {data.lastValue} °F {icon.pool} Piscine</h1>
-                   <h4>dernière mise à jour: {data.lastDate}</h4>
+                   <span class="labelHeader">{icon.thermometer} {data.lastValue} °F {icon.pool} Piscine</span>
+                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
       </div>
@@ -112,7 +96,7 @@
       <div class="box">
           <div class="meteoBox">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="BJM3Cd00">
-                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C Météo</span>
+                  <span class="labelHeader">{icon.thermometer} {data.lastValue} °C Météo</span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -121,7 +105,7 @@
       <div class="box">
           <div class="homeBox">
               <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="rkgvOxjh-e">
-                  <span class="meteolbl">{icon.thermometer} {data.lastValue} °C Maison</span>
+                  <span class="labelHeader">{icon.thermometer} {data.lastValue} °C Maison</span>
                   <div>dernière mise à jour: {data.lastDate}</div>
               </div>
           </div>
@@ -129,9 +113,9 @@
 
       <div class="box">
           <div class="aquaBox">
-             <div data-myHomeSim="rJeeT8Rq5G" class="aqualbl" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Scalaire Coupe</div>
-             <div data-myHomeSim="BkHnWSZ-X" class="aqualbl" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Guppy</div>
-             <div data-myHomeSim="BJOy6aw-7" class="aqualbl" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Salon</div>
+             <div data-myHomeSim="rJeeT8Rq5G" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Scalaire Coupe</div>
+             <div data-myHomeSim="BkHnWSZ-X" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Guppy</div>
+             <div data-myHomeSim="BJOy6aw-7" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Salon</div>
           </div>
       </div>
 
