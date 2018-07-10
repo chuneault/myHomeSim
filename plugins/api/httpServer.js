@@ -470,17 +470,9 @@ class httpServer extends plugins {
 
     app.post('/api/sensor/:_sensorId', function (request, response){
       console.log(request.body);
-
-        request.body = json.parse()
-
-
-
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
-
         checkIntegerProp(request.body);
-        //console.log(request.body);
-
         ctrl.updateSensor(sensor, request.body);
         response.status(200).send('sensor updated');
       }
