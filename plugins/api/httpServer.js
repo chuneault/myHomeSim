@@ -487,7 +487,6 @@ class httpServer extends plugins {
     });
 
     app.get('/api/sensor/:_sensorId/dbvalues', function (request, response){
-       debugger;
        let sensor = ctrl.sensors[request.params._sensorId];
        let where = {
             selector: {
@@ -505,10 +504,9 @@ class httpServer extends plugins {
 
         console.log(where);
 
-        ctrl.__db.sensorsVal.find(where).then(function(vals){
-            response.json(serializeObj(vals.docs));
-        }).catch(function (err){
-            console.log(err);
+        ctrl.__db.collection('sensorsValues').find(where, function (err, docs) {
+            assert.equal(err, null);
+            response.json(serializeObj(docs));
         });
 
       /*var sensorsVal = ctrl.__db.sensorsVal.find(where).sort({ valueDate: 1 }).limit(request.query.limit || 9999999999);
