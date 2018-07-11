@@ -4,8 +4,9 @@
 
 "use strict";
 
-const _ = require('lodash');
-const plugins = require("../../lib/hsPlugins.js");
+const _ = require('lodash'),
+      plugins = require("../../lib/hsPlugins.js"),
+      assert = require('assert');
 
 class httpServer extends plugins {
 
