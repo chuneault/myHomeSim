@@ -216,6 +216,7 @@ class mySensors {
                 if (node)
                   ctrl.addOrUpdateSensor({nodeId: node._id, vendor: {id: msg.childSensorId}}, {
                     name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
+
                     vendor: {
                         id: msg.childSensorId,
                         name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),

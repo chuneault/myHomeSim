@@ -33,12 +33,70 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+    <link rel="stylesheet" href="/css/tooltipster.bundle.min.css"/>
+    <link rel="stylesheet" href="/css/tooltipster-sideTip-shadow.min.css"/>
+    <script src="/js/tooltipster.bundle.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
 
     <script>
       $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {});
+
+      function renderTemplate7(template, data, container) {
+          var template = $(template).html();
+          // compile it with Template7
+
+          Template7.registerHelper('compare',
+              function (key, compareWith, options) {
+                  if (key === compareWith)
+                      return options.fn(this, options.data);
+                  else
+                      return options.inverse(this, options.data);
+              });
+
+          Template7.registerHelper('ifIn',
+              function (key, compareWith, options) {
+                  if (compareWith.split('|').indexOf(key) >= 0)
+                      return options.fn(this, options.data);
+                  else
+                      return options.inverse(this, options.data);
+              });
+
+          Template7.registerHelper('arrayIn',
+              function (key, compareWith, options) {
+                  //console.log('arrayIn', key, compareWith);
+                  if ((key) && (key.indexOf(compareWith) >= 0))
+                      return options.fn(this, options.data);
+                  else
+                      return options.inverse(this, options.data);
+              });
+
+          Template7.registerHelper('fieldVal',
+              function (key, val, type) {
+                  var returnVal = val[key] != null ? val[key] : '';
+
+                  if ((type == 'date') && (returnVal != ''))
+                      returnVal = moment(returnVal).format();
+
+                  return returnVal;
+              });
+
+          Template7.registerHelper('JSON',
+              function (val) {
+                  return JSON.stringify(val, null, 2);
+              });
+
+          var compiledTemplate = Template7.compile(template);
+          // Now we may render our compiled template by passing required context
+          var html = compiledTemplate(data);
+          if (container)
+              container.append(html);
+          else
+              return html;
+      }
     </script>
 
     <style>
@@ -46,16 +104,17 @@
             background-color: #222222;
             font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
             font-weight: normal;
-            color: white;
+            /*color: white;*/
         }
 
         .labelHeader {
             font-size: 60px;
             font-weight: bold;
+            color: white;
         }
 
         .poolBox {
-            background: url(img/pool-water.jpg) no-repeat center center fixed;
+            background: url(img/pool-water.jpg) repeat center center fixed;
         }
 
         .meteoBox {
@@ -71,7 +130,13 @@
         }
         
         .labelFooter {
-            font-size: 42px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .labelRoom {
+            font-size: 28px;
+            color: white;
         }
 
         .container-fluid {
@@ -82,74 +147,292 @@
             background: #69c34c;
         }
 
+        my-sensor-hint {
+            display: none;
+
+        }
+
+        .ace_editor {
+            border: 1px solid lightgray;
+            margin: auto;
+            height: 500px;
+            width: 100%;
+            background-color: #1f1f1f;
+            color: white;
+        }
+        .scrollmargin {
+            /*height: 80px;
+            text-align: center;*/
+        }
+
+        .bootbox{
+             color: black;
+        }
+
+        .sensorInfo {
+            position: relative;
+            top: -10px;
+        }
+
+        .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+        .toggle.ios .toggle-handle { border-radius: 20px; }
+
+        .toggle.btn {
+            min-width: 34px;
+            min-height: 20px;
+            font-size: 8px;
+            position: relative;
+            top: -6px;
+        }
+
+        /* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+        .toggle-off {
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+        }
+        .toggle.off {
+            border-color: rgba(0, 0, 0, .25);
+        }
+
+        .toggle-handle {
+            background-color: white;
+            border: thin rgba(0, 0, 0, .25) solid;
+        }
     </style>
 
 <body>
 
-  <div class="container-fluid">
+<script id="dialogTemplate" type="text/template7">
+    <div class="modal fade" id="exampleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{title}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home">Node</a>
+                        </li>
+
+                        {{#each sensors}}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#{{_id}}">
+                                {{#if vendor}}
+                                  {{#if vendor.desc}}
+                                    <span>{{vendor.desc}}</span>
+                                  {{else}}
+                                    <span>{{vendor.name}}</span>
+                                  {{/if}}
+                               {{else}}
+                                  <span>{{name}}</span>
+                               {{/if}}
+
+                                {{#arrayIn this.functionType "temperature"}}
+                                  <span class="badge badge-pill badge-success sensorInfo">{{lastValue}}°{{tempUnit}}</span>
+                                {{/arrayIn}}
+                                {{#arrayIn this.functionType "switch"}}
+                                  <input id="binary-switch" type="checkbox"
+                                       {{#js_compare "this.lastValue == true"}}
+                                         checked
+                                       {{/js_compare}}
+                                       data-id="{{_id}}" data-style="ios" data-on="&nbsp;" data-off="&nbsp;" data-toggle="toggle-relay">
+                                {{/arrayIn}}
+                            </a>
+                        </li>
+                        {{/each}}
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div id="home" class="container tab-pane active">
+                            <form id="nodeForm" method="post">
+                              <div class="editor" id="editor"></div>
+                            </form>
+                        </div>
+                        {{#each sensors}}
+                        <div id={{_id}} class="container tab-pane">
+                            <form id="sensorForm" method="post">
+                                <div class="editor" id="editor{{_id}}"></div>
+                            </form>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
+                    <button type="button" class="btn btn-primary btn-save">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div id="dialog"></div>
+
+<div class="container-fluid">
+
+
       <div class="box">
           <div class="poolBox">
-              <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue - 32) * 0.5556 ),2) + '°C'" data-myHomeSim="HJNiOwLZX">
-                   <span class="labelHeader">{icon.thermometer} {data.lastValue} °F {icon.pool} Piscine</span>
-                   <div>dernière mise à jour: {data.lastDate}</div>
+              <div class="labelHeader">
+                  <my-sensor _id="HJNiOwLZX">{icon.thermometer} {data.lastValue} °F {icon.pool} Piscine</my-sensor>
               </div>
+              <div>dernière mise à jour: <my-sensor _id="HJNiOwLZX">{data.lastDate}</my-sensor></div>
+
+              <my-sensor-hint hintElem=".poolBox">
+                  <div>
+                      <my-sensor-node _id="B1h5_PUZX" no-animate> {fullData} </my-sensor-node>
+                      <div style="border-top: 1px solid lightgray; margin-top: 5px; padding-top: 3px">
+                          <button type="button" class="btn btn-primary" my-edit-node="B1h5_PUZX">Edit</button>
+                      </div>
+                  </div>
+              </my-sensor-hint>
+
           </div>
       </div>
 
       <div class="box">
           <div class="meteoBox">
-              <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="BJM3Cd00">
-                  <span class="labelHeader">{icon.thermometer} {data.lastValue} °C Météo</span>
-                  <div>dernière mise à jour: {data.lastDate}</div>
-              </div>
+                  <div class="labelHeader">
+                      <my-sensor _id="BJM3Cd00" tooltip=".meteoBox" tooltipEval="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'">{icon.thermometer} {data.lastValue} °C Météo</my-sensor>
+                  </div>
+                  <div>dernière mise à jour: <my-sensor _id="BJM3Cd00">{data.lastDate}</my-sensor></div>
           </div>
       </div>
 
       <div class="box">
           <div class="homeBox">
-              <div class="tooltipex" data-tooltipex="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'" data-myHomeSim="rkgvOxjh-e">
-                  <span class="labelHeader">{icon.thermometer} {data.lastValue} °C Maison</span>
-                  <div>dernière mise à jour: {data.lastDate}</div>
-              </div>
+                  <div class="labelHeader">
+                      <my-sensor _id="rkgvOxjh-e" tooltip=".homeBox" tooltipEval="roundNumber(((data.lastValue * 1.8) + 32),2) + '°F'">{icon.thermometer} {data.lastValue} °C Maison</my-sensor>
+                  </div>
+                  <div>dernière mise à jour: <my-sensor _id="rkgvOxjh-e">{data.lastDate}</my-sensor></div>
           </div>
       </div>
 
       <div class="box">
           <div class="aquaBox">
-             <div data-myHomeSim="rJeeT8Rq5G" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Scalaire Coupe</div>
-             <div data-myHomeSim="BkHnWSZ-X" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Guppy</div>
-             <div data-myHomeSim="BJOy6aw-7" class="labelFooter" data-tooltipex="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Salon</div>
+             <div class="labelFooter" id="aquaCave">
+                 <my-sensor-hint hintElem="#aquaCave">
+                     <div>
+                         <my-sensor-node _id="HkV2mR99f" no-animate> {fullData} </my-sensor-node>
+                     </div>
+                 </my-sensor-hint>
+                 <my-sensor _id="rJeeT8Rq5G">{icon.thermometer} {data.lastValue} °F Scalaire Coupe</my-sensor>
+                 <my-sensor-switch _id="rylTUR5qf"/>
+             </div>
+             <div class="labelFooter" id="aquaBureau2">
+                 <my-sensor _id="BkHnWSZ-X" tooltip="#aquaBureau2" tooltipEval="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Guppy</my-sensor>
+                 <my-sensor-switch _id="B10iZr-Z7"/>
+             </div>
+             <div class="labelFooter" id="aquaSalon">
+                 <my-sensor _id="BJOy6aw-7" tooltip="#aquaSalon" tooltipEval="'dernière maj.: {data.lastDate}'">{icon.thermometer} {data.lastValue} °F Salon</my-sensor>
+                 <my-sensor-switch _id="r1Wka6P-Q"/>
+             </div>
+
           </div>
       </div>
+
       <div class="box">
           <div class="roomsBox">
               <div>
-                  <span data-myHomeSim="rygsl1FCR" class="labelFooter"
-                        data-tooltipex="'dernière maj.: {data.lastDate}'">
-                     Eve {icon.thermometer} {data.lastValue} °C </span>
 
-                  <span data-myHomeSim="ryebOROCA" class="labelFooter"
+                  <span class="labelRoom" id="eveRoom">
+                      <my-sensor _id="rygsl1FCR">{icon.thermometer} {data.lastValue} °C Ève </my-sensor>
+                  </span>
+                  <span class="labelRoom"
                         data-tooltipex="'dernière maj.: {data.lastDate}'">
-                     Eve {icon.tint} {data.lastValue} % </span>
+                      <my-sensor _id="ryebOROCA">{icon.tint} {data.lastValue}%</my-sensor>
+                  </span>
+                  <my-sensor-hint hintElem="#eveRoom">
+                      <my-sensor-node _id="SkbuAdA0" no-animate> {fullData} </my-sensor-node>
+                      <div style="border-top: 1px solid lightgray; margin-top: 5px; padding-top: 3px">
+                          <button type="button" class="btn btn-primary" my-edit-node="SkbuAdA0">Edit</button>
+                      </div>
+                  </my-sensor-hint>
 
               </div>
-              <div data-myHomeSim="r1Yvf50C" class="labelFooter"
-                   data-tooltipex="'dernière maj.: {data.lastDate}'">
-                  Eliane {icon.thermometer} {data.lastValue} °C</div>
+              <div id="elianeRoom" style="background: #35c39d;">
+                 <my-sensor-hint hintElem="#elianeRoom">
+                    <div>
+                       <my-sensor-node _id="BkXK0_AC" no-animate> {fullData} </my-sensor-node>
+                         <div style="border-top: 1px solid lightgray; margin-top: 5px; padding-top: 3px">
+                           <button type="button" class="btn btn-primary" my-edit-node="BkXK0_AC">Edit</button>
+                         </div>
+                     </div>
+                  </my-sensor-hint>
+                 <span class="labelRoom">
+                     <my-sensor _id="r1Yvf50C">{icon.thermometer} {data.lastValue} °C Éliane </my-sensor>
+                 </span>
+                  <span class="labelRoom">
+                      <my-sensor _id="rJlXKCuRC">{icon.tint} {data.lastValue}% </my-sensor></span>
+              </div>
+              <div id="charlineRoom" style="background: #25bbc3;">
+                 <span class="labelRoom">
+                     <my-sensor _id="S1-0bT1dsM">{icon.thermometer} {data.lastValue} °C Charline </my-sensor>
+                 </span>
+                 <span class="labelRoom">
+                   <my-sensor _id="SyMAb6kOiG">{icon.tint} {data.lastValue}% </my-sensor>
+                 </span>
+                  <my-sensor-hint hintElem="#charlineRoom">
+                      <div>
+                          <my-sensor-node _id="HkAZTJdoz" no-animate> {fullData} </my-sensor-node>
+                          <div style="border-top: 1px solid lightgray; margin-top: 5px; padding-top: 3px">
+                              <button type="button" class="btn btn-primary" my-edit-node="HkAZTJdoz">Edit</button>
+                          </div>
+                      </div>
+                  </my-sensor-hint>
+
+
+              </div>
+              <div id="mathieuRoom" style="background: #2a8bc3;">
+                 <span class="labelRoom">
+                     <my-sensor _id="Skeerfvp1g">{icon.thermometer} {data.lastValue} °C Mathieu </my-sensor>
+
+                 </span>
+                  <span class="labelRoom">
+                      <my-sensor _id="HyeHfwTJl">{icon.tint} {data.lastValue}% </my-sensor></span>
+              </div>
+              <div id="lauralieRoom" style="background: #60c303;">
+                  <my-sensor-hint hintElem="#lauralieRoom">
+                      <div>
+                          <my-sensor-node _id="Syqi0u00" no-animate> {fullData} </my-sensor-node>
+                          <div style="border-top: 1px solid lightgray; margin-top: 5px; padding-top: 3px">
+                              <button type="button" class="btn btn-primary" my-edit-node="Syqi0u00">Edit</button>
+                          </div>
+                      </div>
+                  </my-sensor-hint>
+                 <span class="labelRoom">
+                     <my-sensor _id="Bylgb4cRC">{icon.thermometer} {data.lastValue} °C Lauralie </my-sensor>
+
+                 </span>
+                  <span class="labelRoom">
+                      <my-sensor _id="Hyl5i0_R0">{icon.tint} {data.lastValue}% </my-sensor></span>
+              </div>
+              <div id="salon2Room" style="background: #7871c3;">
+                 <span class="labelRoom">
+                     <my-sensor _id="BkWphFiviM">{icon.thermometer} {data.lastValue} °C Salon Mauve </my-sensor>
+
+                 </span>
+                  <span class="labelRoom">
+                      <my-sensor _id="rkfTnKowjf">{icon.tint} {data.lastValue}% </my-sensor></span>
+              </div>
+              <div>
+                 <span class="labelRoom">
+                     <my-sensor _id="BJ-2p9KggG">{icon.thermometer} {data.lastValue} °C Bureau sous-sol </my-sensor>
+                 </span>
+              </div>
+
           </div>
-
-
       </div>
-
-
 
   </div>
 
-
       <script>
 
-
-          var icon = {
+          let icon = {
               'thermometer': "<i class='fas fa-thermometer-half'></i>",
               'pool': "<i class='fas fa-swimming-pool'></i>",
               'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
@@ -163,68 +446,227 @@
               "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
               "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
           };
+          let socket = io.connect($$myHomeSiteApiURL);
 
-          var socket = io.connect($$myHomeSiteApiURL);
+          function myNoty(message, typeMsg = 'error', layoutMsg = 'topCenter', animate = 'pulse') {
+              Noty.closeAll();
+              new Noty({
+                  text: message,
+                  layout: layoutMsg,
+                  type: typeMsg,
+                  killer: true,
+                  animation: {
+                      open: 'animated ' + animate, // Animate.css class names
+                      close: 'animated '+ animate, // Animate.css class names
+                  }
+              }).show();
+          }
 
-
-
-          function updateSensor(elem, data) {
-              data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
-              let html = $(elem).data('origHtml');
-              $(elem).html(format(html, {icon, data: data}));
-              let tooltipex = $(elem).attr('data-tooltipex');
-              if (tooltipex) {
-                  $(elem).tooltipster(
-                    'content', format(eval(format(tooltipex, {icon, data: data})), {icon, data: data})
-                  );
-              }
-              $(elem).animateCss('bounce', function() {});
+          function updateSensor(mysensors, data) {
+              if (data.hasOwnProperty('lastDate'))
+                data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
+              if (data.hasOwnProperty('lastUpdate'))
+                  data.lastUpdate = moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
+              if (data.hasOwnProperty('lastHeartBeat'))
+                  data.lastHeartBeat = moment(data.lastHeartBeat).format('D MMMM, h:mm:ss a');
+              _.forEach(mysensors, function(mysensor){
+                  if (mysensor.elem.attr('eval')) {
+                      debugger;
+                      eval(mysensor.elem.attr('eval'));
+                  }
+                  switch (mysensor.type) {
+                      case 'data':
+                          mysensor.elem.html(format(mysensor.data, {icon, data: data, fullData: function(){
+                              let result = JSON.stringify(data, undefined, 2);
+                                  return result.replace(/\n/g, "<br>").replace(/[ ]/g, "&nbsp;");
+                          }}));
+                          let tooltipex = mysensor.elem.attr('tooltip');
+                          if (tooltipex)
+                              $(tooltipex).tooltipster('content', format(eval(format(mysensor.elem.attr('tooltipEval'), {icon, data: data})), {icon,data: data}));
+                          if (mysensor.elem.attr('no-animate') == null)
+                            mysensor.elem.parents('div:first').animateCss('bounce', function () {});
+                          break;
+                      case 'switch':
+                          if (mysensor.elemSwitch.prop('checked') != data.stateOn) {
+                              mysensor.elemSwitch.data('fromOutside', true);
+                              mysensor.elemSwitch.bootstrapToggle(data.stateOn ? 'on' : 'off');
+                              mysensor.elemSwitch.data('fromOutside', false);
+                              mysensor.elem.parents('div:first').animateCss('bounce', function () { });
+                          }
+                          break;
+                  }
+              });
           }
 
 
-          var idToUpdate = [];
+          let mySensors = {};
+
+          socket.on('updateNode', function (data) {
+              if (mySensors.hasOwnProperty(data._id))
+                updateSensor(mySensors[data._id], data);
+          });
+
           socket.on('newSensorValue', function (data) {
-
-              idFound =_.find(idToUpdate, { 'id': data._id });
-
-              if (idFound )  {
-
-                  updateSensor(idFound.elem, data);
-
-
-                  //$('.tooltipex').tooltipster('content', ((data.lastValue - 32) * 0.5556 ) + '°C');
-
-                  /*new Noty({
-                      text: '<span style="font-size: x-large"><i class="fa fa-thermometer-half" aria-hidden="true"></i>&nbsp;' + data.lastValue + '&nbsp;°F</span>',
-                      timeout: 1500,
-                      killer: true,
-                      type: 'information',
-                      theme: 'relax',
-                      layout: 'topCenter',
-                      animation: {
-                          open: 'animated bounceInDown', // Animate.css class names
-                          close: 'animated bounceOutUp' // Animate.css class names
-                      }
-                  }).show();*/
+              if (mySensors.hasOwnProperty(data._id) )  {
+                  updateSensor(mySensors[data._id], data);
               }
           });
 
-          $("[data-myHomeSim]").each(function (index, elem) {
-              var id = $(elem).attr('data-myHomeSim');
-              $(elem).data('origHtml', $(elem).html());
-              if ($(elem).attr('data-tooltipex'))
-                $(elem).tooltipster({
+          //$('[data-toggle]').bootstrapToggle();
+
+          $("my-sensor").each(function (index, elem) {
+              let id = $(elem).attr('_id');
+              let mySensor = {type: 'data', elem: $(elem), data: $(elem).html()};
+
+              if ($(elem).attr('tooltip'))
+                $($(elem).attr('tooltip')).tooltipster({
                   theme: 'tooltipster-shadow',
-                  content: '??'
-              });
+                });
+
               $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
-                updateSensor(elem, data);
-                idToUpdate.push({id: id, elem: $(elem)});
+                 (mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor]);
+                 updateSensor(mySensors[id], data);
               });
+          });
+
+          $("my-sensor-node").each(function (index, elem) {
+              let id = $(elem).attr('_id');
+              let mySensor = {type: 'data', elem: $(elem), data: $(elem).html()};
+              $.getJSON($$myHomeSiteApiURL + '/api/node/' + id, function (data) {
+                  (mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor]);
+                  updateSensor(mySensors[id], data);
+              });
+          });
+
+          $("my-sensor-switch").each(function (index, elem) {
+              let id = $(elem).attr('_id');
+              $(elem).html('<input id="' + id +'" type="checkbox">');
+              let elemSwitch = $('#'+id);
+              elemSwitch.bootstrapToggle('');
+              elemSwitch.data('fromOutside', false);
+              $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + id, function (data) {
+                 let mySensor = {type: 'switch', elem: $(elem), elemSwitch: elemSwitch, data: $(elem).html()};
+                 (mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor]);
+                 updateSensor(mySensors[id], data);
+                  elemSwitch.change(function(){
+                      if (!$(this).data('fromOutside')) {
+                          $.put($$myHomeSiteApiURL + '/api/sensor/function/' + $(this).attr('id') + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                              {}, function(data) { console.log(data); });
+                      }
+                  });
+              });
+          });
+
+
+          $("my-sensor-hint").each(function (index, elem) {
+              let hintId = $(elem).attr('hintElem');
+              let id = $(elem).attr('_id');
+              let type = $(elem).attr('type');
+              let hintContent = $(elem);
+
+              $(hintId).tooltipster({
+                  theme: 'tooltipster-shadow',
+                  content: 'Loading...',
+                  contentAsHTML: true,
+                  interactive: true,
+                  // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
+                  functionBefore: function(instance, helper) {
+                      let data = hintContent.html();
+                      instance.content(data);
+                  },
+                  functionReady: function() {
+                      binEditnode();
+                  }
+              });
+
 
           });
-      </script>
 
+          let binEditnode = function(){
+
+          $("[my-edit-node]").each(function (index, elem) {
+              $(elem).on("click", function(){
+                  let id = $(elem).attr('my-edit-node');
+                  $.getJSON($$myHomeSiteApiURL + '/api/node/' + id, function (dataNode) {
+
+                      $.getJSON($$myHomeSiteApiURL + '/api/sensors/' + id, function (dataSensors) {
+
+                          var instances = $.tooltipster.instances();
+                          $.each(instances, function(i, instance){
+                              instance.close();
+                          });
+
+                          let data = {title: 'Edit Node', node: dataNode, sensors: dataSensors};
+
+                          console.log(data);
+                          $('#dialog').empty();
+                          renderTemplate7($('#dialogTemplate'), data, $('#dialog'));
+
+                          $('[data-toggle="toggle-relay"]').bootstrapToggle();
+                          $('[data-toggle="toggle-relay"]').change(function () {
+                              let sensorId =  $(this).attr('data-id');
+                              $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                                  {}, function(data) { console.log(data); });
+                          });
+
+                          $('#dialog').find('.btn-save').click(function() {
+                              let nodeDoc;
+                              let editor = ace.edit($('#dialog').find('.active').find('.editor')[0]);
+                              try {
+                                  nodeDoc = JSON.parse(editor.getValue());
+                                  console.log('update ', nodeDoc);
+                                  $.post($$myHomeSiteApiURL + '/api/'+nodeDoc.type+'/'+nodeDoc._id,  nodeDoc, function(data) {
+                                      myNoty(data, 'success');
+                                  }) .fail(function(res) {
+                                      myNoty(res);
+                                  })
+                              }
+                              catch (err) {
+                                  myNoty(err.message);
+                                  return false;
+                              }
+                          });
+
+
+                          let aceEditor = function(elem, data) {
+                              let editor = ace.edit(elem, {
+                                  //autoScrollEditorIntoView: true,
+                                  maxLines: 20,
+                                  minLines: 2
+                              });
+                              editor.setFontSize(16);
+                              editor.renderer.setShowGutter(false);
+                              editor.getSession().setMode("ace/mode/json");
+                              editor.setTheme("ace/theme/ambiance");
+
+                              editor.setValue(JSON.stringify(data, null, 2), 1);
+                          }
+
+                          aceEditor($('#editor')[0], data.node);
+                          _.forEach(data.sensors, function(sensor){
+                              aceEditor($('#editor'+sensor._id)[0], sensor);
+                          });
+
+
+                          $('#exampleModal').modal('show');
+
+                          $('#exampleModal').on('hidden.bs.modal', function (e) {
+                              // do something...
+                              Noty.closeAll();
+                              $('#dialog').empty();
+                          });
+
+                      });
+
+                  });
+
+
+              } );
+
+          });
+
+          };
+      </script>
 
 </body>
 </html>
