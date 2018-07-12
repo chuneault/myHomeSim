@@ -1,18 +1,18 @@
 [Unit]
 Description=myHomeSim node.js
 Documentation=https://example.com
-After=network.target mysgw.service pouchdb.service
+After=network.target mongodb.service
 
 [Service]
 Environment=NODE_PORT=8080 NODE_ENV=production
 Type=simple
-User=pi
-Group=pi
-ExecStart=/usr/bin/node /home/pi/myHomeSim/index.js
+User=root
+Group=root
+ExecStart=/usr/bin/node /home/myHomeSim/index.js
 
 Restart=on-failure
-# Restart service after 10 seconds if node service crashes
-RestartSec=10
+# Restart service after 15 seconds if node service crashes
+RestartSec=15
 
 # Output to syslog
 StandardOutput=syslog
