@@ -507,7 +507,6 @@ class httpServer extends plugins {
 
         ctrl.__db.collection('sensorsValues').find(where.selector).toArray( function (err, docs) {
             assert.equal(err, null);
-            console.log(docs);
             response.json(serializeObj(docs));
         });
 
