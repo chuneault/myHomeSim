@@ -231,7 +231,7 @@
                                {{/if}}
 
                                 {{#arrayIn this.functionType "info"}}
-                                <span class="badge badge-pill badge-success sensorInfo">{{lastValue}}</span>
+                                <span class="badge badge-pill badge-info sensorInfo">{{lastValue}} {{suffix}}</span>
                                 {{/arrayIn}}
                                 {{#arrayIn this.functionType "temperature"}}
                                   <span class="badge badge-pill badge-success sensorInfo">{{lastValue}}°{{tempUnit}}</span>
