@@ -28,7 +28,7 @@ class tasmota extends plugins {
             }
 
             if (client && client.id && self.clients[client.id]){
-                self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
+                //self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
 
                 if (_.endsWith(packet.topic, 'SENSOR'))
                     self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toString());
