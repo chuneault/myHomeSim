@@ -47,12 +47,12 @@ class tasmota extends plugins {
 
     };
 
-    getClientInfo(IPAddress) {
+    getClientInfo(IPAddress, callback) {
         let self = this;
         let unirest = require('unirest');
         unirest.get('http://'  + IPAddress  + '/cm?cmnd=Status 0')
             .end(function (resp) {
-                console.log(resp.body);
+                callback(null, resp.body);
             })
     }
 
@@ -84,8 +84,16 @@ class tasmota extends plugins {
         let self = this;
         let jsonPayload = JSON.parse(payload);
 
-        if ((_.endsWith(topic, 'INFO2')) && (jsonPayload.IPAddress))
-            self.getClientInfo(jsonPayload.IPAddress);
+        if ((_.endsWith(topic, 'INFO2')) && (jsonPayload.IPAddress)) {
+            self.getClientInfo(jsonPayload.IPAddress,
+                function(err, info){
+                    self.__controller.addOrUpdateNode({id: clientId},
+                        {id: clientId, name: topics[1], vendor: info}, self,
+                        function (error, node) {
+
+                        });
+                });
+        }
 
         let topics = topic.split('/');
         self.__controller.addOrUpdateNode({id: clientId},
