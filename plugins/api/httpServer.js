@@ -388,7 +388,17 @@ class httpServer extends plugins {
     });
 
     app.get('/api/node/:_nodeId', function (request, response){
-      response.json(serializeObj(ctrl.nodes[request.params._nodeId]));
+        let node = ctrl.nodes[request.params._nodeId];
+        let result = serializeObj(node);
+        if (request.query.includeSensors) {
+            let sensors = [];
+            _.forEach(node.__sensors, function (sensor) {
+                    sensors.push(serializeObj(sensor))
+                }
+            );
+            result.sensors = sensors;
+        }
+        response.json(result);
     });
 
     app.get('/api/node/:_nodeId/reboot', function (request, response){
@@ -428,6 +438,16 @@ class httpServer extends plugins {
       else
         response.status(412).send('node not found');
     });
+
+    app.get('/api/sensors/:filter', function (request, response){
+        console.log('searching for', request.params.filter.bold.green);
+        let result = [];
+        _.forEach(_.filter(ctrl.sensors, JSON.parse(request.params.filter)), function(sensor){
+            result.push(serializeObj(sensor));
+        });
+        response.json(result);
+    });
+
 
     app.get('/api/sensors/:_nodeId', function (request, response){
       //console.log('searching for', request.params.filter.bold.green);
