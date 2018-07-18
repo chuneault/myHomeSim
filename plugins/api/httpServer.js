@@ -439,7 +439,7 @@ class httpServer extends plugins {
         response.status(412).send('node not found');
     });
 
-    app.get('/api/sensors/:filter', function (request, response){
+    app.get('/api/sensors/query/:filter', function (request, response){
         console.log('searching for', request.params.filter.bold.green);
         let result = [];
         _.forEach(_.filter(ctrl.sensors, JSON.parse(request.params.filter)), function(sensor){
