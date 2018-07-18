@@ -149,17 +149,7 @@
             <ul class="list-group">
             {{#each sensors}}
                 <li class="list-group-item" style="line-height: 28px; min-width: max-content;" id={{_id}}>
-                    {{#if vendor}}
-                      {{#if vendor.desc}}
-                        <span>{{vendor.desc}}</span>
-                      {{else}}
-                        <span>{{vendor.name}}</span>
-                      {{/if}}
-                    {{else}}
-                      <span>{{name}}</span>
-                    {{/if}}
-
-
+                    <span>{{desc}}</span>
                     <span class="pull-right" style="padding-left: 8px;">
                       {{#arrayIn this.functionType "switch"}}
                         <input id="binary-switch" type="checkbox"
@@ -328,9 +318,32 @@
 
 
     $.getJSON($$myHomeSiteApiURL + '/api/nodes/?includeSensors=True', function (data) {
-
         var dataTemplate = {items: data};
+        _.forEach(dataTemplate.items, function(node){
 
+
+            if (_.isUndefined(node.desc)) {
+                if (node.vendor && node.vendor.Status && node.vendor.Status.FriendlyName)
+                    node.desc = node.vendor.Status.FriendlyName;
+            }
+
+            _.forEach(node.sensors, function(sensor){
+                if (_.isUndefined(sensor.desc)) {
+                    if (sensor.vendor && sensor.vendor.desc)
+                        sensor.desc = sensor.vendor.desc;
+                    else
+                      if (sensor.vendor && sensor.vendor.name)
+                        sensor.desc = sensor.vendor.name;
+                      else
+                        if (sensor.name)
+                          sensor.desc = sensor.name;
+                        else
+                          sensor.desc = '???';
+                }
+            });
+        });
+
+        console.log(dataTemplate);
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
         $('.slider').each(function(i,e){

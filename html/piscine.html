@@ -89,6 +89,10 @@
                   return JSON.stringify(val, null, 2);
               });
 
+          Template7.registerHelper('format',
+              function (val, data) {
+                  return format(val, {icon, data: data});
+              });
           var compiledTemplate = Template7.compile(template);
           // Now we may render our compiled template by passing required context
           var html = compiledTemplate(data);
@@ -197,6 +201,31 @@
             background-color: white;
             border: thin rgba(0, 0, 0, .25) solid;
         }
+
+
+        .panel {
+            width: 250px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+
+        .panel-black {
+            background-color:  rgba(57,57,57,0.50);
+            border: 1px solid #000000 ;
+            color: #ffffff ;
+        }
+
+        .panel-expired {
+            background: #ff000c !important;
+        }
+
+        .panel-default > .panel-heading {
+            border-color: #000000;
+            background: rgba(0,0,0,0.25);
+            color: #ffffff;
+        }
+
+
     </style>
 
 <body>
@@ -217,7 +246,7 @@
                             <a class="nav-link active" data-toggle="tab" href="#home">Node</a>
                         </li>
 
-                        {{#each sensors}}
+                        {{#each node.sensors}}
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#{{_id}}">
                                 {{#if vendor}}
@@ -231,10 +260,10 @@
                                {{/if}}
 
                                 {{#arrayIn this.functionType "info"}}
-                                <span class="badge badge-pill badge-info sensorInfo">{{lastValue}} {{suffix}}</span>
+                                <span class="badge badge-pill badge-info sensorInfo">{{#if prefix}} {{format prefix this}} {{/if}} {{lastValue}} {{#if suffix}} {{format suffix this}} {{/if}}</span>
                                 {{/arrayIn}}
                                 {{#arrayIn this.functionType "temperature"}}
-                                  <span class="badge badge-pill badge-success sensorInfo">{{lastValue}}°{{tempUnit}}</span>
+                                  <span class="badge badge-pill badge-success sensorInfo">{{#if prefix}} {{format prefix this}} {{/if}} {{lastValue}}°{{tempUnit}}</span>
                                 {{/arrayIn}}
                                 {{#arrayIn this.functionType "switch"}}
                                   <input id="binary-switch" type="checkbox"
@@ -255,7 +284,7 @@
                               <div class="editor" id="editor"></div>
                             </form>
                         </div>
-                        {{#each sensors}}
+                        {{#each node.sensors}}
                         <div id={{_id}} class="container tab-pane">
                             <form id="sensorForm" method="post">
                                 <div class="editor" id="editor{{_id}}"></div>
@@ -277,6 +306,16 @@
 
 <div class="container-fluid">
 
+<!--
+    <div class="panel panel-default panel-black">
+        <div class="panel-heading">
+            <h5 class="panel-title">TEST big big panel</h5>
+        </div>
+        <div class="panel-body">
+            PANEL body
+        </div>
+    </div>
+!-->
 
       <div class="box">
           <div class="poolBox">
@@ -430,8 +469,7 @@
 
           </div>
       </div>
-
-  </div>
+</div>
 
       <script>
 
@@ -590,18 +628,17 @@
           $("[my-edit-node]").each(function (index, elem) {
               $(elem).on("click", function(){
                   let id = $(elem).attr('my-edit-node');
-                  $.getJSON($$myHomeSiteApiURL + '/api/node/' + id, function (dataNode) {
-
-                      $.getJSON($$myHomeSiteApiURL + '/api/sensors/' + id, function (dataSensors) {
+                  $.getJSON($$myHomeSiteApiURL + '/api/node/' + id + '/?includeSensors=True', function (dataNode) {
 
                           var instances = $.tooltipster.instances();
                           $.each(instances, function(i, instance){
                               instance.close();
                           });
 
-                          let data = {title: 'Edit Node', node: dataNode, sensors: dataSensors};
+                          let data = {title: 'Edit Node', node: dataNode};
 
-                          console.log(data);
+                          //console.log(data);
+                          data.icon = icon;
                           $('#dialog').empty();
                           renderTemplate7($('#dialogTemplate'), data, $('#dialog'));
 
@@ -630,7 +667,6 @@
                               }
                           });
 
-
                           let aceEditor = function(elem, data) {
                               let editor = ace.edit(elem, {
                                   //autoScrollEditorIntoView: true,
@@ -645,10 +681,13 @@
                               editor.setValue(JSON.stringify(data, null, 2), 1);
                           }
 
-                          aceEditor($('#editor')[0], data.node);
-                          _.forEach(data.sensors, function(sensor){
-                              aceEditor($('#editor'+sensor._id)[0], sensor);
+                          _.forEach(data.node.sensors, function(sensor){
+                             aceEditor($('#editor'+sensor._id)[0], sensor);
                           });
+
+                          delete(data.node.sensors);
+                          aceEditor($('#editor')[0], data.node);
+
 
 
                           $('#exampleModal').modal('show');
@@ -658,8 +697,6 @@
                               Noty.closeAll();
                               $('#dialog').empty();
                           });
-
-                      });
 
                   });
 
