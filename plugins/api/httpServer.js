@@ -57,18 +57,18 @@ class httpServer extends plugins {
 
     var self = this;
 
-    var users = [
+    /*var users = [
           { id: 1, username: 'admin', password: 'secret', email: 'chuneault@gmail.com', apikey: 'asdasjsdgfhgdsfjkjhg' }
-      ];
+      ];*/
 
 
     var express = require('express'),
-        passport = require('passport'),
-        LocalStrategy = require('passport-localapikey').Strategy,
+        //passport = require('passport'),
+        //LocalStrategy = require('passport-localapikey').Strategy,
         bodyParser = require('body-parser'),
-        appRoot = require('app-root-path'),
-        cookieParser = require('cookie-parser'),
-        session = require('express-session');
+        appRoot = require('app-root-path');
+        //cookieParser = require('cookie-parser'),
+        //session = require('express-session');
 
 
 
@@ -107,7 +107,7 @@ class httpServer extends plugins {
                 checkIntegerProp(obj[key]);
         });
     }
-
+/*
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
@@ -135,7 +135,7 @@ class httpServer extends plugins {
             });
         }
    ));
-
+*/
       //app.use(express.static(appRoot + '/html'));
 
     //app.use('/static', express.static(appRoot + '/bower_components'));
@@ -146,8 +146,8 @@ class httpServer extends plugins {
     var server = require('http').Server(app);
     var io = require('socket.io')(server);
 
-    app.use(cookieParser());
-    app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
+    //app.use(cookieParser());
+    //app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -171,14 +171,14 @@ class httpServer extends plugins {
       next();
     });
 
-    app.use(passport.initialize());
+    //app.use(passport.initialize());
 
     // persistent login sessions
-    app.use(passport.session());
+    //app.use(passport.session());
 
     app.use(express.static(appRoot + '/html'));
 
-    function ensureAuthenticated(req, res, next) {
+    /*function ensureAuthenticated(req, res, next) {
           if (req.isAuthenticated())
               return next();
           else
@@ -205,7 +205,7 @@ class httpServer extends plugins {
 
     app.all('/api/*', ensureAuthenticated, function(req, res, next){
         next();
-    });
+    });*/
 
     app.get('/api', function (req, res) {
       res.send('Hello from myHomeSim!');
