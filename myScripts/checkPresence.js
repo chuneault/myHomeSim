@@ -14,7 +14,7 @@ function checkHome() {
         ping.sys.probe(host.ip, function(isAlive){
             if (host.alive == null) host.alive = isAlive;
             if (host.alive != isAlive) {
-                server.invokeAction('castwebapi','TTS',['bureau', host.desc + (isAlive ?  ' vient d\'entrer à la maison' :  ' est sortie de la maison')]);
+                server.invokeAction('castwebapi','TTS',['bureau', host.desc + (isAlive ?  ' vient d\'entrer à la maison' :  ' est sortie de la maison'), 50]);
                 server.invokeAction('pushBullet','sendMessage',[host.desc, isAlive ?  'vient d\'entrer à la maison' :  ' est sortie de la maison']);
                 host.alive = isAlive;
             }
