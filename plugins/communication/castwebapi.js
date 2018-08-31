@@ -11,9 +11,11 @@ const plugins = require("../../lib/hsPlugins.js");
 class castwebapi extends plugins {
 
 
+
     dingDong(options) {
+      let self = this;
       console.log('dingDong call');
-      unirest.post('http://127.0.0.1:3000/device/7a070e7e-5be0-441f-8990-2d6b9ffcc02c/playMedia')
+      unirest.post('http://'+self.params.url+'/device/7a070e7e-5be0-441f-8990-2d6b9ffcc02c/playMedia')
         .send({format: 'json',
             mediaTitle: 'Bell Front Door',
             mediaSubtitle: 'Ding Dong',
