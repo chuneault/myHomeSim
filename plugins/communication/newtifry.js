@@ -5,14 +5,22 @@
 
 
 const unirest = require('unirest');
-//const _ = require('lodash');
+const _ = require('lodash');
 
 var plugins = require("../../lib/hsPlugins.js");
 
 class newtifry extends plugins {
 
+
+
   sendMessage(title, body, priority) {
     var self = this;
+
+    if (_.isObject(title)) {
+        console.log(title);
+    }
+
+
     unirest.post('https://newtifry.appspot.com/newtifry')
         .send({format: 'json',
           source: self.params.sourceId,

@@ -501,6 +501,11 @@ class httpServer extends plugins {
         response.status(412).send('sensor not found');
     });
 
+      app.post('/api/invokeAction/:_actionName/:_methodName', function (request, response){
+          console.log(request.body);
+          ctrl.invokeAction(request.params._actionName, request.params._methodName,  request.body);
+          response.status(200).send('action called');
+      });
 
     app.get('/api/sensor/:_sensorId/values', function (request, response){
       var sensor = ctrl.sensors[request.params._sensorId];
