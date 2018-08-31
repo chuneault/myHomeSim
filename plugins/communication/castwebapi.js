@@ -38,9 +38,7 @@ class castwebapi extends plugins {
         let self = this;
         console.log('TTS', deviceName, message);
 
-        let playMedia = function(callback) {
-
-
+        let playMedia = function(callBack) {
             unirest.post('http://' + self.params.url + '/device/' + self.params[deviceName] + '/playMedia')
                 .type('json')
                 .send([
