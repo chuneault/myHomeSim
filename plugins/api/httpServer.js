@@ -502,6 +502,7 @@ class httpServer extends plugins {
     });
 
       app.post('/api/invokeAction/:_actionName/:_methodName', function (request, response){
+          console.log('invokeAction', request.params._actionName, request.params._methodName,  request.body);
           ctrl.invokeAction(request.params._actionName, request.params._methodName,  [request.body]);
           response.status(200).send('action called');
       });
