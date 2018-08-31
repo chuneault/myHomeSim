@@ -21,7 +21,12 @@ class castwebapi extends plugins {
             mediaType: 'audio/mp3',
             mediaUrl: 'http://techreviewsandhelp.com/wp-content/uploads/2018/06/Someone-is-at-the-front-door-1.mp3',
             mediaStreamType: 'NONE'
-        }])
+        },
+            {
+                mediaTitle: 'cours Forest cours',
+                googleTTS: 'fr-CA'
+            }
+        ])
         .end(function (response) {
           if (response.ok)
             console.log(response.body);
