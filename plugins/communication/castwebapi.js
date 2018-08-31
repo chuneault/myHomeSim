@@ -12,6 +12,7 @@ class castwebapi extends plugins {
 
 
     dingDong(options) {
+      console.log('dingDong call');
       unirest.post('http://127.0.0.1:3000/device/7a070e7e-5be0-441f-8990-2d6b9ffcc02c/playMedia')
         .send({format: 'json',
             mediaTitle: 'Bell Front Door',
