@@ -16,13 +16,13 @@ class castwebapi extends plugins {
       let self = this;
       console.log('dingDong call');
       unirest.post('http://'+self.params.url+'/device/7a070e7e-5be0-441f-8990-2d6b9ffcc02c/playMedia')
-        .send({format: 'json',
+        .send([{
             mediaTitle: 'Bell Front Door',
             mediaSubtitle: 'Ding Dong',
             mediaType: 'audio/mp3',
             mediaUrl: 'http://techreviewsandhelp.com/wp-content/uploads/2018/06/Someone-is-at-the-front-door-1.mp3',
             mediaStreamType: 'NONE'
-        })
+        }])
         .end(function (response) {
           if (response.ok)
             console.log(response.body);
