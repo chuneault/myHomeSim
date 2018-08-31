@@ -62,7 +62,7 @@ class castwebapi extends plugins {
                 console.log('current volume', bakVolume);
                 self.setVolume(deviceName, volume, function(){
                     playMedia(function(){
-                        self.setVolume(deviceName, bakVolume);
+                        setTimeout(function(){self.setVolume(deviceName, bakVolume);}, 30000);
                     });
 
                 })
