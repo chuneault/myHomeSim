@@ -17,7 +17,13 @@ var plugins = require("../../lib/hsPlugins.js");
 class pushBullet extends plugins {
 
   sendMessage(title, body) {
-    this.pusher.note(this.deviceSender, title, body.toString(),
+
+      if (_.isObject(title)) {
+          body = title.body;
+          title = title.title;
+      }
+
+      this.pusher.note(this.deviceSender, title, body.toString(),
         function (error, response) {
           // response is the JSON response from the API
         });

@@ -14,12 +14,9 @@ class newtifry extends plugins {
 
 
   sendMessage(title, body, priority) {
-    var self = this;
+    let self = this;
 
-    console.log('title ', title);
     if (_.isObject(title)) {
-        console.log('title is object');
-
         body = title.body;
         title = title.title;
     }
