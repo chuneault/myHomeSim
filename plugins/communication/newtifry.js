@@ -18,8 +18,9 @@ class newtifry extends plugins {
 
     if (_.isObject(title)) {
         console.log(title);
+        body = title.body;
+        title = title.title;
     }
-
 
     unirest.post('https://newtifry.appspot.com/newtifry')
         .send({format: 'json',
