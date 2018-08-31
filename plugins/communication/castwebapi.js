@@ -10,21 +10,70 @@ const plugins = require("../../lib/hsPlugins.js");
 
 class castwebapi extends plugins {
 
-    TTS(deviceName, message ) {
+    setVolume(deviceName, volume, callBack) {
+        let self = this;
+        console.log('setVolume call', volume);
+        unirest.get('http://'+self.params.url+'/device/'+self.params[deviceName]+'/volume/'+volume)
+            .end(function (response) {
+                if (response.ok) {
+                    console.log(response.body);
+                    if (callBack) callBack(response.body);
+                }
+            });
+    }
+
+    getDevice(deviceName, callBack) {
+        let self = this;
+        console.log('getDevice call');
+        unirest.get('http://'+self.params.url+'/device/'+self.params[deviceName])
+            .end(function (response) {
+                if (response.ok) {
+                    console.log(response.body);
+                    if (callBack) callBack(response.body);
+                }
+            });
+    }
+
+    TTS(deviceName, message, volume) {
         let self = this;
         console.log('TTS', deviceName, message);
-        unirest.post('http://'+self.params.url+'/device/'+self.params[deviceName]+'/playMedia')
-            .type('json')
-            .send([
-                {
-                    mediaTitle: message,
-                    googleTTS: 'fr-CA'
-                }
-            ])
-            .end(function (response) {
-                if (response.ok)
-                    console.log(response.body);
-            });
+
+        let playMedia = function(callback) {
+
+
+            unirest.post('http://' + self.params.url + '/device/' + self.params[deviceName] + '/playMedia')
+                .type('json')
+                .send([
+                    {
+                        mediaTitle: message,
+                        googleTTS: 'fr-CA'
+                    }
+                ])
+                .end(function (response) {
+                    if (response.ok) {
+                        console.log(response.body);
+                        if (callBack) callBack(response.body);
+                    }
+
+                });
+        };
+
+        if (volume){
+            self.getDevice(deviceName, function(result){
+                let bakVolume = result.status.volume;
+                console.log('current volume', bakVolume);
+                self.setVolume(deviceName, volume, function(){
+                    playMedia(function(){
+                        self.setVolume(deviceName, bakVolume);
+                    });
+
+                })
+
+            })
+        }
+        else
+            playMedia();
+
     }
 
     dingDong(options) {
