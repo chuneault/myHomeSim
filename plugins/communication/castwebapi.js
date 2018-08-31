@@ -10,6 +10,23 @@ const plugins = require("../../lib/hsPlugins.js");
 
 class castwebapi extends plugins {
 
+    TTS(deviceName, message ) {
+        let self = this;
+        console.log('TTS', deviceName, message);
+        unirest.post('http://'+self.params.url+'/device/'+self.params[deviceName]+'/playMedia')
+            .type('json')
+            .send([
+                {
+                    mediaTitle: message,
+                    googleTTS: 'fr-CA'
+                }
+            ])
+            .end(function (response) {
+                if (response.ok)
+                    console.log(response.body);
+            });
+    }
+
     dingDong(options) {
       let self = this;
       console.log('dingDong call');
@@ -35,7 +52,7 @@ class castwebapi extends plugins {
 
     constructor(controller, params) {
       super(controller, params);
-      controller.addObject('castwebapi', {class: this, dingDong: this.dingDong});
+      controller.addObject('castwebapi', {class: this, dingDong: this.dingDong, TTS: this.TTS});
     }
 }
 
