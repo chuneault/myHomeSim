@@ -5,7 +5,7 @@ let  hosts = [{ip: '192.168.0.151', desc: 'Carl', alive: null}, {ip: '192.168.0.
 function checkHome() {
 
     let cfg = {
-        timeout: 5,
+        timeout: 6,
         // WARNING: -i 2 may not work in other platform like window
         extra: ["-i 2"],
     };
@@ -27,4 +27,4 @@ checkHome();
 
 setInterval(function (){
     checkHome();
-}, 10000);
+}, 15000);
