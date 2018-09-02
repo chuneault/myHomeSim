@@ -211,17 +211,17 @@ class httpServer extends plugins {
       res.send('Hello from myHomeSim!');
     });
 
-      app.get('/espeasy/:sysname', function (req, res) {
+    app.get('/espeasy/:sysname', function (req, res) {
           console.log('Hello from espeasy!');
           console.log(req.params.sysname);
           res.send('OK');
       });
 
-      app.get('/espeasy/:sysname/:taskname/:valname/:value', function (req, res) {
+    app.get('/espeasy/:sysname/:taskname/:valname/:value', function (req, res) {
           console.log('Hello from espeasy!');
           console.log(req.params);
           res.send('OK');
-      });
+    });
 
 
     app.get('/', function (req, res) {
@@ -448,7 +448,6 @@ class httpServer extends plugins {
         response.json(result);
     });
 
-
     app.get('/api/sensors/:_nodeId', function (request, response){
       //console.log('searching for', request.params.filter.bold.green);
       let result = [];
@@ -478,7 +477,7 @@ class httpServer extends plugins {
         response.status(412).send('sensor not found');
     });
 
-      app.put('/api/sensor/function/:_sensorId/:_functionName', function (request, response){
+    app.put('/api/sensor/function/:_sensorId/:_functionName', function (request, response){
           var sensor = ctrl.sensors[request.params._sensorId];
           if (sensor) {
               console.log('call sensor function', request.params._functionName, request.body);
@@ -501,7 +500,7 @@ class httpServer extends plugins {
         response.status(412).send('sensor not found');
     });
 
-      app.post('/api/invokeAction/:_actionName/:_methodName', function (request, response){
+    app.post('/api/invokeAction/:_actionName/:_methodName', function (request, response){
           console.log('invokeAction', request.params._actionName, request.params._methodName,  request.body);
           ctrl.invokeAction(request.params._actionName, request.params._methodName,  [request.body]);
           response.status(200).send('action called');

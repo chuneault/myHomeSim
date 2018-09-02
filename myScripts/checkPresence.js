@@ -1,13 +1,16 @@
 const  ping = require('ping');
 
-let  hosts = [{ip: '192.168.0.151', desc: 'Carl', alive: null}, {ip: '192.168.0.188', desc: 'Annie', alive: null}];
+let  hosts = [{ip: '192.168.0.151', desc: 'Carl', alive: null},
+              {ip: '192.168.0.188', desc: 'Annie', alive: null},
+              {ip: '192.168.0.143', desc: 'Éliane', alive: null},
+             ];
 
 function checkHome() {
 
     let cfg = {
         timeout: 6,
         // WARNING: -i 2 may not work in other platform like window
-        extra: ["-i 2"],
+        extra: ["-i 1"],
     };
 
     hosts.forEach(function(host){
