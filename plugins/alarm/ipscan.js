@@ -22,10 +22,10 @@ class ipScan extends plugins {
         let self = this;
         self.log.info('Scan IP');
 
-        arpscan({dev: "eth0"}).then(function (response) {
+        arpscan({dev: self.params.dev}).then(function (response) {
 
-            self.__controller.addOrUpdateNode({id: ip.ip},
-                {name: 'IPDevices', dev: 'eth0'}, self,
+            self.__controller.addOrUpdateNode({id: self.params.id},
+                {id: self.params.id, name: 'IPScan', dev: self.params.dev}, self,
                 function (error, node) {
                     _.forEach(response, function (ip) {
                         getHostName(ip.ip).then(
@@ -33,11 +33,9 @@ class ipScan extends plugins {
                                 self.__controller
                                     .addOrUpdateSensor({id: ip.ip},
                                         {
-                                          id: ip.ip, name: name,
-                                          mac: ip.mac
+                                          id: ip.ip, name: name, mac: ip.mac
                                         }, node,
                                         function (err, sensor) {
-
 
                                         }
                                     )
