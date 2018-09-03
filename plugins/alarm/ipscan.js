@@ -33,7 +33,7 @@ class ipScan extends plugins {
                                 self.__controller
                                     .addOrUpdateSensor({id: ip.ip},
                                         {
-                                          id: ip.ip, name: (nameDev == '' ? ip.ip : nameDev), mac: ip.mac
+                                          id: ip.ip, name: (nameDev == '' ? ip.ip : nameDev), mac: ip.mac, vendor: ip.vendor
                                         }, node,
                                         function (err, sensor) {
 
