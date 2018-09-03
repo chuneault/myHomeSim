@@ -9,8 +9,7 @@ function getHostName(ip){
 		var hostname = '';
 		switch(os.type().toLowerCase()){
 			case 'linux':
-				 console.log('linux');
-                                 spawn.exec('avahi-resolve-address ' + ip +" | awk '{print $2}'", function (err, stdout, stderr){
+                    spawn.exec('avahi-resolve-address ' + ip +" | awk '{print $2}'", function (err, stdout, stderr){
 					if(err) console.log('['+ip+' hostname not found]: '+stderr);
 					else hostname = stdout;
 					resolve(hostname);
