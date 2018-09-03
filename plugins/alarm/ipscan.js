@@ -29,11 +29,11 @@ class ipScan extends plugins {
                 function (error, node) {
                     _.forEach(response, function (ip) {
                         getHostName(ip.ip).then(
-                            function (name) {
+                            function (nameDev) {
                                 self.__controller
                                     .addOrUpdateSensor({id: ip.ip},
                                         {
-                                          id: ip.ip, name: name, mac: ip.mac
+                                          id: ip.ip, name: (nameDev == '' ? ip.ip : nameDev), mac: ip.mac
                                         }, node,
                                         function (err, sensor) {
 
