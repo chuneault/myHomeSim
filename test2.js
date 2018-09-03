@@ -1,36 +1,33 @@
-const { Client } = require('tplink-smarthome-api');
-const hue  = require("node-hue-api");
-const hueApi = hue.HueApi;
-const _       = require('lodash');
+const  ping = require('ping');
 
-function testPhilipsHue(){
-  let api = new hueApi('192.168.0.178', 'uZR5pbc3P2aUmCtdn6JQzOn-gEXipyA4ZU9m1TR6');
-  api.lights(function(err, light) {
-      if (err) throw err;
-      console.log(lights)
+let  hosts = [{ip: '192.168.0.151', desc: 'Carl', alive: null}, {ip: '192.168.0.188', desc: 'Annie', alive: null}];
+
+function checkHome() {
+
+  let cfg = {
+    timeout: 5,
+    // WARNING: -i 2 may not work in other platform like window
+    extra: ["-i 2"],
+  };
+
+
+  hosts.forEach(function(host){
+    ping.sys.probe(host.ip, function(isAlive){
+        var msg = isAlive ?  host.desc + ' est à la maison' :  host.desc + ' n\'est pas la';
+        if (host.alive == null) host.alive = isAlive;
+        if (host.alive != isAlive) { 
+          console.log(msg);
+          host.alive = isAlive;
+        }
+    }, cfg);
   });
-}
-
-function testTplink()  {
-    const client = new Client();
-
-    // Client events `device-*` also have `bulb-*` and `plug-*` counterparts.
-    // Use those if you want only events for those types and not all devices.
-
-    /*client.getDevice({host: '192.168.0.131'}).then((device) => {
-      device.getSysInfo().then(console.log);
-      device.setPowerState(false);
-      device.getSysInfo().then(console.log);
-
-    });*/
-
-    client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
-        device.getSysInfo().then(function (device) {
-            console.log(device)
-        });
-        //device.setPowerState(true);
-    });
 
 }
 
-testPhilipsHue();
+
+checkHome();
+
+setInterval(function (){
+    checkHome();
+  }, 10000);
+
