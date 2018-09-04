@@ -513,6 +513,8 @@ class httpServer extends plugins {
               return res.status(400).send('No files were uploaded.');
 
           console.log(req.files);
+          console.log(req.body);
+          console.log(req.params);
 
           _.forEach(req.files, function(file){
               ctrl.addFileAttachement(file.data, function(result){
