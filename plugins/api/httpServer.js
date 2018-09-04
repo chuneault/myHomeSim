@@ -518,7 +518,7 @@ class httpServer extends plugins {
           _.forEach(req.files, function(file){
               ctrl.addFileAttachement(file.data, function(result){
                   let sensor = ctrl.sensors[req.body.id];
-                  ctrl.updateSensor(sensor, {fileData: {name: file.name,  mimetype: file.mimetype, fileId: result.ops[0]._id});
+                  ctrl.updateSensor(sensor, {fileData: {name: file.name,  mimetype: file.mimetype, fileId: result.ops[0]._id}});
                   console.log(result.ops[0]._id);
                   res.json({fileId: result.ops[0]._id});
               });
