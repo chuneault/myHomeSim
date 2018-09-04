@@ -160,6 +160,23 @@
               <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
               <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
               <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
+
+              <input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>
+              <script>
+                $(function () {
+                    $('#fileupload').fileupload({
+                        dataType: 'json',
+                        done: function (e, data) {
+                            $.each(data.result.files, function (index, file) {
+                                $('<p/>').text(file.name).appendTo(document.body);
+                            });
+                        }
+                    });
+                });
+               </script>
+
+
+
             {{/js_compare}}
         </div>
     </div>
@@ -185,23 +202,10 @@
         {{/each}}
         <div class="form-group">
             <div class="col-xs-12 col-xs-offset-4">
-                <input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>
                 <button type="submit" class="btn btn-primary"
                         onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
                 </button>
                 <button class="btn btn-danger bootbox-close-button">Cancel</button>
-                <script>
-                    $(function () {
-                        $('#fileupload').fileupload({
-                            dataType: 'json',
-                            done: function (e, data) {
-                                $.each(data.result.files, function (index, file) {
-                                    $('<p/>').text(file.name).appendTo(document.body);
-                                });
-                            }
-                        });
-                    });
-                </script>
             </div>
         </div>
     </form>
