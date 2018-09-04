@@ -66,13 +66,26 @@ class httpServer extends plugins {
         //passport = require('passport'),
         //LocalStrategy = require('passport-localapikey').Strategy,
         bodyParser = require('body-parser'),
-        appRoot = require('app-root-path');
+        appRoot = require('app-root-path'),
         //cookieParser = require('cookie-parser'),
         //session = require('express-session');
+        upload = require('jquery-file-upload-middleware');
 
 
 
     var app = express();
+
+    upload.configure({
+          uploadDir: __dirname + '/public/uploads',
+          uploadUrl: '/api/uploads',
+          imageVersions: {
+              thumbnail: {
+                  width: 80,
+                  height: 80
+              }
+          }
+    });
+
 
 
     function findById(id, fn) {
@@ -148,6 +161,8 @@ class httpServer extends plugins {
 
     //app.use(cookieParser());
     //app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
+
+    app.use('/api/upload', upload.fileHandler());
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -506,8 +521,8 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
-    app.post('/api/sensor/picture/upload', function (request, response){
-        console.log('picture', request.body, request.file, request);
+    app.post('/api/uploads', function (request, response){
+        console.log('picture', request.body, request.file);
         response.status(200).send('picture updated');
     });
 
