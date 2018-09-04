@@ -77,7 +77,7 @@ class httpServer extends plugins {
 
     upload.configure({
           uploadDir: __dirname + '/uploads/',
-          uploadUrl: '/api/uploads'
+          uploadUrl: '/api/uploads',
           imageVersions: {
               thumbnail: {
                   width: 80,
