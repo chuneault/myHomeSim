@@ -1,6 +1,7 @@
 const plugins = require("../../lib/hsPlugins.js");
 const _       = require('lodash');
 const arpscan = require('./arpscan.js');   // perform the arp scan
+const mac = require('./mac.js');
 const getHostName = require('./getHostName.js');
 
 
@@ -44,7 +45,13 @@ class ipScan extends plugins {
                                             function (err, sensor) {
                                             }
                                         )
+
                                 }
+                                if ((sensor) && (sensor.vendor == '(Unknown)'))
+                                    mac(sensor.mac).then(function(vendor){
+                                        if ((vendor != '') && (vendor != (Unknown)))
+                                            self.__controller.addOrUpdateSensor({id: sensor.id}, {id: sensor.id, vendor:vendor}, node, function(err,sensor){});
+                                    });
                             }
                         )
                     })
