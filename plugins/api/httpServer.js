@@ -506,6 +506,12 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
+    app.post('/api/sensor/picture', function (request, response){
+        console.log('picture', request.body);
+        response.status(200).send('picture updated');
+    });
+
+
     app.get('/api/sensor/:_sensorId/values', function (request, response){
       var sensor = ctrl.sensors[request.params._sensorId];
       response.json(serializeObj(sensor.__values));
