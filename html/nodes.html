@@ -336,7 +336,7 @@
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
             $('#fileupload').fileupload({
-                dataType: 'json',
+                sequentialUploads: true,
 
                 /*add: function (e, data) {
                     debugger;
