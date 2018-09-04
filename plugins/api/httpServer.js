@@ -76,8 +76,7 @@ class httpServer extends plugins {
     var app = express();
 
     upload.configure({
-          uploadDir: __dirname + '/public/uploads',
-          uploadUrl: '/api/uploads',
+          uploadDir: '/public/uploads',
           imageVersions: {
               thumbnail: {
                   width: 80,
@@ -521,7 +520,7 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
-    app.post('/api/uploads', function (request, response){
+    app.post('/api/upload', function (request, response){
         console.log('picture', request.body, request.file);
         response.status(200).send('picture updated');
     });

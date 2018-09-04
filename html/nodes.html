@@ -335,7 +335,9 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
-            $('#fileupload').fileupload({
+            $('#fileupload').fileupload({ dataType: 'json' });
+
+            /*    $('#fileupload')
                 add: function (e, data) {
                     data.submit();
                 },
@@ -344,7 +346,7 @@
                         //$('<p/>').text(file.name).appendTo(document.body);
                     });
                 }
-            });
+            });*/
 
 
 
