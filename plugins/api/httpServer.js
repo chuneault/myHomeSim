@@ -508,6 +508,14 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
+
+
+      app.get('/api/file/:fileId', function(req, res) {
+          ctrl.getFileAttachement(req.params.fileId, function(result){
+              res.json(result);
+          });
+      });
+
       app.post('/api/upload', function(req, res) {
           if (!req.files)
               return res.status(400).send('No files were uploaded.');

@@ -45,9 +45,9 @@ class ipScan extends plugins {
                                             function (err, sensor) {
                                             }
                                         )
-
                                 }
-                                if ((sensor) && (sensor.vendorName == '(Unknown)'))
+                                if ((sensor) && (sensor.vendorName == '(Unknown)')) {
+                                    sensor.vendorName = 'Pending';
                                     mac(sensor.mac).then(function(vendor){
                                         if ((vendor != '') && (vendor != '(Unknown)')) {
                                             self.log.info('Update Device Vendor', sensor.id, vendor);
@@ -58,6 +58,7 @@ class ipScan extends plugins {
                                             });
                                         }
                                     });
+                                }
                             }
                         )
                     })
