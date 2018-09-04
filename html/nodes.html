@@ -120,7 +120,7 @@
             color: #ffffff;
         }
 
-        .pictureSensor{
+        .pictureSensorImg{
             height: 80px;
 
         }
@@ -350,7 +350,7 @@
 
             $.getJSON($$myHomeSiteApiURL + '/api/file/' + fileData.fileId, function (data) {
                 //<img src=”data:image/png;base64,iVBORw0KGgoAAAANS… (see source for full base64 encoded image) …8bgAAAAASUVORK5CYII=”>
-               $(e).append($('<img>').attr('src', 'data:' + fileData.mimetype + ';base64,' + data.base64));
+               $(e).append($('<img class="pictureSensorImg">').attr('src', 'data:' + fileData.mimetype + ';base64,' + data.base64));
             });
         });
 
