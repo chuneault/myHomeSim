@@ -76,7 +76,7 @@ class httpServer extends plugins {
     var app = express();
 
     upload.configure({
-          uploadDir: '/public/uploads',
+          uploadDir: __dirname + 'uploads',
           imageVersions: {
               thumbnail: {
                   width: 80,
