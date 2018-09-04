@@ -513,6 +513,15 @@ class httpServer extends plugins {
               return res.status(400).send('No files were uploaded.');
 
           console.log(req.files);
+
+          _.forEach(req.files, function(file){
+              ctrl.addFileAttachement(file.data, function(result){
+                  console.log(result);
+                  res.json(result);
+              });
+          });
+
+
           /* The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
           let sampleFile = req.files.sampleFile;
 
