@@ -169,7 +169,7 @@
                <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Select files...</span>
-                    <input id="fileupload" data-url="/api/upload" data-form-data="/sensor/{{_id}}" type="file" name="files[]" multiple>
+                    <input id="fileupload" data-url="/api/upload" data-id="{{_id}}" type="file" name="files[]" multiple>
                </span>
 
 
@@ -335,23 +335,15 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
-            $('#fileupload').fileupload({ dataType: 'json' });
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add: function (e, data) {
+                console.log(data);
+                data.submit();
+            }
+        });
 
-            /*    $('#fileupload')
-                add: function (e, data) {
-                    data.submit();
-                },
-                done: function (e, data) {
-                    $.each(data.result.files, function (index, file) {
-                        //$('<p/>').text(file.name).appendTo(document.body);
-                    });
-                }
-            });*/
-
-
-
-
-$('.slider').each(function(i,e){
+        $('.slider').each(function(i,e){
            $(e).slider({
             /*formatter: function (value) {
                 return value;
