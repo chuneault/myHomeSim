@@ -76,7 +76,8 @@ class httpServer extends plugins {
     var app = express();
 
     upload.configure({
-          uploadDir: __dirname + 'uploads',
+          uploadDir: __dirname + '/uploads/',
+          uploadUrl: '/api/uploads'
           imageVersions: {
               thumbnail: {
                   width: 80,
@@ -162,6 +163,8 @@ class httpServer extends plugins {
     //app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
 
     app.use('/api/upload', upload.fileHandler());
+
+
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -520,7 +523,7 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
-    app.post('/api/upload', function (request, response){
+    app.post('/api/uploads', function (request, response){
         console.log('picture', request.body, request.file);
         response.status(200).send('picture updated');
     });
