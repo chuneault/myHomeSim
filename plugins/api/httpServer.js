@@ -71,20 +71,30 @@ class httpServer extends plugins {
         //session = require('express-session');
         upload = require('jquery-file-upload-middleware');
 
-
-
     var app = express();
 
-    upload.configure({
-          uploadDir: __dirname + '/uploads/',
-          uploadUrl: '/api/uploads',
+      upload.configure({
           imageVersions: {
               thumbnail: {
                   width: 80,
                   height: 80
               }
           }
-    });
+      });
+
+      app.use('/upload', function (req, res, next) {
+          // imageVersions are taken from upload.configure()
+          upload.fileHandler({
+              uploadDir: function () {
+                  console.log(__dirname + '/uploads/');
+                  return __dirname + '/uploads/';
+              },
+              uploadUrl: function () {
+                  console.log('/api/upload/');
+                  return '/api/upload/';
+              }
+          })(req, res, next);
+      });
 
 
 
@@ -161,8 +171,6 @@ class httpServer extends plugins {
 
     //app.use(cookieParser());
     //app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
-
-    app.use('/api/upload', upload.fileHandler());
 
 
 
@@ -523,7 +531,7 @@ class httpServer extends plugins {
           response.status(200).send('action called');
       });
 
-    app.post('/api/uploads', function (request, response){
+    app.post('/api/upload', function (request, response){
         console.log('picture', request.body, request.file);
         response.status(200).send('picture updated');
     });
