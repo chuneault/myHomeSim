@@ -31,8 +31,8 @@ class ipScan extends plugins {
                         getHostName(ip.ip).then(
                             function (nameDev) {
                                 let sensor = _.find(node.__sensors, {mac: ip.mac});
-                                if ((sensor == null) || ((sensor.ip != ip.ip) || (sensor.name != nameDev) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
-                                    self.log.info('Update sensor', sensor, ip);
+                                if ((sensor == null) || ((sensor.id != ip.ip) || (sensor.name != nameDev) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
+                                    self.log.info('Update sensor', ip);
                                     self.__controller
                                         .addOrUpdateSensor({id: ip.ip},
                                             {
