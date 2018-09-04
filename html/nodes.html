@@ -338,6 +338,7 @@
         $('#fileupload').fileupload({
             dataType: 'json',
             add: function (e, data) {
+                data.form.body = {test: 'allo'};
                 console.log(data);
                 data.submit();
             }
