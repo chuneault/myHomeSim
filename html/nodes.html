@@ -158,7 +158,7 @@
         </div>
         <div class="panel-body">
             {{#js_compare "this.fileData != null"}}
-                <div>!!! PHOTO !!!</div>
+               <div class="pictureSensor" data-fileData="{{JSON fileData}}"></div>
             {{/js_compare}}
             <p>{{lastValue}}</p>
             <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
@@ -339,6 +339,11 @@
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
         $('#fileupload').fileupload({dataType: 'json'});
+
+        $('.pictureSensor').each(function(i,e){
+            let fileData = JSON.parse($(e).attr('data-fileData'));
+            debugger;
+        });
 
         $('.slider').each(function(i,e){
            $(e).slider({
