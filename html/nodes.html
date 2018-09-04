@@ -343,7 +343,11 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
-        $('#fileupload').fileupload({dataType: 'json'});
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                        .test(window.navigator && navigator.userAgent),
+            imageMaxHeight: 100});
 
         $('.pictureSensor').each(function(i,e){
             let fileData = JSON.parse($(e).attr('data-fileData'));
