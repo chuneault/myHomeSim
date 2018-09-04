@@ -190,6 +190,18 @@
                         onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
                 </button>
                 <button class="btn btn-danger bootbox-close-button">Cancel</button>
+                <script>
+                    $(function () {
+                        $('#fileupload').fileupload({
+                            dataType: 'json',
+                            done: function (e, data) {
+                                $.each(data.result.files, function (index, file) {
+                                    $('<p/>').text(file.name).appendTo(document.body);
+                                });
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
     </form>
