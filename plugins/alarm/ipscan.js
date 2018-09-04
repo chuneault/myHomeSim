@@ -32,7 +32,7 @@ class ipScan extends plugins {
                         getHostName(ip.ip).then(
                             function (nameDev) {
                                 let sensor = _.find(node.__sensors, {mac: ip.mac});
-                                if ((sensor == null) || ((sensor.id != ip.ip) || (sensor.name != (nameDev == '' ? ip.ip : nameDev)) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
+                                if ((sensor == null) || ((sensor.id != ip.ip) || (sensor.name != (nameDev == '' ? ip.ip : nameDev)) || ((sensor.vendorName != ip.vendor) && (ip.vendor != '(Unknown)')))) {
                                     self.log.info('Update Device', ip);
                                     self.__controller
                                         .addOrUpdateSensor({id: ip.ip},
@@ -40,20 +40,20 @@ class ipScan extends plugins {
                                                 id: ip.ip,
                                                 name: (nameDev == '' ? ip.ip : nameDev),
                                                 mac: ip.mac,
-                                                vendor: ip.vendor
+                                                vendorName: ip.vendor
                                             }, node,
                                             function (err, sensor) {
                                             }
                                         )
 
                                 }
-                                if ((sensor) && (sensor.vendor == '(Unknown)'))
+                                if ((sensor) && (sensor.vendorName == '(Unknown)'))
                                     mac(sensor.mac).then(function(vendor){
                                         if ((vendor != '') && (vendor != '(Unknown)')) {
                                             self.log.info('Update Device Vendor', sensor.id, vendor);
                                             self.__controller.addOrUpdateSensor({id: sensor.id}, {
                                                 id: sensor.id,
-                                                vendor: vendor
+                                                vendorName: vendor
                                             }, node, function (err, sensor) {
                                             });
                                         }
