@@ -32,7 +32,7 @@ class ipScan extends plugins {
                             function (nameDev) {
                                 let sensor = _.find(node.sensors, {mac: ip.mac});
                                 if ((!sensor) || ((sensor.ip != ip.ip) || (sensor.name != nameDev) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
-                                    self.log.info('Update sensor', ip);
+                                    self.log.info('Update sensor', sensor, ip);
                                     self.__controller
                                         .addOrUpdateSensor({id: ip.ip},
                                             {
