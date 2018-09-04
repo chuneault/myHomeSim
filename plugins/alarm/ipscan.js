@@ -20,7 +20,7 @@ class ipScan extends plugins {
 
     scanIp() {
         let self = this;
-        self.log.info('Scan IP');
+        self.log.info('Scan IP ', self.params.dev);
 
         arpscan({dev: self.params.dev}).then(function (response) {
 
@@ -30,15 +30,21 @@ class ipScan extends plugins {
                     _.forEach(response, function (ip) {
                         getHostName(ip.ip).then(
                             function (nameDev) {
-                                self.__controller
-                                    .addOrUpdateSensor({id: ip.ip},
-                                        {
-                                          id: ip.ip, name: (nameDev == '' ? ip.ip : nameDev), mac: ip.mac, vendor: ip.vendor
-                                        }, node,
-                                        function (err, sensor) {
-
-                                        }
-                                    )
+                                let sensor = _.find(node.sensors, {mac: ip.mac});
+                                if ((!sensor) || ((sensor.ip != ip.ip) || (sensor.name != nameDev) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
+                                    self.log.info('Update sensor', ip);
+                                    self.__controller
+                                        .addOrUpdateSensor({id: ip.ip},
+                                            {
+                                                id: ip.ip,
+                                                name: (nameDev == '' ? ip.ip : nameDev),
+                                                mac: ip.mac,
+                                                vendor: ip.vendor
+                                            }, node,
+                                            function (err, sensor) {
+                                            }
+                                        )
+                                }
                             }
                         )
                     })
