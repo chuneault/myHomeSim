@@ -88,10 +88,6 @@ class httpServer extends plugins {
               uploadDir: function () {
                   console.log(__dirname + '/uploads/');
                   return __dirname + '/uploads/';
-              },
-              uploadUrl: function () {
-                  console.log('/api/upload/');
-                  return '/api/upload/';
               }
           })(req, res, next);
       });
@@ -530,11 +526,6 @@ class httpServer extends plugins {
           ctrl.invokeAction(request.params._actionName, request.params._methodName,  [request.body]);
           response.status(200).send('action called');
       });
-
-    app.post('/api/upload', function (request, response){
-        console.log('picture', request.body, request.file);
-        response.status(200).send('picture updated');
-    });
 
 
     app.get('/api/sensor/:_sensorId/values', function (request, response){
