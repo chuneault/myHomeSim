@@ -169,7 +169,7 @@
                <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Select files...</span>
-                    <input id="fileupload" data-url="/api/upload" data-id="{{_id}}" type="file" name="files[]" multiple>
+                    <input id="fileupload" data-url="/api/upload" data-form-data='{"script": "{{_id}}"}' data-id="{{_id}}" type="file" name="files[]" multiple>
                </span>
 
 
@@ -338,7 +338,7 @@
         $('#fileupload').fileupload({
             dataType: 'json',
             add: function (e, data) {
-                data.form.body = {test: 'allo'};
+                //data.form.body = {test: 'allo'};
                 console.log(data);
                 data.submit();
             }
