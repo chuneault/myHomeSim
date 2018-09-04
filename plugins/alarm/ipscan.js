@@ -21,7 +21,7 @@ class ipScan extends plugins {
 
     scanIp() {
         let self = this;
-        self.log.info('Scan IP ', self.params.dev);
+        self.log.info('Scan Devices (IP)', self.params.dev);
 
         arpscan({dev: self.params.dev}).then(function (response) {
 
@@ -33,7 +33,7 @@ class ipScan extends plugins {
                             function (nameDev) {
                                 let sensor = _.find(node.__sensors, {mac: ip.mac});
                                 if ((sensor == null) || ((sensor.id != ip.ip) || (sensor.name != (nameDev == '' ? ip.ip : nameDev)) || ((sensor.vendor != ip.vendor) && (ip.vendor != '(Unknown)')))) {
-                                    self.log.info('Update sensor', ip);
+                                    self.log.info('Update Device', ip);
                                     self.__controller
                                         .addOrUpdateSensor({id: ip.ip},
                                             {
@@ -49,8 +49,14 @@ class ipScan extends plugins {
                                 }
                                 if ((sensor) && (sensor.vendor == '(Unknown)'))
                                     mac(sensor.mac).then(function(vendor){
-                                        if ((vendor != '') && (vendor != (Unknown)))
-                                            self.__controller.addOrUpdateSensor({id: sensor.id}, {id: sensor.id, vendor:vendor}, node, function(err,sensor){});
+                                        if ((vendor != '') && (vendor != (Unknown))) {
+                                            self.log.info('Update Device Vendor', sensor.id, vendor);
+                                            self.__controller.addOrUpdateSensor({id: sensor.id}, {
+                                                id: sensor.id,
+                                                vendor: vendor
+                                            }, node, function (err, sensor) {
+                                            });
+                                        }
                                     });
                             }
                         )
