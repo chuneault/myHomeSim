@@ -146,12 +146,12 @@
             <h5 class="panel-title">{{name}}</h5>
             <h7 class="panel-title">{{desc}}</h7>
             {{#arrayIn this.functionType "switch"}}
-              <div class="panel-title"><input id="binary-switch" type="checkbox"
+              <span class="panel-title"><input id="binary-switch" type="checkbox"
                   {{#js_compare "this.stateOn == true"}}
                      checked
                   {{/js_compare}}
                  data-id="{{_id}}" data-toggle="toggle-relay">
-              </div>
+              </span>
             {{/arrayIn}}
             {{#arrayIn this.functionType "brightness"}}
               <input data-id="{{_id}}" class="slider"
