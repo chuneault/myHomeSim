@@ -46,7 +46,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css" />
 
-
     <script>
 
         var icon = {
@@ -75,6 +74,11 @@
 
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/vendor/jquery.ui.widget.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/jquery.fileupload.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.14.0/js/canvas-to-blob.min.js"></script>
 
     <style>
         body {
@@ -181,6 +185,7 @@
         {{/each}}
         <div class="form-group">
             <div class="col-xs-12 col-xs-offset-4">
+                <input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>
                 <button type="submit" class="btn btn-primary"
                         onclick="submitUpdate(event, $(this).parents('#nodeForm'), '{{formType}}');">Save
                 </button>
