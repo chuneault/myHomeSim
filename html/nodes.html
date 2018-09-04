@@ -336,12 +336,9 @@
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
             $('#fileupload').fileupload({
-                sequentialUploads: true,
-
-                /*add: function (e, data) {
-                    debugger;
-                    //data.submit();
-                },*/
+                add: function (e, data) {
+                    data.submit();
+                },
                 done: function (e, data) {
                     $.each(data.result.files, function (index, file) {
                         //$('<p/>').text(file.name).appendTo(document.body);
