@@ -507,7 +507,7 @@ class httpServer extends plugins {
       });
 
     app.post('/api/sensor/picture/upload', function (request, response){
-        console.log('picture', request.body);
+        console.log('picture', request.body, response.file);
         response.status(200).send('picture updated');
     });
 
