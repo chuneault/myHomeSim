@@ -343,14 +343,10 @@
         $('.pictureSensor').each(function(i,e){
             let fileData = JSON.parse($(e).attr('data-fileData'));
 
-            $.getJSON($$myHomeSiteApiURL + '/api/file/' + fileData.fileId, function (base64Data) {
+            $.getJSON($$myHomeSiteApiURL + '/api/file/' + fileData.fileId, function (data) {
                 //<img src=”data:image/png;base64,iVBORw0KGgoAAAANS… (see source for full base64 encoded image) …8bgAAAAASUVORK5CYII=”>
-               $(e).append($('<img>').attr('src', 'data:' + fileData.mimetype + ';base64,' + base64Data));
+               $(e).append($('<img>').attr('src', 'data:' + fileData.mimetype + ';base64,' + data.base64));
             });
-
-
-
-
         });
 
         $('.slider').each(function(i,e){
