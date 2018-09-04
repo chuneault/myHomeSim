@@ -512,12 +512,13 @@ class httpServer extends plugins {
           if (!req.files)
               return res.status(400).send('No files were uploaded.');
 
-          console.log(req.files);
-          console.log(req.body);
-          console.log(req.params);
+          //console.log(req.files);
+          //console.log(req.body);
 
           _.forEach(req.files, function(file){
               ctrl.addFileAttachement(file.data, function(result){
+                  let sensor = ctrl.sensors[req.body.id];
+                  ctrl.updateSensor(sensor, {fileData: {name: file.name,  mimetype: file.mimetype, fileId: result.ops[0]._id});
                   console.log(result.ops[0]._id);
                   res.json({fileId: result.ops[0]._id});
               });
