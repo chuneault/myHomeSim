@@ -160,23 +160,7 @@
               <a href="#" class="btn btn-danger" data-toggle="delete-{{../type}}" data-id="{{_id}}">Delete</a>
               <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="reboot-{{../type}}" data-id="{{_id}}">Reboot</a>
               <a href="#" style="margin-top: 5px;" class="btn btn-warning" data-toggle="toggle-send" data-id="{{_id}}">Send</a>
-
               <input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>
-              <script>
-                $(function () {
-                    $('#fileupload').fileupload({
-                        dataType: 'json',
-                        done: function (e, data) {
-                            $.each(data.result.files, function (index, file) {
-                                $('<p/>').text(file.name).appendTo(document.body);
-                            });
-                        }
-                    });
-                });
-               </script>
-
-
-
             {{/js_compare}}
         </div>
     </div>
@@ -219,10 +203,10 @@
 </script>
 
 <script>
-    $.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
+    /*$.post($$myHomeSiteApiURL + '/login', {apikey: 'asdasjsdgfhgdsfjkjhg'}, function(data) {
         console.log('Authentificate api')
         console.log(data);
-    });
+    });*/
 
     var $grid;
 
@@ -339,7 +323,19 @@
 
         renderTemplate7($('#nodesCard'), dataTemplate, $('.grid'));
 
-        $('.slider').each(function(i,e){
+            $('#fileupload').fileupload({
+                dataType: 'json',
+                done: function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        $('<p/>').text(file.name).appendTo(document.body);
+                    });
+                }
+            });
+        });
+
+
+
+$('.slider').each(function(i,e){
            $(e).slider({
             /*formatter: function (value) {
                 return value;
