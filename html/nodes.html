@@ -157,6 +157,9 @@
             {{/arrayIn}}
         </div>
         <div class="panel-body">
+            {{#js_compare "this.filedata != null"}}
+                <div>!!! PHOTO !!!</div>
+            {{/js_compare}}
             <p>{{lastValue}}</p>
             <a href="#" class="btn btn-primary" data-toggle="edit-{{../type}}" data-id="{{_id}}">Edit</a>
             {{#js_compare "this.type != 'sensor'"}}
