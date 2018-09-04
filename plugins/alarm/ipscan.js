@@ -49,7 +49,7 @@ class ipScan extends plugins {
                                 }
                                 if ((sensor) && (sensor.vendor == '(Unknown)'))
                                     mac(sensor.mac).then(function(vendor){
-                                        if ((vendor != '') && (vendor != (Unknown))) {
+                                        if ((vendor != '') && (vendor != '(Unknown)')) {
                                             self.log.info('Update Device Vendor', sensor.id, vendor);
                                             self.__controller.addOrUpdateSensor({id: sensor.id}, {
                                                 id: sensor.id,
