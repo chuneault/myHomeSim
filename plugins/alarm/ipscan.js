@@ -85,11 +85,11 @@ class ipScan extends plugins {
             extra: ["-i 1"],
         };
         let deviceSensors = _.filter(self.__controller.sensors, {checkPresence: {active: "true"}});
-        if (deviceSensors) {
-            _.forEach(deviceSensors, function (deviceSensor) {
+        /*if (deviceSensors) {
+            _.forEach(self.__controller.sensors, function (deviceSensor) {
                 ping.sys.probe(deviceSensor.id, function (isAlive) {
                     if (deviceSensor.lastValue != isAlive) {
-                        self.__controller.addSensorValue(deviceSensor, deviceSensor);
+                        self.__controller.addSensorValue(deviceSensor, isAlive);
                         if (!firstCheck) {
                             self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
                             self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
@@ -98,7 +98,7 @@ class ipScan extends plugins {
                     }
                 }, cfg);
             });
-        }
+        }*/
     }
 
 }
