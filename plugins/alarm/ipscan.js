@@ -84,11 +84,9 @@ class ipScan extends plugins {
             // WARNING: -i 2 may not work in other platform like window
             extra: ["-i 1"],
         };
-
         let deviceSensors = _.find(self.__controller.sensors, {checkPresence: {active: "true"}});
-        self.log.info('checkPresence for all', deviceSensors);
         if (deviceSensors) {
-            deviceSensors.forEach(function (deviceSensor) {
+            _.forEach(deviceSensors, function (deviceSensor) {
                 self.log.info('checkPresence for', deviceSensor);
                 ping.sys.probe(deviceSensor.id, function (isAlive) {
                     if (deviceSensor.lastValue != isAlive) {
