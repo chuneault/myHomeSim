@@ -18,7 +18,7 @@ class ipScan extends plugins {
         controller.on('loadDBCompleted', function () {
             self.scanIp();
 
-            setTimeout(function () {
+            setInterval(function () {
                 self.scanIp();
             }, 60000);
 
