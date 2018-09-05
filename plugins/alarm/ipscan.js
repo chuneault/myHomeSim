@@ -84,7 +84,7 @@ class ipScan extends plugins {
             // WARNING: -i 2 may not work in other platform like window
             extra: ["-i 1"],
         };
-        /*let deviceSensors = _.filter(self.__controller.sensors, {checkPresence: {active: "true"}});
+        let deviceSensors = _.filter(self.__controller.sensors, {checkPresence: {active: "true"}});
         if (deviceSensors) {
             _.forEach(deviceSensors, function (deviceSensor) {
                 ping.sys.probe(deviceSensor.id, function (isAlive) {
@@ -98,7 +98,7 @@ class ipScan extends plugins {
                     }
                 }, cfg);
             });
-        }*/
+        }
     }
 
 }
