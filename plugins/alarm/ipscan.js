@@ -86,20 +86,22 @@ class ipScan extends plugins {
         };
 
         let deviceSensors = _.find(self.__controller.sensors, {checkPresence: {active: true}});
-        if (deviceSensors)
-            deviceSensors.forEach(function(deviceSensor){
-            ping.sys.probe(deviceSensor.id, function(isAlive){
-                if (deviceSensor.lastValue != isAlive) {
-                    self.__controller.addSensorValue(deviceSensor, deviceSensor);
-                    if (!firstCheck) {
-                        self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
-                        self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
+        if (deviceSensors) {
+            self.log.info('checkPresence for all', deviceSensors);
+            deviceSensors.forEach(function (deviceSensor) {
+                self.log.info('checkPresence for', deviceSensor);
+                ping.sys.probe(deviceSensor.id, function (isAlive) {
+                    if (deviceSensor.lastValue != isAlive) {
+                        self.__controller.addSensorValue(deviceSensor, deviceSensor);
+                        if (!firstCheck) {
+                            self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
+                            self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
+                        }
+                        firstCheck = false;
                     }
-                    firstCheck = false;
-                }
-            }, cfg);
-        });
-
+                }, cfg);
+            });
+        }
     }
 
 }
