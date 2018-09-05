@@ -89,12 +89,12 @@ class ipScan extends plugins {
             _.forEach(self.__controller.sensors, function (deviceSensor) {
                 ping.sys.probe(deviceSensor.id, function (isAlive) {
                     if (deviceSensor.lastValue != isAlive) {
+                        console.log('ipscan sensor', deviceSensor.lastValue, isAlive);
                         self.__controller.addSensorValue(deviceSensor, isAlive);
-                        if (!firstCheck) {
+                        if (firstCheck == false) {
                             self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
                             self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
                         }
-                        firstCheck = false;
                     }
                 }, cfg);
             });
