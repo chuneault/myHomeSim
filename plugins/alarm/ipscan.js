@@ -3,6 +3,7 @@ const _       = require('lodash');
 const arpscan = require('./arpscan.js');   // perform the arp scan
 const mac = require('./mac.js');
 const getHostName = require('./getHostName.js');
+const ping = require('ping');
 
 
 class ipScan extends plugins {
@@ -16,6 +17,16 @@ class ipScan extends plugins {
 
         controller.on('loadDBCompleted', function () {
             self.scanIp();
+
+            setTimeout(function () {
+                self.scanIp();
+            }, 60000);
+
+            self.checkHome(true);
+            setInterval(function (){
+                self.checkHome(false);
+            }, 15000);
+
         });
     };
 
@@ -63,13 +74,33 @@ class ipScan extends plugins {
                         )
                     })
                 });
-
-            setTimeout(function () {
-                self.scanIp();
-            }, 60000);
-
         });
     };
+
+    checkHome(firstCheck){
+        let self = this;
+        let cfg = {
+            timeout: 6,
+            // WARNING: -i 2 may not work in other platform like window
+            extra: ["-i 1"],
+        };
+
+        let deviceSensors = _.find(self.__controller.sensors, {checkPresence: {active: true}});
+        if (deviceSensors)
+            deviceSensors.forEach(function(deviceSensor){
+            ping.sys.probe(deviceSensor.id, function(isAlive){
+                if (deviceSensor.lastValue != isAlive) {
+                    self.__controller.addSensorValue(deviceSensor, deviceSensor);
+                    if (!firstCheck) {
+                        self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
+                        self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
+                    }
+                    firstCheck = false;
+                }
+            }, cfg);
+        });
+
+    }
 
 }
 
