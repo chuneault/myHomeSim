@@ -17,16 +17,7 @@ class ipScan extends plugins {
 
         controller.on('loadDBCompleted', function () {
             self.scanIp();
-
-            setInterval(function () {
-                self.scanIp();
-            }, 60000);
-
             self.checkHome(true);
-            setInterval(function (){
-                self.checkHome(false);
-            }, 15000);
-
         });
     };
 
@@ -74,6 +65,11 @@ class ipScan extends plugins {
                         )
                     })
                 });
+
+            setTimeout(function () {
+                self.scanIp();
+            }, 60000);
+
         });
     };
 
@@ -99,6 +95,9 @@ class ipScan extends plugins {
                 }, cfg);
             });
         }
+        setTimeout(function (){
+            self.checkHome(false);
+        }, 15000);
     }
 
 }
