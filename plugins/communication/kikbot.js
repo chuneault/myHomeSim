@@ -67,6 +67,7 @@ class kikbot extends plugins {
         let self = this;
 
         if (_.isObject(title)) {
+            console.log(title);
             body = title.body;
             title = title.title;
             userName = title.userName;
