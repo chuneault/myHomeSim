@@ -91,6 +91,8 @@ class kikbot extends plugins {
               }
               msgs.push(img);
           });
+
+        console.log(msgs, data.recipient);
         self.bot.send(msgs, data.recipient);
     }
 }
