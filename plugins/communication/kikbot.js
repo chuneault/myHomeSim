@@ -71,7 +71,7 @@ class kikbot extends plugins {
             title = title.title;
             userName = title.userName;
         }
-        self.bot.send(Bot.Message.title(title).text(body), userName);
+        self.bot.send(Bot.Message.text(body), userName);
     }
 
 }
