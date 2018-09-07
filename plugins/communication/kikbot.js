@@ -60,7 +60,7 @@ class kikbot extends plugins {
             });
 
 
-        controller.addObject('kik', {class: this, sendMessage: self.sendMessage});
+        controller.addObject('kik', {class: this, sendMessage: self.sendMessage, sendPicture: self.sendPicture});
     }
 
     sendMessage(body, recipient) {
@@ -72,6 +72,32 @@ class kikbot extends plugins {
         self.bot.send(Bot.Message.text(body), recipient);
     }
 
+    sendPicture(data) {
+
+        let msgs = [];
+
+        if (data.msgs)
+          _.forEach(data.msgs, function(msg){
+              if (msg.type = 'image') {
+                  let img = Bot.Message.picture(msg.url);
+                  if (msg.name) img.setAttributionName(msg.name);
+                  if (msg.icon) img.setAttributionIcon(msg.icon);
+
+              }
+              else
+              if (msg.type = 'text') {
+                  let img = Bot.Message.text(msg.text);
+
+              }
+              msgs.push(img);
+          });
+
+        /*bot.send([Bot.Message.picture('http://i.imgur.com/oalyVlU.jpg')
+            .setAttributionName('Imgur')
+            .setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png'),*/
+
+        self.bot.send(msgs, data.recipient);
+    }
 }
 
 exports.connect = function(pluginType, params, callback) {
