@@ -26,7 +26,13 @@ class pushBullet extends plugins {
       this.pusher.note(this.deviceSender, title, body.toString(),
         function (error, response) {
           // response is the JSON response from the API
+            if (error)
+              console.log('PushBullet Error', error);
         });
+  }
+
+  sendFile(fileId, title) {
+      //pusher.file('u1qSJddxeKwOGuGW', '/path/to/file', 'Important file!', function(error, response) {});
   }
 
   createStream() {
@@ -122,7 +128,7 @@ class pushBullet extends plugins {
     });
 
 
-    controller.addObject('pushBullet', {class: self, sendMessage: self.sendMessage});
+    controller.addObject('pushBullet', {class: self, sendMessage: self.sendMessage, sendFile: self.sendFile});
 
   }
 
