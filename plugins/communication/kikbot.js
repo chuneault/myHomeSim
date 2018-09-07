@@ -17,6 +17,8 @@ class kikbot extends plugins {
 
         // We are first gonna create a new bot object with all of
         // the information we just filled in on dev.kik.com
+
+        console.log(params);
         self.bot = new Bot({
             username: params.userName, // The username you gave BotsWorth on Kik
             apiKey: params.apiKey,     // The API Key you can find on your profile on $
