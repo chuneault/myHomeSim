@@ -68,7 +68,7 @@ class kikbot extends plugins {
             self.bot.send(Bot.Message.title(title).text(body), userName);
         }
 
-        controller.addObject('kik', {class: this, sendMessage: sendMessage});
+        controller.addObject('kik', {class: this, "sendMessage": sendMessage});
     }
 
 }
