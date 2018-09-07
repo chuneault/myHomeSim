@@ -72,7 +72,7 @@ class kikbot extends plugins {
         self.bot.send(Bot.Message.text(body), recipient);
     }
 
-    sendPicture(data) {
+    async sendPicture(data) {
         let self = this;
         let msgs = [];
         if (data.msgs)
