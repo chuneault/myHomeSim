@@ -73,7 +73,7 @@ class kikbot extends plugins {
     }
 
     sendPicture(data) {
-
+        let self = this;
         let msgs = [];
         let img;
 
@@ -84,20 +84,13 @@ class kikbot extends plugins {
                   img = Bot.Message.picture(msg.url);
                   if (msg.name) img.setAttributionName(msg.name);
                   if (msg.icon) img.setAttributionIcon(msg.icon);
-
               }
               else
               if (msg.type = 'text') {
                   img = Bot.Message.text(msg.text);
-
               }
               msgs.push(img);
           });
-
-        /*bot.send([Bot.Message.picture('http://i.imgur.com/oalyVlU.jpg')
-            .setAttributionName('Imgur')
-            .setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png'),*/
-
         self.bot.send(msgs, data.recipient);
     }
 }
