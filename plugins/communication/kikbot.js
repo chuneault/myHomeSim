@@ -76,23 +76,21 @@ class kikbot extends plugins {
         let self = this;
         let msgs = [];
 
-
         if (data.msgs)
           _.forEach(data.msgs, function(msg){
               console.log('array', msg);
-              if (msg.type = 'image') {
+              if (msg.type == 'image') {
                   let img = Bot.Message.picture(msg.url);
                   if (msg.name) img.setAttributionName(msg.name);
                   if (msg.icon) img.setAttributionIcon(msg.icon);
                   msgs.push(img);
               }
               else
-              if (msg.type = 'text') {
+              if (msg.type == 'text') {
                   msgs.push(Bot.Message.text(msg.text));
               }
           });
 
-        console.log(msgs, data.recipient);
         self.bot.send(msgs, data.recipient);
     }
 }
