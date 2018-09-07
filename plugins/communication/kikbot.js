@@ -7,6 +7,7 @@ const _       = require('lodash');
 const http = require('http');
 const ObjectID = require('mongodb').ObjectID;
 let Bot  = require('@kikinteractive/kik');
+const fs = require('fs');
 
 
 
@@ -84,6 +85,9 @@ class kikbot extends plugins {
                     if (msg.fileId) {
                         let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(msg.fileId)}).toArray();
                         console.log(result);
+                        fs.writeFileSync('/home/myHomeSim/html/img/tmp/test.jpg', result[0].file_data);
+                        let img = Bot.Message.picture('http://home.huneault.ca:8080/img/tmp/test.jpg').setAttributionName('image').setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
+                        msgs.push(img);
                     }
                     else {
                         let img = Bot.Message.picture(msg.url);
