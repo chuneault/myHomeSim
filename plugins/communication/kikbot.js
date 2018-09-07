@@ -83,9 +83,8 @@ class kikbot extends plugins {
                 if (msg.type == 'image') {
                     if (msg.fileId) {
                         let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(msg.fileId)}).toArray();
-                        console.log(result);
-                        fs.writeFileSync('/home/myHomeSim/html/img/tmp/test.jpg', result[0].file_data.buffer);
-                        let img = Bot.Message.picture('http://home.huneault.ca:8080/img/tmp/test.jpg').setAttributionName('image').setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
+                        fs.writeFileSync('/home/myHomeSim/html/img/tmp/'+msg.fileId+'.jpg', result[0].file_data.buffer);
+                        let img = Bot.Message.picture('http://home.huneault.ca:8080/img/tmp/'+msg.fileId+'.jpg').setAttributionName('image').setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
                         msgs.push(img);
                     }
                     else {
