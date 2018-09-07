@@ -65,14 +65,15 @@ class kikbot extends plugins {
 
     sendMessage(title, body, userName) {
         let self = this;
+        let toUserName = userName;
 
         if (_.isObject(title)) {
-            console.log(title);
+            console.log('json', title);
             body = title.body;
             title = title.title;
-            userName = title.userName;
+            toUserName = title.userName;
         }
-        self.bot.send(Bot.Message.text(body), userName);
+        self.bot.send(Bot.Message.text(body), toUserName);
     }
 
 }
