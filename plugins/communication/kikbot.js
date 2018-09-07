@@ -70,6 +70,8 @@ class kikbot extends plugins {
             body = body.body;
             recipient = body.recipient;
         }
+
+        console.log('body', body, 'recipient', recipient);
         self.bot.send(Bot.Message.text(body), recipient);
     }
 
