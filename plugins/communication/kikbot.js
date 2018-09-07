@@ -18,11 +18,10 @@ class kikbot extends plugins {
         // We are first gonna create a new bot object with all of
         // the information we just filled in on dev.kik.com
 
-        console.log(params);
         self.bot = new Bot({
-            username: params.userName, // The username you gave BotsWorth on Kik
-            apiKey: params.apiKey,     // The API Key you can find on your profile on $
-            baseUrl: params.baseUrl    // THIS IS YOUR WEBHOOK! make sure this maches$
+            username: self.params.userName, // The username you gave BotsWorth on Kik
+            apiKey: self.params.apiKey,     // The API Key you can find on your profile on $
+            baseUrl: self.params.baseUrl    // THIS IS YOUR WEBHOOK! make sure this maches$
         });
 
         // Send the configuration to kik to update the bot with the information above
@@ -52,7 +51,7 @@ class kikbot extends plugins {
         // Set up your server and start listening
         let server = http
             .createServer(bot.incoming())
-            .listen(params.baseUrlPort, (err) => {
+            .listen(self.params.baseUrlPort, (err) => {
                 if (err) {
                     return console.log('something bad happened', err)
                 }
