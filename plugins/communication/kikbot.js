@@ -50,13 +50,13 @@ class kikbot extends plugins {
 
         // Set up your server and start listening
         let server = http
-            .createServer(bot.incoming())
+            .createServer(self.bot.incoming())
             .listen(self.params.baseUrlPort, (err) => {
                 if (err) {
                     return console.log('something bad happened', err)
                 }
 
-                console.log(`kik bot server is listening on ` + params.baseUrlPort)
+                console.log(`kik bot server is listening on ` + self.params.baseUrlPort)
             });
 
         function sendMessage(title, body, userName) {
