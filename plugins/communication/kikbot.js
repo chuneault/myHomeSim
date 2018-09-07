@@ -82,7 +82,7 @@ class kikbot extends plugins {
                 if (msg.type == 'image') {
 
                     if (msg.fileId) {
-                        let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
+                        let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(msg.fileId)}).toArray();
                         console.log(result);
                     }
                     else {
