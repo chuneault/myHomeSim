@@ -75,18 +75,18 @@ class kikbot extends plugins {
     sendPicture(data) {
 
         let msgs = [];
-
+        let img;
         if (data.msgs)
           _.forEach(data.msgs, function(msg){
               if (msg.type = 'image') {
-                  let img = Bot.Message.picture(msg.url);
+                  img = Bot.Message.picture(msg.url);
                   if (msg.name) img.setAttributionName(msg.name);
                   if (msg.icon) img.setAttributionIcon(msg.icon);
 
               }
               else
               if (msg.type = 'text') {
-                  let img = Bot.Message.text(msg.text);
+                  img = Bot.Message.text(msg.text);
 
               }
               msgs.push(img);
