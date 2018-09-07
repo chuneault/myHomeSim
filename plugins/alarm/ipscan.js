@@ -76,13 +76,13 @@ class ipScan extends plugins {
     checkHome(firstCheck){
         let self = this;
         let cfg = {
-            timeout: 6,
+            timeout: 15,
             // WARNING: -i 2 may not work in other platform like window
-            extra: ["-i 1"],
+            extra: ["-i 0.5"],
         };
         let deviceSensors = _.filter(self.__controller.sensors, {checkPresence: {active: "true"}});
         if (deviceSensors) {
-            _.forEach(deviceSensors, function (deviceSensor) {
+            _.forEach(deviceSensors, function (deviceSensor, index) {
                 ping.sys.probe(deviceSensor.id, function (isAlive) {
                     if (deviceSensor.lastValue != isAlive) {
                         console.log('ipscan sensor', deviceSensor.lastValue, isAlive);
@@ -92,12 +92,18 @@ class ipScan extends plugins {
                             self.__controller.invokeAction('kik', 'sendMessage', [deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 'carlturtle37']);
                         }
                     }
+                    if (index == deviceSensors.length-1)
+                        setTimeout(function (){
+                            self.checkHome(false);
+                        }, 15000);
                 }, cfg);
+
             });
         }
-        setTimeout(function (){
+        else
+          setTimeout(function (){
             self.checkHome(false);
-        }, 15000);
+          }, 30000);
     }
 
 }
