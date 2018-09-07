@@ -89,7 +89,7 @@ class ipScan extends plugins {
                         self.__controller.addSensorValue(deviceSensor, isAlive);
                         if (firstCheck == false) {
                             self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
-                            self.__controller.invokeAction('pushBullet', 'sendMessage', [deviceSensor.desc, isAlive ? 'vient d\'entrer à la maison' : ' est sortie de la maison']);
+                            self.__controller.invokeAction('kik', 'sendMessage', [deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 'carlturtle37']);
                         }
                     }
                 }, cfg);
