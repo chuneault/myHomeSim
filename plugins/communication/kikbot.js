@@ -76,41 +76,36 @@ class kikbot extends plugins {
     sendPicture(data) {
         let self = this;
         let msgs = [];
+        if (data.msgs)
+            _.forEach(data.msgs, async function(msg, index){
+                console.log('array', msg);
+                if (msg.type == 'image') {
 
-        async function getResults() {
-            if (data.msgs)
-                _.forEach(data.msgs, function(msg){
-                    console.log('array', msg);
-                    if (msg.type == 'image') {
-
-                        if (msg.fileId) {
-                            let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
-                            console.log(result);
-                        }
-                        else {
-                            let img = Bot.Message.picture(msg.url);
-                            if (msg.name) {
-                                img.setAttributionName(msg.name);
-                            } else img.setAttributionName('image');
-                            if (msg.icon) {
-                                img.setAttributionIcon(msg.icon);
-                            } else img.setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
-                            msgs.push(img);
-                        }
+                    if (msg.fileId) {
+                        let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
+                        console.log(result);
                     }
-                    else
-                    if (msg.type == 'text') {
-                        msgs.push(Bot.Message.text(msg.text));
+                    else {
+                        let img = Bot.Message.picture(msg.url);
+                        if (msg.name) {
+                            img.setAttributionName(msg.name);
+                        } else img.setAttributionName('image');
+                        if (msg.icon) {
+                            img.setAttributionIcon(msg.icon);
+                        } else img.setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
+                        msgs.push(img);
                     }
-                });
+                }
+                else
+                if (msg.type == 'text') {
+                    msgs.push(Bot.Message.text(msg.text));
+                }
 
-            self.bot.send(msgs, data.recipient);
-            console.log('message sended');
-        }
-
-
-        getResults();
-
+                if (index+1 == data.msgs.length) {
+                  self.bot.send(msgs, data.recipient);
+                  console.log('message sended');
+                }
+            });
     }
 }
 
