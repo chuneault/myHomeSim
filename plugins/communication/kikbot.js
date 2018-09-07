@@ -5,6 +5,7 @@
 const plugins = require("../../lib/hsPlugins.js");
 const _       = require('lodash');
 const http = require('http');
+const ObjectID = require('mongodb').ObjectID;
 let Bot  = require('@kikinteractive/kik');
 
 
