@@ -59,16 +59,19 @@ class kikbot extends plugins {
                 console.log(`kik bot server is listening on ` + self.params.baseUrlPort)
             });
 
-        function sendMessage(title, body, userName) {
-            if (_.isObject(title)) {
-                body = title.body;
-                title = title.title;
-                userName = title.userName;
-            }
-            self.bot.send(Bot.Message.title(title).text(body), userName);
-        }
 
-        controller.addObject('kik', {class: this, "sendMessage": sendMessage});
+        controller.addObject('kik', {class: this, sendMessage: self.sendMessage});
+    }
+
+    sendMessage(title, body, userName) {
+        let self = this;
+
+        if (_.isObject(title)) {
+            body = title.body;
+            title = title.title;
+            userName = title.userName;
+        }
+        self.bot.send(Bot.Message.title(title).text(body), userName);
     }
 
 }
