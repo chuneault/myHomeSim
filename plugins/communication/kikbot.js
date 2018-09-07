@@ -73,16 +73,34 @@ class kikbot extends plugins {
     }
 
     async sendPicture(data) {
+
+
+        function getFileFromBD(fileId ){
+            return await = self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
+        }
+
+
+
         let self = this;
         let msgs = [];
         if (data.msgs)
           _.forEach(data.msgs, function(msg){
               console.log('array', msg);
               if (msg.type == 'image') {
-                  let img = Bot.Message.picture(msg.url);
-                  if (msg.name) { img.setAttributionName(msg.name); } else img.setAttributionName('image');
-                  if (msg.icon) { img.setAttributionIcon(msg.icon); } else img.setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
-                  msgs.push(img);
+
+                  if (msg.fileId) {
+                    console.log(getFileFromBD(msg.fileId));
+                  }
+                  else {
+                      let img = Bot.Message.picture(msg.url);
+                      if (msg.name) {
+                          img.setAttributionName(msg.name);
+                      } else img.setAttributionName('image');
+                      if (msg.icon) {
+                          img.setAttributionIcon(msg.icon);
+                      } else img.setAttributionIcon('http://s.imgur.com/images/favicon-96x96.png');
+                      msgs.push(img);
+                  }
               }
               else
               if (msg.type == 'text') {
@@ -91,6 +109,7 @@ class kikbot extends plugins {
           });
 
         self.bot.send(msgs, data.recipient);
+        console.log('message sended');
     }
 }
 
