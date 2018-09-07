@@ -74,14 +74,6 @@ class kikbot extends plugins {
     }
 
     async sendPicture(data) {
-
-
-        function getFileFromBD(fileId ){
-            return self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
-        }
-
-
-
         let self = this;
         let msgs = [];
         if (data.msgs)
@@ -90,9 +82,8 @@ class kikbot extends plugins {
               if (msg.type == 'image') {
 
                   if (msg.fileId) {
-                    let result = await getFileFromBD(msg.fileId);
+                    let result = await self.__controller.__db.collection('files').find({ _id: new ObjectID(fileId)}).toArray();
                     console.log(result);
-
                   }
                   else {
                       let img = Bot.Message.picture(msg.url);
