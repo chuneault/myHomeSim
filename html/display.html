@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>myHomeSim Pool</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="/myUtils.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.3.6/template7.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/string-format/0.5.0/string-format.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+
+    <link rel="stylesheet" href="/css/tooltipster.bundle.min.css"/>
+    <link rel="stylesheet" href="/css/tooltipster-sideTip-shadow.min.css"/>
+    <script src="/js/tooltipster.bundle.min.js"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+
+    <script>
+      var $$DISPLAY = '<%= display %>';
+
+      console.log($$DISPLAY);
+    </script>
+
+    <style>
+        body {
+            background-color: #222222;
+            font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
+            font-weight: normal;
+            /*color: white;*/
+        }
+
+        .labelHeader {
+            font-size: 60px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .poolBox {
+            background: url(img/pool-water.jpg) repeat center center fixed;
+        }
+
+        .meteoBox {
+            background: url(img/sky.jpg) no-repeat center center fixed;
+        }
+
+        .homeBox {
+            background: url(img/home.jpg) repeat center center;
+        }
+
+        .aquaBox {
+            background: url(img/aqua.jpg) repeat center center;
+        }
+        
+        .labelFooter {
+            font-size: 36px;
+            color: white;
+        }
+
+        .labelRoom {
+            font-size: 28px;
+            color: white;
+        }
+
+        .container-fluid {
+            text-align: center;
+            padding: 0px;
+        }
+        .roomsBox{
+            background: #69c34c;
+        }
+
+        my-sensor-hint {
+            display: none;
+
+        }
+
+        .ace_editor {
+            border: 1px solid lightgray;
+            margin: auto;
+            height: 500px;
+            width: 100%;
+            background-color: #1f1f1f;
+            color: white;
+        }
+        .scrollmargin {
+            /*height: 80px;
+            text-align: center;*/
+        }
+
+        .bootbox{
+             color: black;
+        }
+
+        .sensorInfo {
+            position: relative;
+            top: -10px;
+        }
+
+        .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+        .toggle.ios .toggle-handle { border-radius: 20px; }
+
+        .toggle.btn {
+            min-width: 34px;
+            min-height: 20px;
+            font-size: 8px;
+            position: relative;
+            top: -6px;
+        }
+
+        /* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+        .toggle-off {
+            box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+        }
+        .toggle.off {
+            border-color: rgba(0, 0, 0, .25);
+        }
+
+        .toggle-handle {
+            background-color: white;
+            border: thin rgba(0, 0, 0, .25) solid;
+        }
+
+
+        .panel {
+            width: 250px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+
+        .panel-black {
+            background-color:  rgba(57,57,57,0.50);
+            border: 1px solid #000000 ;
+            color: #ffffff ;
+        }
+
+        .panel-expired {
+            background: #ff000c !important;
+        }
+
+        .panel-default > .panel-heading {
+            border-color: #000000;
+            background: rgba(0,0,0,0.25);
+            color: #ffffff;
+        }
+
+
+    </style>
+
+<body>
+
+</body>
+</html>
