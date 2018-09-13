@@ -242,6 +242,64 @@ class httpServer extends plugins {
         res.render(appRoot + '/html/piscine.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
+    app.get('/display', async function (req, res) {
+
+        let resultDisplay = {};
+        let tags = {};
+        let addDisplay = function(display) {
+
+            let owner;
+            if (display.template) {
+                if (resultDisplay[display.template])
+                    owner = resultDisplay[display.template];
+                else {
+                    owner = [];
+                    resultDisplay[display.template] = owner;
+                }
+                delete display.template;
+            }
+
+            let addItem = function (item) {
+                if (item.ownerTagId) {
+                    let ownerItem = tags[item.ownerTagId];
+                    if (!ownerItem.items)
+                        ownerItem.items = [];
+                    ownerItem.items.push(item);
+                }
+                else
+                    owner.push(item);
+
+                if (item.tagId)
+                    tags[item.tagId] = item;
+            };
+
+            if (display.items) {
+                _.forEach(display.items, function (item) {
+                    addItem(item)
+                });
+            }
+            else
+                addItem(display)
+
+        };
+
+
+        let nodes = await ctrl.__db.collection('node').find(({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        _.forEach(nodes, function (node) {
+            addDisplay(node.display);
+        });
+
+        let sensors = await ctrl.__db.collection('sensor').find(({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        _.forEach(sensors, function (sensor) {
+            addDisplay(sensor.display);
+        });
+
+        console.log(display);
+
+        res.render(appRoot + '/html/display.html', {display: display});
+    });
+
+
     app.get('/nodes', function (req, res) {
       res.render(appRoot + '/html/nodes.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
