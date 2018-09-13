@@ -265,6 +265,8 @@ class httpServer extends plugins {
 
                 if (item.ownerTagId) {
                     let ownerItem = tags[item.ownerTagId];
+                    if (!ownerItem)
+                        console.log('owerItem not Found', item.ownerTagId, item);
                     if (!ownerItem.items)
                         ownerItem.items = [];
                     ownerItem.items.push(item);
