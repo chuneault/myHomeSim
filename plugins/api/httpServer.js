@@ -301,9 +301,9 @@ class httpServer extends plugins {
             addDisplay(sensor.display);
         });
 
-        console.log(display);
+        console.log(resultDisplay);
 
-        res.render(appRoot + '/html/display.html', {display: display});
+        res.render(appRoot + '/html/display.html', {display: resultDisplay});
     });
 
 
