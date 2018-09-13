@@ -303,7 +303,7 @@ class httpServer extends plugins {
 
         console.log(resultDisplay);
 
-        res.render(appRoot + '/html/display.html', {display: resultDisplay});
+        res.render(appRoot + '/html/display.html', {display: JSON.stringify(resultDisplay)});
     });
 
 
