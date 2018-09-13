@@ -259,22 +259,22 @@ class httpServer extends plugins {
                 delete display.template;
             }
 
-            let addItem = function (item, owner) {
+            let addItem = function (item, owner = null, pushProperty = 'items') {
                 if (item.tagId)
                     tags[item.tagId] = item;
 
                 if (item.body)
                     _.forEach(item.body, function(bodyItem){
-                        addItem(bodyItem, null);
+                        addItem(bodyItem, null, 'body');
                     });
 
                 if (item.ownerTagId) {
                     let ownerItem = tags[item.ownerTagId];
                     if (!ownerItem)
                         console.log('owerItem not Found', item.ownerTagId, item);
-                    if (!ownerItem.items)
-                        ownerItem.items = [];
-                    ownerItem.items.push(item);
+                    if (!ownerItem[pushProperty])
+                        ownerItem[pushProperty] = [];
+                    ownerItem[pushProperty].push(item);
                 }
                 else
                     if (owner) owner.push(item);
@@ -291,12 +291,12 @@ class httpServer extends plugins {
         };
 
 
-        let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(nodes, function (node) {
             addDisplay(node.display);
         });
 
-        let sensors = await ctrl.__db.collection('sensor').find({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        let sensors = await ctrl.__db.collection('sensor').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(sensors, function (sensor) {
             addDisplay(sensor.display);
         });
