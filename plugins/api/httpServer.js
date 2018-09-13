@@ -277,7 +277,7 @@ class httpServer extends plugins {
                     ownerItem.items.push(item);
                 }
                 else
-                    owner.push(item);
+                    if (owner) owner.push(item);
             };
 
             if (display.items) {
