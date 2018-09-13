@@ -260,6 +260,9 @@ class httpServer extends plugins {
             }
 
             let addItem = function (item) {
+                if (item.tagId)
+                    tags[item.tagId] = item;
+
                 if (item.ownerTagId) {
                     let ownerItem = tags[item.ownerTagId];
                     if (!ownerItem.items)
@@ -268,9 +271,6 @@ class httpServer extends plugins {
                 }
                 else
                     owner.push(item);
-
-                if (item.tagId)
-                    tags[item.tagId] = item;
             };
 
             if (display.items) {
