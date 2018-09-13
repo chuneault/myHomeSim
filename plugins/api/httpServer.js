@@ -259,9 +259,14 @@ class httpServer extends plugins {
                 delete display.template;
             }
 
-            let addItem = function (item) {
+            let addItem = function (item, owner) {
                 if (item.tagId)
                     tags[item.tagId] = item;
+
+                if (item.body)
+                    _.forEach(item.body, function(bodyItem){
+                        addItem(bodyItem, null);
+                    });
 
                 if (item.ownerTagId) {
                     let ownerItem = tags[item.ownerTagId];
@@ -277,11 +282,11 @@ class httpServer extends plugins {
 
             if (display.items) {
                 _.forEach(display.items, function (item) {
-                    addItem(item)
+                    addItem(item, owner)
                 });
             }
             else
-                addItem(display)
+                addItem(display, owner)
 
         };
 
