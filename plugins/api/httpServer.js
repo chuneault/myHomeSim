@@ -284,12 +284,12 @@ class httpServer extends plugins {
         };
 
 
-        let nodes = await ctrl.__db.collection('node').find(({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
         _.forEach(nodes, function (node) {
             addDisplay(node.display);
         });
 
-        let sensors = await ctrl.__db.collection('sensor').find(({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
+        let sensors = await ctrl.__db.collection('sensor').find({"display":{$exists: true}}, {"display.zorder": 1}).toArray();
         _.forEach(sensors, function (sensor) {
             addDisplay(sensor.display);
         });
