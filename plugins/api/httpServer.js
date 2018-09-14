@@ -284,7 +284,7 @@ class httpServer extends plugins {
                 else
                     if (owner) owner.push(item);
 
-                if (data._id) {
+                if ((data) && (data._id)) {
                   item._id = data._id;
                   if (!resultData[data._id]) {
                     let dataItem = serializeObj(data);
@@ -302,6 +302,11 @@ class httpServer extends plugins {
             else
                 addItem(display, owner)
         };
+
+        let displays = await ctrl.__db.collection('display').find({}).sort({"display.zorder": 1}).toArray();
+        _.forEach(displays, function (display) {
+            addDisplay(display);
+        });
 
         let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(nodes, function (node) {
