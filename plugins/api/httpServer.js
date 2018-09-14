@@ -245,6 +245,7 @@ class httpServer extends plugins {
     app.get('/display', async function (req, res) {
 
         let resultDisplay = {};
+        let resultData = {};
         let tags = {};
         let addDisplay = function(display, data) {
 
@@ -281,9 +282,11 @@ class httpServer extends plugins {
                 else
                     if (owner) owner.push(item);
 
-                item.data = serializeObj(data);
-                delete item.data['display'];
-
+                if ((data._id) && (!resultData[data._id])) {
+                  let dataItem = serializeObj(data);
+                  delete dataItem['display'];
+                  resultData[data._id] = dataItem;
+                }
 
             };
 
@@ -310,7 +313,7 @@ class httpServer extends plugins {
 
         console.log(resultDisplay);
 
-        res.render(appRoot + '/html/display.html', {display: resultDisplay});
+        res.render(appRoot + '/html/display.html', {display: resultDisplay, data: resultData});
     });
 
 
