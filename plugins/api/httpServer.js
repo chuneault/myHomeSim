@@ -261,7 +261,7 @@ class httpServer extends plugins {
 
             let addItem = function (item, owner = null, pushProperty = 'items') {
 
-                item.data = serializeObj(data);
+                item.data = JSON.stringify(serializeObj(data));
 
                 if (item.tagId)
                     tags[item.tagId] = item;
