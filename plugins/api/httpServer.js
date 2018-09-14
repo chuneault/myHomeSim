@@ -282,12 +282,14 @@ class httpServer extends plugins {
                 else
                     if (owner) owner.push(item);
 
-                if ((data._id) && (!resultData[data._id])) {
-                  let dataItem = serializeObj(data);
-                  delete dataItem['display'];
-                  resultData[data._id] = dataItem;
+                if (data._id) {
+                  item._id = data._id;
+                  if (!resultData[data._id]) {
+                    let dataItem = serializeObj(data);
+                    delete dataItem['display'];
+                    resultData[data._id] = dataItem;
+                  }
                 }
-
             };
 
             if (display.items) {
@@ -297,9 +299,7 @@ class httpServer extends plugins {
             }
             else
                 addItem(display, owner)
-
         };
-
 
         let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(nodes, function (node) {
@@ -310,8 +310,6 @@ class httpServer extends plugins {
         _.forEach(sensors, function (sensor) {
             addDisplay(sensor.display, sensor);
         });
-
-        console.log(resultDisplay);
 
         res.render(appRoot + '/html/display.html', {display: resultDisplay, data: resultData});
     });
