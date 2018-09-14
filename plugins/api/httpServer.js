@@ -246,7 +246,7 @@ class httpServer extends plugins {
 
         let resultDisplay = {};
         let tags = {};
-        let addDisplay = function(display) {
+        let addDisplay = function(display, data) {
 
             let owner;
             if (display.template) {
@@ -260,6 +260,9 @@ class httpServer extends plugins {
             }
 
             let addItem = function (item, owner = null, pushProperty = 'items') {
+
+                item.data = serializeObj(data);
+
                 if (item.tagId)
                     tags[item.tagId] = item;
 
@@ -274,6 +277,7 @@ class httpServer extends plugins {
                         console.log('owerItem not Found', item.ownerTagId, item);
                     if (!ownerItem[pushProperty])
                         ownerItem[pushProperty] = [];
+                    delete item.ownerTagId;
                     ownerItem[pushProperty].push(item);
                 }
                 else
@@ -293,12 +297,12 @@ class httpServer extends plugins {
 
         let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(nodes, function (node) {
-            addDisplay(node.display);
+            addDisplay(node.display, node);
         });
 
         let sensors = await ctrl.__db.collection('sensor').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
         _.forEach(sensors, function (sensor) {
-            addDisplay(sensor.display);
+            addDisplay(sensor.display, sensor);
         });
 
         console.log(resultDisplay);
