@@ -261,7 +261,7 @@ class httpServer extends plugins {
 
             let addItem = function (item, owner = null, pushProperty = 'items') {
 
-                item.data = JSON.stringify(serializeObj(data));
+                item.data = serializeObj(data);
 
                 if (item.tagId)
                     tags[item.tagId] = item;
@@ -307,7 +307,7 @@ class httpServer extends plugins {
 
         console.log(resultDisplay);
 
-        res.render(appRoot + '/html/display.html', {display: JSON.stringify(resultDisplay)});
+        res.render(appRoot + '/html/display.html', {display: resultDisplay});
     });
 
 
