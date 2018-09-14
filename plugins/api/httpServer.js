@@ -261,8 +261,6 @@ class httpServer extends plugins {
 
             let addItem = function (item, owner = null, pushProperty = 'items') {
 
-                item.data = serializeObj(data);
-
                 if (item.tagId)
                     tags[item.tagId] = item;
 
@@ -282,6 +280,11 @@ class httpServer extends plugins {
                 }
                 else
                     if (owner) owner.push(item);
+
+                item.data = serializeObj(data);
+                delete item.data['display'];
+
+
             };
 
             if (display.items) {
