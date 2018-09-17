@@ -103,8 +103,11 @@ class httpServer extends plugins {
             if ((typeof obj[key] == 'string') && (Number(val) + 0 == val))
                 obj[key] = Number(val);
             else
-            if (typeof obj[key] == 'object')
-                checkIntegerProp(obj[key]);
+            if ((typeof obj[key] == 'string') && (val == 'null'))
+                delete obj[key];
+            else
+              if (typeof obj[key] == 'object')
+              checkIntegerProp(obj[key]);
         });
     }
 /*
