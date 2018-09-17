@@ -103,7 +103,7 @@ class httpServer extends plugins {
             if ((typeof obj[key] == 'string') && (Number(val) + 0 == val))
                 obj[key] = Number(val);
             else
-            if (val == 'null')
+            if ((typeof obj[key] == 'string') && (val == '!DELETE!'))
                 delete obj[key];
             else
               if (typeof obj[key] == 'object')
