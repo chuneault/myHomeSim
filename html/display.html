@@ -17,7 +17,6 @@
 
     <script src="/myUtils.js"></script>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.3.6/template7.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
@@ -42,96 +41,87 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
 
-    <script>
-      var $$DISPLAY = '<%- display %>';
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/vendor/jquery.ui.widget.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/js/jquery.fileupload.min.js"></script>
 
-      console.log($$DISPLAY);
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.14.0/js/canvas-to-blob.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/css/jquery.fileupload.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.22.0/css/jquery.fileupload-ui.min.css" />
+
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
 
     <style>
+
         body {
             background-color: #222222;
             font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
             font-weight: normal;
-            /*color: white;*/
+            /*padding-top: 60px;*/
         }
 
-        .labelHeader {
-            font-size: 60px;
-            font-weight: bold;
+        @media screen and (min-width: 1200px) {
+            .grid-item--large {
+                width: 525px;
+            }
+
+            .grid-item--medlarge {
+                width: 475px;
+            }
+
+            .grid-item--med {
+                width: 425px;
+            }
+        }
+
+        @media screen and (min-width: 1800px) {
+
+            body {
+                background: url(img/Spring-Wallpaper-HD.jpg) no-repeat center center fixed;
+                background-size: cover;
+
+            }
+        }
+
+        #cards{
+            margin-top: 20px;
+        }
+        .card {
+            background-color: rgba(57, 57, 57, 0.75);
+            border-color: #000000;
             color: white;
+            width: 500px;
+
         }
 
-        .poolBox {
-            background: url(img/pool-water.jpg) repeat center center fixed;
+        .card-header {
+            background: rgba(0, 0, 0, 0.25);
+            /*border-bottom: 1px solid rgba(0,0,0,.125);*/
         }
 
-        .meteoBox {
-            background: url(img/sky.jpg) no-repeat center center fixed;
+        .list-group {
+            margin: 12px;
+        }
+        .list-group-item {
+            background: rgba(0, 0, 0, 0.25);
+            /*border: 1px solid #000000;*/
         }
 
-        .homeBox {
-            background: url(img/home.jpg) repeat center center;
-        }
-
-        .aquaBox {
-            background: url(img/aqua.jpg) repeat center center;
-        }
-        
-        .labelFooter {
-            font-size: 36px;
-            color: white;
-        }
-
-        .labelRoom {
-            font-size: 28px;
-            color: white;
-        }
-
-        .container-fluid {
+        .btn-circle {
+            width: 30px;
+            height: 30px;
             text-align: center;
-            padding: 0px;
-        }
-        .roomsBox{
-            background: #69c34c;
-        }
-
-        my-sensor-hint {
-            display: none;
-
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 50%;
         }
 
-        .ace_editor {
-            border: 1px solid lightgray;
-            margin: auto;
-            height: 500px;
-            width: 100%;
-            background-color: #1f1f1f;
-            color: white;
-        }
-        .scrollmargin {
-            /*height: 80px;
-            text-align: center;*/
-        }
-
-        .bootbox{
-             color: black;
-        }
-
-        .sensorInfo {
-            position: relative;
-            top: -10px;
-        }
-
-        .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
-        .toggle.ios .toggle-handle { border-radius: 20px; }
-
-        .toggle.btn {
-            min-width: 34px;
-            min-height: 20px;
-            font-size: 8px;
-            position: relative;
-            top: -6px;
+        .myclearfix:after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
         /* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
@@ -147,33 +137,410 @@
             border: thin rgba(0, 0, 0, .25) solid;
         }
 
-
-        .panel {
-            width: 250px;
-            margin-bottom: 10px;
-            margin-right: 10px;
+        .ace_editor {
+            border: 1px solid lightgray;
+            margin: auto;
+            height: 650px;
+            width: 100%;
+            background-color: #1f1f1f;
+            color: white;
         }
 
-        .panel-black {
-            background-color:  rgba(57,57,57,0.50);
-            border: 1px solid #000000 ;
-            color: #ffffff ;
+        .label-med {
+            width: 150px;
+            display: inline-block;
+        }
+        .modal-lg {
+            max-width: 1000px;
         }
 
-        .panel-expired {
-            background: #ff000c !important;
+        .pictureSensorImg{
+            /*width: 200px;*/
+            height: 200px;
         }
-
-        .panel-default > .panel-heading {
-            border-color: #000000;
-            background: rgba(0,0,0,0.25);
-            color: #ffffff;
-        }
-
 
     </style>
 
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">myHomeSim</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/nodes?type=node">Nodes</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+  <div id="cards"></div>
+</div>
+
+<!--
+    <div class="card">
+        <div class="card-header">
+            Mes chambres
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">Charline 25</li>
+            <li class="list-group-item">Éliane 30</li>
+            <li class="list-group-item">Lauralie</li>
+        </ul>
+    </div>
+/!-->
+
+<div id="templates" data-template="displayTemplates.html"></div>
+
+<script>
+    let mySensors = {};
+    let $$DISPLAY = <%-JSON.stringify(display)%>;
+    let $$DATA = <%-JSON.stringify(data)%>;
+</script>
+
+
+<div id="dialog"></div>
+
+<script>
+    let icon = {
+        'thermometer': "<i class='fas fa-thermometer-half'></i>",
+        'pool': "<i class='fas fa-swimming-pool'></i>",
+        'tint': "<i class='fa fa-tint' aria-hidden='true'></i>",
+        'bars': "<i class='fa fa-bars' aria-hidden='true'></i>",
+        'ok': "<i class='fa fa-check' aria-hidden='true'></i>",
+        'fire': "<i class='fa fa-fire'></i>",
+        'cancel': "<i class='fa fa-times' aria-hidden='true'></i>",
+        'exclamation': "<i class='fa fa-exclamation-circle' aria-hidden='true'></i>",
+        'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
+        "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
+        "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
+        "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+    };
+
+    let fileDataRendered = {};
+
+
+    //load templates
+    $('#templates').load($('#templates').data('template'),
+     function () {
+
+        _.forEach($$DISPLAY, function(display, template) {
+          _.forEach(display, function(val) {
+              renderTemplate7($(template), {display: {template: [val]}}, $(val.container));
+          });
+        });
+
+        function myNoty(message, typeMsg = 'error', layoutMsg = 'topCenter', animate = 'pulse') {
+            Noty.closeAll();
+            new Noty({
+                text: message,
+                layout: layoutMsg,
+                type: typeMsg,
+                killer: true,
+                animation: {
+                    open: 'animated ' + animate, // Animate.css class names
+                    close: 'animated '+ animate, // Animate.css class names
+                }
+            }).show();
+        }
+
+        function updateSensor(mysensors, data) {
+            if (data.hasOwnProperty('lastDate'))
+                data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
+            if (data.hasOwnProperty('lastUpdate'))
+                data.lastUpdate = moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
+            if (data.hasOwnProperty('lastHeartBeat'))
+                data.lastHeartBeat = moment(data.lastHeartBeat).format('D MMMM, h:mm:ss a');
+
+            _.forEach(mysensors, function(mysensor){
+                if (mysensor.elem.attr('eval')) {
+                    eval(mysensor.elem.attr('eval'));
+                }
+
+                let formatHtml = function(html) {
+                  data.fullData = function(){
+                     let result = JSON.stringify(data, undefined, 2);
+                     return result.replace(/\n/g, "<br>").replace(/[ ]/g, "&nbsp;");
+                  };
+
+                  data.fileImg = function() {
+                    let img = fileDataRendered['img'+data.fileData.fileId];
+                    if (img)
+                        return img;
+                    else {
+                        img = $('<img>').attr('id', 'img' + data.fileData.fileId);
+                        $(img).attr('style', mySensors[data._id][0].elem.attr('style'));
+                        $.getJSON($$myHomeSiteApiURL + '/api/file/' + data.fileData.fileId, function (imgSrc) {
+                            $('#img' + data.fileData.fileId).attr('src', 'data:' + data.fileData.mimetype + ';base64,' + imgSrc.base64);
+                            fileDataRendered['img'+data.fileData.fileId] = $('#img' + data.fileData.fileId)[0].outerHTML;
+                        });
+                        fileDataRendered['img'+data.fileData.fileId] = img[0].outerHTML;
+                        return img[0].outerHTML;
+                    }
+                  };
+
+                  return format(html, {icon, data: data});
+                };
+
+                switch (mysensor.type) {
+                    case 'data':
+                        mysensor.elem.html(formatHtml(formatHtml(mysensor.data)));
+                        mysensor.elem.parents('li:first').animateCss('bounce', function () {});
+                        break;
+                    case 'switch':
+                        if (mysensor.elemSwitch.prop('checked') != data.stateOn) {
+                            mysensor.elemSwitch.data('fromOutside', true);
+                            mysensor.elemSwitch.bootstrapToggle(data.stateOn ? 'on' : 'off');
+                            mysensor.elemSwitch.data('fromOutside', false);
+                        }
+                        break;
+
+                    case 'switch-img':
+                        if (data.lastValue)
+                           mysensor.imgElem.css('filter', '');
+                        else
+                           mysensor.imgElem.css('filter', 'grayscale(100%)');
+                        mysensor.imgElem.animateCss('bounce', function () {});
+                        break;
+                    case 'hint':
+                        mysensor.elem.tooltipster('content', formatHtml(mysensor.hint.html));
+                        break;
+
+                }
+            });
+        }
+
+        let binEditnode = function(){
+            $("[my-edit-node]").each(function (index, elem) {
+                $(elem).on("click", function(){
+                    let id = $(elem).attr('my-edit-node');
+                    $.getJSON($$myHomeSiteApiURL + '/api/node/' + id + '/?includeSensors=True', function (dataNode) {
+
+                        var instances = $.tooltipster.instances();
+                        $.each(instances, function(i, instance){
+                            instance.close();
+                        });
+
+                        let data = {title: 'Edit Node', node: dataNode};
+
+                        //console.log(data);
+                        data.icon = icon;
+                        $('#dialog').empty();
+                        renderTemplate7($('#dialogTemplate'), data, $('#dialog'));
+
+                        $('[data-toggle="toggle-relay"]').bootstrapToggle();
+                        $('[data-toggle="toggle-relay"]').change(function () {
+                            let sensorId =  $(this).attr('data-id');
+                            $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                                {}, function(data) { console.log(data); });
+                        });
+
+                        $('#dialog').find('.btn-save').click(function() {
+                            let nodeDoc;
+                            let editor = ace.edit($('#dialog').find('.active').find('.editor')[0]);
+                            try
+                            {
+                              nodeDoc = JSON.parse(editor.getValue());
+                              $.post($$myHomeSiteApiURL + '/api/'+nodeDoc.type+'/'+nodeDoc._id,  nodeDoc, function(data) {
+                                  myNoty(data, 'success');
+                              }) .fail(function(res) {
+                                  myNoty(res);
+                              })
+                            }
+                            catch (err) {
+                                myNoty(err.message);
+                                return false;
+                            }
+                        });
+
+                        let aceEditor = function(elem, data) {
+                            let editor = ace.edit(elem, {
+                                //autoScrollEditorIntoView: true,
+                                maxLines: 20,
+                                minLines: 2
+                            });
+                            editor.setFontSize(18);
+                            editor.renderer.setShowGutter(false);
+                            editor.getSession().setMode("ace/mode/json");
+                            editor.setTheme("ace/theme/ambiance");
+
+                            editor.setValue(JSON.stringify(data, null, 2), 1);
+                        };
+
+                        _.forEach(data.node.sensors, function(sensor){
+                            aceEditor($('#editor'+sensor._id)[0], sensor);
+                        });
+
+                        delete(data.node.sensors);
+                        aceEditor($('#editor')[0], data.node);
+
+                        $('[data-toggle="reboot-node"]').click(function () {
+                            $.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
+                                myNoty('send reboot message to node', 'success');
+                            });
+                        });
+
+                        $('.fileupload').fileupload({
+                            dataType: 'json',
+                            add: function (e, data) {
+                               let tab = $('#dialog').find('.active');
+                               data.formData = {id: $(tab).attr('data-id'), type: $(tab).attr('data-type')};
+                               data.submit();
+                               myNoty('file uploaded', 'success');
+                            },
+                            disableImageResize: /Android(?!.*Chrome)|Opera/
+                                .test(window.navigator && navigator.userAgent),
+                            imageMaxHeight: 100});
+
+                        $(".dropdown").on("show.bs.dropdown", function(event){
+                            $('#dropDownItems').nextAll().remove();
+
+                            let doc = JSON.parse(ace.edit($('#dialog').find('.active').find('.editor')[0]).getValue());
+                            if ((doc) && (doc.fileData)) {
+
+                                let fileElem = $('<a class="dropdown-item tooltipImage" href="#" data-fileId="'+doc.fileData.fileId+'" data-mimetype="'+doc.fileData.mimetype+'">'+doc.fileData.name+'</a>');
+                                $('#dropDownItems').parent().append(fileElem);
+                                $(fileElem).tooltipster({
+                                    theme: 'tooltipster-shadow',
+                                    content: 'Loading...',
+                                    contentAsHTML: true,
+                                    interactive: true,
+                                    // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
+                                    functionBefore: function(instance, helper) {
+                                        $.getJSON($$myHomeSiteApiURL + '/api/file/' + $(helper.origin).data('fileid'), function (data) {
+                                            instance.content($('<img class="pictureSensorImg">').attr('src', 'data:' + $(helper.origin).data('mimetype') + ';base64,' + data.base64));
+                                        });
+
+                                    },
+                                    functionReady: function() {
+                                    }
+                                });
+
+
+                            }
+                        });
+
+                        $('#exampleModal').modal('show');
+
+                        $('#exampleModal').on('hidden.bs.modal', function (e) {
+                            // do something...
+                            Noty.closeAll();
+                            $('#dialog').empty();
+                        });
+                    });
+
+
+                } );
+
+            });
+        };
+
+        $("[data-hint]").each(function (index, elem) {
+            if ($(elem).attr('data-hint')) {
+                let id = $(elem).attr('_id');
+                let mySensor = {type: 'hint', elem: $(elem), hint: JSON.parse($(elem).attr('data-hint'))};
+                mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+
+                if ((mySensor.hint.edit == true) || (mySensor.hint.edit == "true"))
+                    mySensor.hint.html = mySensor.hint.html + '<br><br><button type="button" class="btn btn-primary" my-edit-node="'+id+'">Edit</button>';
+
+                $(elem).tooltipster({
+                    theme: 'tooltipster-shadow',
+                    content: 'Loading...',
+                    contentAsHTML: true,
+                    interactive: true,
+                    // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
+                    functionBefore: function(instance, helper) {
+                        /*let data = hintContent.html();
+                        instance.content(data);*/
+                    },
+                    functionReady: function() {
+                        binEditnode();
+                    }
+                });
+
+                if ($$DATA[id]) updateSensor(mySensors[id], $$DATA[id]);
+            }
+        });
+
+        $('my-sensor').each(function (index, elem) {
+            let id = $(elem).attr('_id');
+            let mySensor = {type: 'data', elem: $(elem), data: $(elem).html()};
+            mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+            if ($$DATA[id]) {
+                let data = $$DATA[id];
+                updateSensor(mySensors[id], data);
+            }
+        });
+
+        $("my-sensor-switch").each(function (index, elem) {
+            let id = $(elem).attr('_id');
+            $(elem).html('<input id="' + id +'" type="checkbox">');
+            let elemSwitch = $('#'+id);
+            elemSwitch.bootstrapToggle('');
+            elemSwitch.data('fromOutside', false);
+
+            let mySensor = {type: 'switch', elem: $(elem), elemSwitch: elemSwitch, data: $(elem).html()};
+            mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+            updateSensor(mySensors[id], $$DATA[id]);
+
+            elemSwitch.change(function(){
+                if (!$(this).data('fromOutside')) {
+                    $.put('/api/sensor/function/' + $(this).attr('id') + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
+                        {}, function(data) { console.log(data); });
+                }
+            });
+        });
+
+         $("my-sensor-switch-img").each(function (index, elem) {
+             let id = $(elem).attr('_id');
+             let data = $$DATA[id];
+
+             let img = $('<img>').attr('id', 'img' + data.fileData.fileId);
+             img.attr('style', $(elem).attr('style'));
+             $.getJSON($$myHomeSiteApiURL + '/api/file/' + data.fileData.fileId, function (imgSrc) {
+                 img.attr('src', 'data:' + data.fileData.mimetype + ';base64,' + imgSrc.base64);
+                 $(elem).append(img);
+                 fitCards();
+             });
+
+             let mySensor = {type: 'switch-img', elem: $(elem), imgElem: img, data: $(elem).html()};
+             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+             updateSensor(mySensors[id],data);
+
+         });
+
+        let socket = io.connect($$myHomeSiteApiURL);
+
+        socket.on('updateNode', function (data) {
+            if (mySensors.hasOwnProperty(data._id))
+                updateSensor(mySensors[data._id], data);
+        });
+
+        socket.on('updateSensor', function (data) {
+            if (mySensors.hasOwnProperty(data._id) )  {
+                updateSensor(mySensors[data._id], data);
+            }
+        });
+
+
+        function fitCards() {
+            $('.container').isotope({
+                // options
+                itemSelector: '.card',
+                layoutMode: 'fitRows'
+            });
+        }
+
+         fitCards();
+
+
+     });
+
+</script>
 
 </body>
 </html>

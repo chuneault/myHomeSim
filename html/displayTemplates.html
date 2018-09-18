@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script id="cardTemplate" type="text/template7">
+        {{#each display}}
+        {{#each this}}
+        <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
+        {{#if title}}
+        <div class="card-header">{{title}}</div>
+        {{/if}}
+        {{#if body}}
+        <ul class="list-group">
+            {{#each body}}
+            <li class="list-group-item">
+                <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
+                {{html}}
+                {{#if items}}
+                {{#each items}}
+                <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}} {{#if style}} style='{{style}}' {{/if}}>{{html}}</{{tag}}>
+            {{/each}}
+            {{/if}}
+        </{{tag}}>
+        </li>
+        {{/each}}
+        </ul>
+        {{/if}}
+        </{{tag}}>
+        {{/each}}
+        {{/each}}
+    </script>
+
+    <script id="dialogTemplate" type="text/template7">
+        <div class="modal fade" id="exampleModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{title}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" data-id="{{node._id}}" data-type="node" href="#home">Node</a>
+                            </li>
+                            {{#each node.sensors}}
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" data-id="{{_id}}" data-type="sensor" href="#tab{{_id}}">
+                                    {{#if vendor}}
+                                    <span>{{vendor.name}} {{vendor.desc}}</span>
+                                    {{else}}
+                                    <span>{{name}} {{desc}}</span>
+                                    {{/if}}
+
+                                    {{#arrayIn this.functionType "info"}}
+                                    <span class="badge badge-pill badge-info sensorInfo">{{#if prefix}} {{format prefix this}} {{/if}} {{lastValue}} {{#if suffix}} {{format suffix this}} {{/if}}</span>
+                                    {{/arrayIn}}
+                                    {{#arrayIn this.functionType "temperature"}}
+                                    <span class="badge badge-pill badge-success sensorInfo">{{#if prefix}} {{format prefix this}} {{/if}} {{lastValue}}°{{tempUnit}}</span>
+                                    {{/arrayIn}}
+                                    {{#arrayIn this.functionType "switch"}}
+                                    <input id="binary-switch" type="checkbox"
+                                           {{#js_compare "this.lastValue == true"}}
+                                    checked
+                                    {{/js_compare}}
+                                    data-id="{{_id}}" data-style="ios" data-on="&nbsp;" data-off="&nbsp;" data-toggle="toggle-relay">
+                                    {{/arrayIn}}
+                                </a>
+                            </li>
+                            {{/each}}
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link active dropdown-toggle" data-toggle="dropdown">Action</a>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" data-id="{{node._id}}" data-toggle="reboot-node" href="#">Reboot Node</a>
+                                    <a class="dropdown-item fileinput-button" href="#">
+                                        Upload a file
+                                        <input class="fileupload" data-url="/api/upload" type="file" name="files[]" multiple>
+                                    </a>
+                                    <div class="dropdown-divider" id="dropDownItems"></div>
+                                    <a class="dropdown-item" id="dropDownItem1" href="#">Separated link</a>
+                                </ul>
+                            </li>
+
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="home" class="container tab-pane active">
+                                <form id="nodeForm" method="post">
+                                    <div class="editor" id="editor"></div>
+                                </form>
+                            </div>
+                            {{#each node.sensors}}
+                            <div id=tab{{_id}} class="container tab-pane">
+                                <form id="sensorForm" method="post">
+                                    <div class="editor" id="editor{{_id}}"></div>
+                                </form>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
+                        <button type="button" class="btn btn-primary btn-save">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        function renderTemplate7(template, data, container) {
+            var template = $(template).html();
+            // compile it with Template7
+
+            Template7.registerHelper('compare',
+                function (key, compareWith, options) {
+                    if (key === compareWith)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('ifIn',
+                function (key, compareWith, options) {
+                    if (compareWith.split('|').indexOf(key) >= 0)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('arrayIn',
+                function (key, compareWith, options) {
+                    //console.log('arrayIn', key, compareWith);
+                    if ((key) && (key.indexOf(compareWith) >= 0))
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('fieldVal',
+                function (key, val, type) {
+                    var returnVal = val[key] != null ? val[key] : '';
+
+                    if ((type == 'date') && (returnVal != ''))
+                        returnVal = moment(returnVal).format();
+
+                    return returnVal;
+                });
+
+            Template7.registerHelper('JSON',
+                function (val) {
+                    return JSON.stringify(val, null, 2);
+                });
+
+            Template7.registerHelper('format',
+                function (val, data) {
+                    return format(val, {icon, data: data});
+                });
+
+            var compiledTemplate = Template7.compile(template);
+            // Now we may render our compiled template by passing required context
+            var html = compiledTemplate(data);
+            if (container)
+                container.append(html);
+            else
+                return html;
+        }
+    </script>
+</head>
+</html>

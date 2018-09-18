@@ -103,6 +103,9 @@ class httpServer extends plugins {
             if ((typeof obj[key] == 'string') && (Number(val) + 0 == val))
                 obj[key] = Number(val);
             else
+            if ((typeof obj[key] == 'string') && ((val == "true") || (val == "false")))
+                obj[key] = (val == "true" ? true : false);
+            else
               if (typeof obj[key] == 'object')
               checkIntegerProp(obj[key]);
         });
@@ -303,7 +306,7 @@ class httpServer extends plugins {
                 addItem(display, owner)
         };
 
-        let displays = await ctrl.__db.collection('display').find({}).sort({"display.zorder": 1}).toArray();
+        let displays = await ctrl.__db.collection('display').find({}).sort({"zorder": 1}).toArray();
         _.forEach(displays, function (display) {
             addDisplay(display);
         });
@@ -413,6 +416,10 @@ class httpServer extends plugins {
 
       ctrl.on('updateNode', function (node) {
         io.emit('updateNode', serializeObj(node));
+      });
+
+      ctrl.on('updateSensor', function (sensor) {
+          io.emit('updateSensor', serializeObj(sensor));
       });
 
 

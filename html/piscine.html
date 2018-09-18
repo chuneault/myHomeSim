@@ -93,6 +93,7 @@
               function (val, data) {
                   return format(val, {icon, data: data});
               });
+
           var compiledTemplate = Template7.compile(template);
           // Now we may render our compiled template by passing required context
           var html = compiledTemplate(data);
@@ -679,7 +680,7 @@
                               editor.setTheme("ace/theme/ambiance");
 
                               editor.setValue(JSON.stringify(data, null, 2), 1);
-                          }
+                          };
 
                           _.forEach(data.node.sensors, function(sensor){
                              aceEditor($('#editor'+sensor._id)[0], sensor);
