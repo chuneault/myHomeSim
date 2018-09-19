@@ -596,8 +596,8 @@ class httpServer extends plugins {
     });
 
     app.post('/api/runScript', function (request, response){
-        console.log('run script', request.body);
-        ctrl.runScript(request.body, {});
+        console.log('run script', request.body.script);
+        ctrl.runScript(request.body.script, {});
         response.status(200).send('script called');
     });
 
