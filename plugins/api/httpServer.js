@@ -590,22 +590,27 @@ class httpServer extends plugins {
     });
 
     app.post('/api/invokeAction/:_actionName/:_methodName', function (request, response){
-          console.log('invokeAction', request.params._actionName, request.params._methodName,  request.body);
-          ctrl.invokeAction(request.params._actionName, request.params._methodName,  [request.body]);
-          response.status(200).send('action called');
-      });
+        console.log('invokeAction', request.params._actionName, request.params._methodName,  request.body);
+       ctrl.invokeAction(request.params._actionName, request.params._methodName,  [request.body]);
+       response.status(200).send('action called');
+    });
+
+    app.post('/api/runScript', function (request, response){
+        console.log('run script', request.body);
+        ctrl.runScript(request.body, {});
+        response.status(200).send('script called');
+    });
 
 
+    app.get('/api/file/:fileId', function(req, res) {
+        ctrl.getFileAttachement(req.params.fileId, function(result){
+            res.json(result);
+        });
+    });
 
-      app.get('/api/file/:fileId', function(req, res) {
-          ctrl.getFileAttachement(req.params.fileId, function(result){
-              res.json(result);
-          });
-      });
-
-      app.post('/api/upload', function(req, res) {
-          if (!req.files)
-              return res.status(400).send('No files were uploaded.');
+    app.post('/api/upload', function(req, res) {
+        if (!req.files)
+            return res.status(400).send('No files were uploaded.');
 
           //console.log(req.files);
           //console.log(req.body);
