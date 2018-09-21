@@ -79,6 +79,7 @@
                                         Upload a file
                                         <input class="fileupload" data-url="/api/upload" type="file" name="files[]" multiple>
                                     </a>
+                                    <a class="dropdown-item" data-toggle="run-script" href="#">Run Script</a>
                                     <div class="dropdown-divider" id="dropDownItems"></div>
                                     <a class="dropdown-item" id="dropDownItem1" href="#">Separated link</a>
                                 </ul>
@@ -90,7 +91,7 @@
                         <div class="tab-content">
                             <div id="home" class="container tab-pane active">
                                 <form id="nodeForm" method="post">
-                                    <div class="editor" id="editor"></div>
+                                    <div class="editor" id="editor{{node._id}}"></div>
                                 </form>
                             </div>
                             {{#each node.sensors}}
@@ -103,8 +104,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
                         <button type="button" class="btn btn-primary btn-save">Enregistrer</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
                     </div>
                 </div>
             </div>

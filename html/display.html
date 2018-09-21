@@ -220,6 +220,20 @@
         "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
     };
 
+    function myNoty(message, typeMsg = 'error', layoutMsg = 'topCenter', animate = 'pulse') {
+        Noty.closeAll();
+        new Noty({
+            text: message,
+            layout: layoutMsg,
+            type: typeMsg,
+            killer: true,
+            animation: {
+                open: 'animated ' + animate, // Animate.css class names
+                close: 'animated '+ animate, // Animate.css class names
+            }
+        }).show();
+    }
+
     let fileDataRendered = {};
 
 
@@ -233,25 +247,12 @@
           });
         });
 
-        function myNoty(message, typeMsg = 'error', layoutMsg = 'topCenter', animate = 'pulse') {
-            Noty.closeAll();
-            new Noty({
-                text: message,
-                layout: layoutMsg,
-                type: typeMsg,
-                killer: true,
-                animation: {
-                    open: 'animated ' + animate, // Animate.css class names
-                    close: 'animated '+ animate, // Animate.css class names
-                }
-            }).show();
-        }
-
         function updateSensor(mysensors, data) {
+
             if (data.hasOwnProperty('lastDate'))
-                data.lastDate = moment(data.lastDate).format('D MMMM, h:mm:ss a');
+                data.lastDate = moment(data.lastDate).fromNow(); // moment(data.lastDate).format('D MMMM, h:mm:ss a');
             if (data.hasOwnProperty('lastUpdate'))
-                data.lastUpdate = moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
+                data.lastUpdate = moment(data.lastUpdate).fromNow(); //moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
             if (data.hasOwnProperty('lastHeartBeat'))
                 data.lastHeartBeat = moment(data.lastHeartBeat).format('D MMMM, h:mm:ss a');
 
@@ -261,6 +262,12 @@
                 }
 
                 let formatHtml = function(html) {
+
+                  const fmt = format.create({
+                        stringify: s => JSON.stringify(s, undefined, 2).replace(/\n/g, "<br>").replace(/[ ]/g, "&nbsp;"),
+                        upper: s => s.toUpperCase()
+                  });
+
                   data.fullData = function(){
                      let result = JSON.stringify(data, undefined, 2);
                      return result.replace(/\n/g, "<br>").replace(/[ ]/g, "&nbsp;");
@@ -282,7 +289,7 @@
                     }
                   };
 
-                  return format(html, {icon, data: data});
+                  return fmt(html, {icon, data: data});
                 };
 
                 switch (mysensor.type) {
@@ -375,12 +382,32 @@
                         });
 
                         delete(data.node.sensors);
-                        aceEditor($('#editor')[0], data.node);
+                        aceEditor($('#editor'+data.node._id)[0], data.node);
 
                         $('[data-toggle="reboot-node"]').click(function () {
                             $.get($$myHomeSiteApiURL + '/api/node/' + $(this).attr('data-id') + '/reboot', function (data) {
                                 myNoty('send reboot message to node', 'success');
                             });
+                        });
+
+                        $('[data-toggle="run-script"]').click(function () {
+                            let editor = ace.edit($('#scriptEditor')[0], {
+                                //autoScrollEditorIntoView: true,
+                                maxLines: 20,
+                                minLines: 2
+                            });
+                            editor.setFontSize(18);
+                            editor.renderer.setShowGutter(false);
+                            editor.getSession().setMode("ace/mode/json");
+                            editor.setTheme("ace/theme/ambiance");
+
+                            //editor.setValue(JSON.stringify(data, null, 2), 1);
+
+                            $('#myModal').on('shown.bs.modal', function () {
+                                ace.edit($('#scriptEditor')[0]).focus();
+                            }).modal('show');
+
+
                         });
 
                         $('.fileupload').fileupload({
@@ -421,6 +448,15 @@
 
 
                             }
+                        });
+
+                        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                            //e.target // newly activated tab
+                            //e.relatedTarget // previous active tab
+                            let edit = ace.edit($('#editor'+$(e.currentTarget).data('id'))[0]);
+                            edit.focus();
+                            edit.navigateFileStart();
+
                         });
 
                         $('#exampleModal').modal('show');
@@ -541,6 +577,35 @@
      });
 
 </script>
+
+<script>
+    function runScript() {
+        let scriptSource = {script: ace.edit($('#scriptEditor')[0]).getValue()};
+        $.post($$myHomeSiteApiURL + '/api/runScript', scriptSource, function (data) {
+          myNoty(data, 'success');
+        });
+    }
+</script>
+
+<div id="myModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="max-width: 850px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Script Source</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="editor" id="scriptEditor"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="runScript();">Exécuter</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
