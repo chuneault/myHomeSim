@@ -31,14 +31,17 @@ class scripts extends plugins {
 
   }
 
-  httpGet(url){
+  httpGet(url, callback){
     const http = require('http');
 
     http.get(url, (res) => {
       // consume response body
       res.resume();
+      if (callback) callback();
+
     }).on('error', (e) => {
-      console.log(`Got error: ${e.message}`);
+        if (callback) callback(e);
+        //console.log(`Got error: ${e.message}`);
     });
   }
 }

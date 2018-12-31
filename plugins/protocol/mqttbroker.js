@@ -10,6 +10,7 @@ class mqttbroker extends plugins {
         super(controller, params);
         let self = this;
         self.log = params.logger.addLogger('mqttBroker', {fileName: './logs/mqttBroker.log'});
+        //self.log = params.logger.addSocket('mqttBroker', {topic: 'mqttBroker'});
 
         controller.addDevice(this);
 
@@ -34,17 +35,14 @@ class mqttbroker extends plugins {
         controller.on('loadDBCompleted', function(){
 
             self.server.on('clientConnected', function(client) {
-                self.log.info('client connected', client.id);
+                self.log.info({message: 'client connected', id: client.id});
                 controller.event.emit('mqtt-newclient', client);
             });
 
             // fired when a message is received
             self.server.on('published', function(packet, client) {
-                /*if (client && client.id)
-                    console.log(client.id);*/
-                //self.log.info('Published', packet.topic, packet.payload.toString());
+                self.log.info({topic: packet.topic, payload: packet.payload.toString(), clientId: client ? client.id : 'null'});
                 controller.event.emit('mqtt-published', packet, client);
-
             });
         });
     };

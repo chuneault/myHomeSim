@@ -14,33 +14,49 @@ class fingScan extends plugins {
 
         controller.on('loadDBCompleted', function () {
             self.scanIp();
-            //self.checkHome(true);
+            setTimeout(function () {
+                self.checkHome(true);
+            }, 30 * 1000); // 30 secondes after reboot
+
         });
     };
 
     scanIp() {
         let self = this;
-        self.log.info('Scan Devices (IP)', self.params.dev);
+        self.log.info('Fing Scan Devices');
 
-        fing.scan().then(function (response) {
-
+        fing.scan('-r1').then(function (responses) {
+            //console.log('fing scan response', response);
             self.__controller.addOrUpdateNode({id: self.params.id},
                 {id: self.params.id, name: 'fing'}, self,
                 function (error, node) {
-                    _.forEach(response.Hosts, function (host) {
-                        let sensor = _.find(node.__sensors, {vendor:{HardwareAddress: host.HardwareAddress}});
-                        if ((sensor == null) || (sensor.id != host.Address)) {
-                            self.log.info('Update Device', host);
-                            self.__controller
-                                .addOrUpdateSensor({id: host.Address},
-                                    {
-                                     id: host.Address,
-                                     vendor: host
-                                    }, node,
-                                    function (err, sensor) {
-                                    }
-                                );
-                        }
+                    _.forEach(responses, function (response) {
+                        _.forEach(response.Hosts, function (host) {
+                            let sensor = _.find(node.__sensors, {vendor: {HardwareAddress: host.HardwareAddress}});
+                            if ((sensor == null) || (sensor.id != host.Address) || (sensor.vendor.Vendor != host.Vendor)) {
+                                self.log.info('Update Device', host.Address);
+                                if (sensor != null)
+                                    self.__controller.updateSensor(sensor, {
+                                        id: host.Address,
+                                        plugin: 'fing',
+                                        vendor: host,
+                                        name: host.Address
+                                    });
+                                else
+                                  self.__controller
+                                    .addOrUpdateSensor({id: host.Address, plugin: 'fing'},
+                                        {
+                                            id: host.Address,
+                                            plugin: 'fing',
+                                            vendor: host,
+                                            name: host.Address
+                                        }, node,
+                                        function (err) {
+                                            if (err) self.log.error(err);
+                                        }
+                                    );
+                            }
+                        })
                     })
                 });
 
@@ -52,36 +68,69 @@ class fingScan extends plugins {
     };
 
     checkHome(firstCheck){
-        /*let self = this;
-        let cfg = {
-            timeout: 15,
-            // WARNING: -i 2 may not work in other platform like window
-            extra: ["-i 0.5"],
-        };
-        let deviceSensors = _.filter(self.__controller.sensors, {checkPresence: {active: true}});
+        let self = this;
+        let deviceSensors = _.filter(self.__controller.sensors, { plugin: 'fing', checkPresence: {active: true}});
+
         if (deviceSensors) {
-            _.forEach(deviceSensors, function (deviceSensor, index) {
-                ping.sys.probe(deviceSensor.id, function (isAlive) {
-                    if (deviceSensor.lastValue != isAlive) {
-                        console.log('ipscan sensor', deviceSensor.lastValue, isAlive);
-                        self.__controller.addSensorValue(deviceSensor, isAlive);
-                        if (firstCheck == false) {
-                            self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
-                            self.__controller.invokeAction('kik', 'sendMessage', [deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 'carlturtle37']);
+            let ips = _.map(deviceSensors, 'id');
+            fing.ping(ips).then(function (response) {
+
+                _.forEach(deviceSensors, function(sensor) {
+                    let ping = _.find(response, {host: sensor.id});
+                    let isAlive = !((!ping) || (ping.loss==100));
+                    if ((!sensor.fingCheckCount) || (sensor.lastValue == isAlive))
+                        sensor.checkCount = 0;
+
+                    if (sensor.lastValue != isAlive) {
+
+                        self.log.info(`ping [${ping.loss}]`, ping);
+
+                        if ((isAlive == false) && (sensor.fingCheckCount < 1)) {
+                            sensor.fingCheckCount=sensor.fingCheckCount+1;
+                        }
+                        else
+                        {
+                            sensor.fingCheckCount = 0;
+                            console.log('fing ping sensor', ping, sensor.lastValue);
+                            self.__controller.addSensorValue(sensor, isAlive);
+                            if (firstCheck == false) {
+                                self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', sensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
+                                self.__controller.invokeAction('kik', 'sendMessage', [sensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 'carlturtle37']);
+                            }
                         }
                     }
-                    if (index == deviceSensors.length-1)
-                        setTimeout(function (){
-                            self.checkHome(false);
-                        }, 15000);
-                }, cfg);
 
+                });
+
+
+                setTimeout(function (){
+                        self.checkHome(false);
+                   }, 15000);
+
+
+
+                /*let isAlive = ((!_.isEmpty(response.Hosts) ) && (response.Hosts[0].State == 'up'));
+                if ((!deviceSensor.checkCount) || (deviceSensor.lastValue == isAlive))
+                    deviceSensor.checkCount = 0;
+                if ((deviceSensor.lastValue != isAlive) && (deviceSensor.checkCount >= 2)) {
+                    deviceSensor.checkCount = 0;
+                    console.log('fing ping sensor', response.Hosts, deviceSensor.lastValue);
+                    self.__controller.addSensorValue(deviceSensor, isAlive);
+                    if (firstCheck == false) {
+                        self.__controller.invokeAction('castwebapi', 'TTS', ['bureau', deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 50]);
+                        self.__controller.invokeAction('kik', 'sendMessage', [deviceSensor.desc + (isAlive ? ' vient d\'entrer à la maison' : ' est sortie de la maison'), 'carlturtle37']);
+                    }
+                } else
+                    deviceSensor.checkCount = deviceSensor.checkCount  + 1;
+                */
             });
+
+
         }
         else
           setTimeout(function (){
             self.checkHome(false);
-          }, 30000);*/
+          }, 30000);
     }
 
 }

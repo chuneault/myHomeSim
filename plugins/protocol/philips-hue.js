@@ -20,6 +20,7 @@ class philipsHueBridge extends plugins {
         self.api = new hueApi(self.params.host, self.params.userName);
         self.api.lights(function(err, lights) {
             if (err) throw err;
+
             self.registerLights(lights);
         });
     });
@@ -32,11 +33,12 @@ class philipsHueBridge extends plugins {
          function (error, node) {
              if (node)
                _.forEach(lights.lights, function(light) {
+                   light.id = parseInt(light.id);
                    self.__controller.addOrUpdateSensor({nodeId: node._id, vendor: {light: {id: light.id}}},
                        {name: light.name, functionType: [self.__controller.sensorFunctionType.switch, self.__controller.sensorFunctionType.brightness],
-                           stateOn: light.state.on, stateBrigthness: light.state.bri/255*100, vendor: {light}}, node,
+                           stateOn: light.state.on, stateBrigthness: light.state.bri, vendor: {light}}, node,
                        function(err, sensor) {
-
+                           console.log('register philips light', sensor.name);
                            sensor.__sensorApi = light;
                            sensor.turnOn = function(){
                                self.write(this, 'on', true);

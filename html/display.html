@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>myHomeSim Pool</title>
+    <title>myHomeSim</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -26,6 +26,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/locale/fr-ca.js"></script>
+    <script src="/js/moment-transform.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
@@ -52,12 +53,26 @@
 
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.1/css/bootstrap-slider.min.css" />
+
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
     <style>
 
         body {
             background-color: #222222;
             font-family: 'Oxygen', Thaoma, Arial, sans-serif !important;
+            /*font-family: 'Pacifico', sans-serif;*/
             font-weight: normal;
+
             /*padding-top: 60px;*/
         }
 
@@ -78,7 +93,7 @@
         @media screen and (min-width: 1800px) {
 
             body {
-                background: url(img/Spring-Wallpaper-HD.jpg) no-repeat center center fixed;
+                background: url(/img/beautiful-winter-wallpaper_03382016_27.jpg) no-repeat center center fixed;
                 background-size: cover;
 
             }
@@ -91,13 +106,17 @@
             background-color: rgba(57, 57, 57, 0.75);
             border-color: #000000;
             color: white;
-            width: 500px;
-
         }
 
         .card-header {
             background: rgba(0, 0, 0, 0.25);
-            /*border-bottom: 1px solid rgba(0,0,0,.125);*/
+        }
+
+        .card-footer{
+            background: rgba(0, 0, 0, 0.25);
+            padding: 5px;
+            padding-bottom: 0px;
+
         }
 
         .list-group {
@@ -151,7 +170,7 @@
             display: inline-block;
         }
         .modal-lg {
-            max-width: 1000px;
+            max-width: 1600px;
         }
 
         .pictureSensorImg{
@@ -193,9 +212,10 @@
     </div>
 /!-->
 
-<div id="templates" data-template="displayTemplates.html"></div>
+<div id="templates" data-template="/displayTemplates.html"></div>
 
 <script>
+    debugger;
     let mySensors = {};
     let $$DISPLAY = <%-JSON.stringify(display)%>;
     let $$DATA = <%-JSON.stringify(data)%>;
@@ -217,7 +237,10 @@
         'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
         "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
         "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
-        "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+        "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>",
+        "lightbulb": "<i class='fa fa-lightbulb' aria-hidden='true'></i>",
+        "door-open": "<i class='fas fa-door-open'></i>",
+        "door-closed": "<i class='fas fa-door-closed'></i>"
     };
 
     function myNoty(message, typeMsg = 'error', layoutMsg = 'topCenter', animate = 'pulse') {
@@ -227,6 +250,7 @@
             layout: layoutMsg,
             type: typeMsg,
             killer: true,
+            timeout: 2500,
             animation: {
                 open: 'animated ' + animate, // Animate.css class names
                 close: 'animated '+ animate, // Animate.css class names
@@ -240,24 +264,47 @@
     //load templates
     $('#templates').load($('#templates').data('template'),
      function () {
-
         _.forEach($$DISPLAY, function(display, template) {
           _.forEach(display, function(val) {
-              renderTemplate7($(template), {display: {template: [val]}}, $(val.container));
+              let dataTemplate7 = {display: {template: [val]}};
+              if ((val.data) && (val.data.sensor)) {
+                  dataTemplate7.data = $$DATA[val.data.sensor];
+                  let mySensor = {type: 'template', template: $(template), container:  $('#'+val.tagId), display: {template: [val]}};
+                  mySensors.hasOwnProperty(val.data.sensor) ? mySensors[val.data.sensor].push(mySensor) : mySensors[val.data.sensor] = [mySensor];
+              }
+
+              console.log('renderTemplate', template, dataTemplate7);
+              renderTemplate7($(template), dataTemplate7, $(val.container));
+
+              if (val.options)
+                  _.forEach(val.options, function(option) {
+                      if (option.refreshTime) {
+                          setInterval(function (option) {
+                              //console.log('call refresh', option);
+                              $.get($$myHomeSiteApiURL + '/api/node/' + option._id + '/refresh', function (resp) {
+                                  //console.log(resp);
+                              });
+                          }, option.refreshTime, option)
+                      }
+                  });
           });
         });
 
         function updateSensor(mysensors, data) {
 
             if (data.hasOwnProperty('lastDate'))
-                data.lastDate = moment(data.lastDate).fromNow(); // moment(data.lastDate).format('D MMMM, h:mm:ss a');
+                data.lastDateSince = moment(data.lastDate).fromNow(); // moment(data.lastDate).format('D MMMM, h:mm:ss a');
             if (data.hasOwnProperty('lastUpdate'))
-                data.lastUpdate = moment(data.lastUpdate).fromNow(); //moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
+                data.lastUpdateSince = moment(data.lastUpdate).fromNow(); //moment(data.lastUpdate).format('D MMMM, h:mm:ss a');
             if (data.hasOwnProperty('lastHeartBeat'))
-                data.lastHeartBeat = moment(data.lastHeartBeat).format('D MMMM, h:mm:ss a');
+                data.lastHeartBeatSince = moment(data.lastHeartBeat).fromNow();
 
-            _.forEach(mysensors, function(mysensor){
-                if (mysensor.elem.attr('eval')) {
+            _.forEach(mysensors, function(mysensor, index) {
+
+                if ((index == 0) && (mysensor.id))
+                    $$DATA[mysensor.id] = data;
+
+                if ((mysensor.elem) && (mysensor.elem.attr('eval'))) {
                     eval(mysensor.elem.attr('eval'));
                 }
 
@@ -298,9 +345,9 @@
                         mysensor.elem.parents('li:first').animateCss('bounce', function () {});
                         break;
                     case 'switch':
-                        if (mysensor.elemSwitch.prop('checked') != data.stateOn) {
+                        if (mysensor.elemSwitch.prop('checked') != data.lastValue) {
                             mysensor.elemSwitch.data('fromOutside', true);
-                            mysensor.elemSwitch.bootstrapToggle(data.stateOn ? 'on' : 'off');
+                            mysensor.elemSwitch.bootstrapToggle(data.lastValue == true || data.lastValue == 'ON' ? 'on' : 'off');
                             mysensor.elemSwitch.data('fromOutside', false);
                         }
                         break;
@@ -315,14 +362,45 @@
                     case 'hint':
                         mysensor.elem.tooltipster('content', formatHtml(mysensor.hint.html));
                         break;
-
+                    case 'template':
+                        console.log('update template', mysensor);
+                        mysensor.container.empty();
+                        renderTemplate7(mysensor.template, {data: data, display: mysensor.display}, mysensor.container);
+                        break;
+                    case 'color':
+                        let HTMLColor = '000000'.substring(0,7 - data.lastValue.toString().length) + data.lastValue.toString(16);
+                        mysensor.colorElem.spectrum('set', HTMLColor);
+                        break;
+                    case 'binary':
+                        mysensor.elemBinary.removeClass(mysensor.iconOn);
+                        mysensor.elemBinary.removeClass(mysensor.iconOff);
+                        if (data.lastValue) {
+                            mysensor.elemBinary.addClass(mysensor.iconOn);
+                            if (mysensor.colorOn)
+                              mysensor.elemBinary.css('color',mysensor.colorOn);
+                        }
+                        else {
+                            mysensor.elemBinary.addClass(mysensor.iconOff);
+                            if (mysensor.colorOff)
+                                mysensor.elemBinary.css('color',mysensor.colorOff);
+                        }
+                        mysensor.elemBinary.animateCss('bounce', function () {});
+                        break;
+                    case 'slider':
+                        let value=0;
+                        if (data.stateBrigthness)
+                            value = data.stateBrigthness;
+                        else
+                            value = Math.round((data.lastValue / 255 * 100));
+                        mysensor.sliderElem.slider('setValue', value);
+                        break;
                 }
             });
         }
 
         let binEditnode = function(){
             $("[my-edit-node]").each(function (index, elem) {
-                $(elem).on("click", function(){
+                $(elem).unbind("click").bind("click", function(){
                     let id = $(elem).attr('my-edit-node');
                     $.getJSON($$myHomeSiteApiURL + '/api/node/' + id + '/?includeSensors=True', function (dataNode) {
 
@@ -389,6 +467,34 @@
                                 myNoty('send reboot message to node', 'success');
                             });
                         });
+
+                        $('[data-toggle="delete-sensor"]').click(function() {
+                            let editor = ace.edit($('#dialog').find('.active').find('.editor')[0]);
+                            try {
+                                let nodeDoc = JSON.parse(editor.getValue());
+                                $.delete($$myHomeSiteApiURL + '/api/'+nodeDoc.type+'/'+nodeDoc._id,  nodeDoc, function(data) {
+                                    myNoty(data, 'success');
+
+
+                                    let tab = $('#dialog').find('.nav-link.active.show');
+                                    let tabContainer = $($(tab).attr('href'));
+                                    tabContainer.remove();
+                                    tab.remove();
+                                    var tabFirst = $('#dialog').find('.nav-tabs a:first');
+                                    tabFirst.tab('show');
+
+
+
+                                }) .fail(function(res) {
+                                    myNoty(res);
+                                })
+                            }
+                            catch (err) {
+                                myNoty(err.message);
+                                return false;
+                            }
+                        });
+
 
                         $('[data-toggle="run-script"]').click(function () {
                             let editor = ace.edit($('#scriptEditor')[0], {
@@ -476,60 +582,228 @@
 
         $("[data-hint]").each(function (index, elem) {
             if ($(elem).attr('data-hint')) {
+                debugger;
                 let id = $(elem).attr('_id');
-                let mySensor = {type: 'hint', elem: $(elem), hint: JSON.parse($(elem).attr('data-hint'))};
+                let dataHint = JSON.parse($(elem).attr('data-hint'));
+                if (!dataHint.ownerElem)
+                   dataHint.ownerElem = elem;
+
+                if (dataHint.edit && dataHint.edit != true)
+                    id = dataHint.edit;
+
+
+                let mySensor = {type: 'hint', elem: $(dataHint.ownerElem), hint: dataHint, 'id': id};
                 mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
 
-                if ((mySensor.hint.edit == true) || (mySensor.hint.edit == "true"))
-                    mySensor.hint.html = mySensor.hint.html + '<br><br><button type="button" class="btn btn-primary" my-edit-node="'+id+'">Edit</button>';
+                if (mySensor.hint.edit) {
 
-                $(elem).tooltipster({
+                    let idHint = id;
+                    if (mySensor.hint.edit != true)
+                        idHint = mySensor.hint.edit;
+
+                    mySensor.hint.html = mySensor.hint.html + '<br><br><button type="button" class="btn btn-primary" my-edit-node="'+idHint+'">Edit</button>';
+                }
+
+                let dataDisplay = $(elem).data('data' );
+                if ((dataDisplay) && (mySensor.hint.editNode == true)) {
+                    mySensor.hint.html = mySensor.hint.html + '<br><br><button type="button" class="btn btn-primary" my-edit-node="'+dataDisplay.data.node+'">Edit</button>';
+                    let mySensorEditNode = {type: 'hint', elem: $(elem), hint: JSON.parse($(elem).attr('data-hint')), 'id': id};
+                    mySensors.hasOwnProperty(dataDisplay.data.node) ? mySensors[dataDisplay.data.node].push(mySensorEditNode) : mySensors[dataDisplay.data.node] = [mySensorEditNode];
+                }
+
+                $(dataHint.ownerElem).data('mySensor', mySensor);
+                $(dataHint.ownerElem).tooltipster({
                     theme: 'tooltipster-shadow',
                     content: 'Loading...',
                     contentAsHTML: true,
                     interactive: true,
-                    // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
                     functionBefore: function(instance, helper) {
-                        /*let data = hintContent.html();
-                        instance.content(data);*/
+                        let hintMySensor = $(helper.origin).data('mySensor');
+                        if ((hintMySensor) && (hintMySensor.id) && ($$DATA[hintMySensor.id]))
+                            updateSensor([hintMySensor], $$DATA[hintMySensor.id]);
                     },
                     functionReady: function() {
                         binEditnode();
                     }
                 });
 
-                if ($$DATA[id]) updateSensor(mySensors[id], $$DATA[id]);
+                /*if (_.isEmpty($$DATA[id])) {
+                    $.getJSON($$myHomeSiteApiURL + '/api/node/' + id , function (dataNode) {
+                        updateSensor(mySensors[id], dataNode);
+                    });
+                } else*/
+                  //updateSensor(mySensors[id], $$DATA[id]);
             }
         });
 
         $('my-sensor').each(function (index, elem) {
             let id = $(elem).attr('_id');
-            let mySensor = {type: 'data', elem: $(elem), data: $(elem).html()};
+            let mySensor = {type: 'data', elem: $(elem), data: $(elem).html(), 'id': id};
             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
             if ($$DATA[id]) {
                 let data = $$DATA[id];
                 updateSensor(mySensors[id], data);
+                checkChart(data, id, $(elem));
             }
         });
 
+        function checkChart(data, idSensor, elemClick) {
+                 if (data.chart) {
+                     //console.log(data.chart);
+                     elemClick.click(function(){
+                         $('#chartContainer').empty();
+                         $('#myModalChart').unbind('shown.bs.modal').bind('shown.bs.modal', function () {
+                             let data = $$DATA[idSensor];
+                             console.log('chart click', data.chart);
+                             /*if (data.chart.fncChart == 'genChartCloseOpen')
+                                 genChartCloseOpen('#chartContainer', idSensor, data.sensorToClose,  data.chart.title);
+                             else
+                             if (data.chart.fncChart == 'genChartOpenClose')
+                                 genChartCloseOpen('#chartContainer', data.sensorToClose, idSensor, data.chart.title);
+                             else*/
+                             if (data.chart.fncChart == 'genChartPIR')
+                                 genChartPIR('#chartContainer', idSensor, data.chart.title);
+                             else
+                             if (data.chart.fncChart == 'genChartTrueFalse')
+                                 genChartTrueFalse('#chartContainer', idSensor, data.chart.title, data.chart.trueLabel, data.chart.falseLabel);
+                             else
+                             if (data.chart.fncChart == 'genChartTempDay')
+                                 genChartTempDay('#chartContainer', idSensor, data.chart.compareSensorId, data.chart.title, data.tempUnit);
+                             else
+                             if (data.chart.fncChart == 'genChartCustom1')
+                               genChartCustom1('#chartContainer');
+
+                         }).modal('show');
+                     });
+                 }
+        }
+
+         $("my-sensor-binary").each(function (index, elem) {
+             let id = $(elem).attr('_id');
+
+             let iconOn = $(elem).attr('iconon');
+             let iconOff = $(elem).attr('iconoff');
+
+
+             let elemImg = $("<i id='"+id+"' aria-hidden='true'></i>");
+             $(elem).html(elemImg);
+
+
+             let mySensor = {type: 'binary', elem: $(elem), elemBinary: elemImg, iconOn: iconOn, iconOff: iconOff, colorOn: $(elem).attr('coloron'), colorOff: $(elem).attr('coloroff'), 'id': id};
+             let data = $$DATA[id];
+             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+             updateSensor(mySensors[id], data);
+
+             checkChart(data, id, elemImg);
+
+         });
+
         $("my-sensor-switch").each(function (index, elem) {
             let id = $(elem).attr('_id');
-            $(elem).html('<input id="' + id +'" type="checkbox">');
-            let elemSwitch = $('#'+id);
-            elemSwitch.bootstrapToggle('');
+            let elemSwitch = $('<input id="' + id +'" type="checkbox" data-style="ios" data-on="ON" data-off="OFF">');
+            $(elem).html(elemSwitch);
+
+            elemSwitch.bootstrapToggle();
+            //elemSwitch.bootstrapToggle('disable');
             elemSwitch.data('fromOutside', false);
 
-            let mySensor = {type: 'switch', elem: $(elem), elemSwitch: elemSwitch, data: $(elem).html()};
+            let mySensor = {type: 'switch', elem: $(elem), elemSwitch: elemSwitch, 'id': id};
             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
             updateSensor(mySensors[id], $$DATA[id]);
 
-            elemSwitch.change(function(){
+            checkChart($$DATA[id], id, elemSwitch);
+
+
+            if (!$(elem).attr('readOnly'))
+              elemSwitch.change(function(){
                 if (!$(this).data('fromOutside')) {
                     $.put('/api/sensor/function/' + $(this).attr('id') + '/' + ($(this).prop('checked') ? 'turnOn' : 'turnOff'),
                         {}, function(data) { console.log(data); });
                 }
-            });
+              });
+            else
+              if ($(elem).attr('readOnly'))
+                  elemSwitch.change(function(){
+                      if (!$(this).data('fromOutside')) {
+                          $(this).data('fromOutside', true);
+                          $(this).bootstrapToggle('toggle');
+                          $(this).data('fromOutside', false);
+                      }
+                  });
+
+
+
         });
+
+         $("my-sensor-color").each(function (index, elem) {
+             let id = $(elem).attr('_id');
+             let data = $$DATA[id];
+
+             let inputColor = $('<input type="text">').attr('id', id+'Color');
+             $(elem).html(inputColor);
+
+             let $lastAquaColor = '';
+
+             function changeAquaColor(color) {
+                 $.put($$myHomeSiteApiURL + '/api/sensor/' + id + '/40', {value: color}, function(data) { });
+             }
+
+             inputColor.spectrum({
+                 showPaletteOnly: true,
+                 togglePaletteOnly: true,
+                 chooseText: "OK",
+                 cancelText: "Cancel",
+                 palette: [
+                     ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+                     ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+                     ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+                     ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+                     ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+                     ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+                     ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+                     ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+                 ],
+                 move: function(color) {
+                     if ($lastAquaColor != color.toHex()) {
+                         $lastAquaColor = color.toHex();
+                         changeAquaColor($lastAquaColor, id);
+                     }
+                 }
+             });
+
+             let mySensor = {type: 'color', elem: $(elem), colorElem: inputColor, data: $(elem).html(), 'id': id};
+             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+             updateSensor(mySensors[id],data);
+
+         });
+
+         $("my-sensor-slider").each(function (index, elem) {
+
+             //background: linear-gradient(to right, #ff9933 0%, #99ccff 100%);
+
+             let id = $(elem).attr('_id');
+             let data = $$DATA[id];
+
+             $(elem).css('margin-left', '12px');
+             $(elem).css('margin-right', '12px');
+             let inputSlider = $('<input type="text" data-slider-min="0" data-slider-max="100" data-slider-step="5" data-slider-value="0" style="width: 150px">').attr('id', id+'Slider');
+             $(elem).html(inputSlider);
+             inputSlider.slider({
+                 formatter: function (value) {
+                     return value;
+                 }
+             }).on('change',
+                 function (e) {
+                     //$.put($$myHomeSiteApiURL + '/api/sensor/'+id+'/23', {value: Math.trunc(e.value.newValue / 100 * 255)}, function (data) {});
+                     $.put($$myHomeSiteApiURL + '/api/sensor/function/' + id + '/brightness' ,
+                         {value: e.value.newValue}, function(data) { console.log(data); });
+                 }
+             );
+
+             let mySensor = {type: 'slider', elem: $(elem), sliderElem: inputSlider, data: $(elem).html(), 'id': id};
+             mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
+             updateSensor(mySensors[id],data);
+         });
 
          $("my-sensor-switch-img").each(function (index, elem) {
              let id = $(elem).attr('_id');
@@ -543,13 +817,23 @@
                  fitCards();
              });
 
-             let mySensor = {type: 'switch-img', elem: $(elem), imgElem: img, data: $(elem).html()};
+             let mySensor = {type: 'switch-img', elem: $(elem), imgElem: img, data: $(elem).html(), 'id': id};
              mySensors.hasOwnProperty(id) ? mySensors[id].push(mySensor) : mySensors[id] = [mySensor];
              updateSensor(mySensors[id],data);
 
-         });
+             checkChart(data, id, img);
+
+        });
 
         let socket = io.connect($$myHomeSiteApiURL);
+
+         socket.on('nmapscan', function (data) {
+             console.log('nmapscan', data);
+         });
+
+         socket.on('log', function (data) {
+             console.log('log', data);
+         });
 
         socket.on('updateNode', function (data) {
             if (mySensors.hasOwnProperty(data._id))
@@ -562,6 +846,19 @@
             }
         });
 
+         socket.on('newFaceDetected', function (data) {
+            console.log('new Face Detected', data.nameId, data.similarity);
+             myNoty(data.nameId+ ' '+data.similarity, 'success');
+             $('#img5b8fea1dacba5f719ee8ae04').attr('src', 'data:image/jpeg;base64,'+ data.img64);
+         });
+
+         socket.on('noFaceDetected', function (data) {
+             console.log('noFaceDetected');
+             $('#img5b8ee0ff1d4f7060d768e2e1').attr('src', 'data:image/jpeg;base64,'+ data.img64);
+         });
+
+
+
 
         function fitCards() {
             $('.container').isotope({
@@ -572,6 +869,7 @@
         }
 
          fitCards();
+        setTimeout(function(){fitCards()}, 2000);
 
 
      });
@@ -585,7 +883,421 @@
           myNoty(data, 'success');
         });
     }
+
+    function trueValDateTime(data, allVals, trueVal) {
+        let lastVal;
+        $.each(data, function (index, val) {
+            if ((val.value != lastVal) || (index == data.length)) {
+                if (val.value==true) {
+                    let m = moment(val.valueDate);
+                    allVals.push([Date.UTC(m.year(), m.month(), m.date(), m.hours(), m.minutes(), m.seconds()), trueVal]);
+                }
+            }
+        });
+    }
+
+    function trueFalseValDateTime(data, trueVals, falseVals) {
+        let lastVal;
+        $.each(data, function (index, val) {
+            if ((val.value != lastVal) || (index == data.length)) {
+                let m = moment(val.valueDate);
+                if (val.value==true)
+                   trueVals.push([Date.UTC(m.year(), m.month(), m.date(), m.hours(), m.minutes(), m.seconds()), Number(val.value)]);
+                else
+                   falseVals.push([Date.UTC(m.year(), m.month(), m.date(), m.hours(), m.minutes(), m.seconds()), Number(val.value)]);
+                lastVal = val.value;
+            }
+        });
+    }
+
+    function genChartCloseOpen(divChart, sensorIdClose, sensorIdOpen, title) {
+
+        var tonight = moment().transform('23:59:59.999');
+        var beginday = moment().transform('00:00:00.000');
+
+        /*tonight = moment();*/
+        beginday = moment().add(-1, 'days');
+
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorIdClose + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+
+            let valChartClose = [];
+            trueValDateTime(data, valChartClose, 0);
+
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorIdOpen + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+
+                let valChartOpen = [];
+                trueValDateTime(data, valChartOpen, 1);
+
+                $(divChart).highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: title
+                    },
+                    xAxis: [{
+                        type: 'datetime',
+                    }],
+                    tooltip: {
+                        formatter: function() {return moment.utc(this.x).format('dddd, h:mm:ss a')}
+                    },
+                    yAxis: [{ // Primary yAxis
+                        min: 0,
+                        max: 1,
+                        tickInterval: 1,
+                        title: {
+                            text: 'Open/Close',
+                        },
+
+                        labels: {
+                          formatter: function () {
+                            if (this.value == 0)
+                              return 'Close';
+                            if (this.value == 1)
+                              return 'Open';
+                          }
+                        }
+
+
+                    }],
+                    series: [
+                        { name: 'Open',
+                          type: 'scatter',
+                          data: valChartOpen
+                        },
+                        {
+                          name: 'Close',
+                          type: 'scatter',
+                          data: valChartClose
+                        }
+                        ]
+                });
+            });
+        });
+
+    }
+
+    function genChartPIR(divChart, sensorId, title) {
+
+        let tonight = moment().transform('23:59:59.999');
+        let beginday = moment().transform('00:00:00.000');
+
+        beginday = moment().add(-2, 'days');
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+                let valChartOpen = [];
+                trueValDateTime(data, valChartOpen, 1);
+                $(divChart).highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: title
+                    },
+                    xAxis: [{
+                        type: 'datetime',
+                    }],
+                    tooltip: {
+                        formatter: function() {return moment.utc(this.x).format('dddd, h:mm:ss a')}
+                    },
+                    yAxis: [{ // Primary yAxis
+                        min: 0,
+                        max: 2,
+                        tickInterval: 1,
+                        title: {
+                            text: 'Mouvement',
+                        },
+                        labels: {
+                            formatter: function () {
+                                //if (this.value == 1)
+                                return ' ';
+                            }
+                        }
+                    }],
+                    series: [
+                        { name: 'Mouvement',
+                            type: 'scatter',
+                            data: valChartOpen
+                        }
+                    ]
+                });
+        });
+
+    }
+
+    function genChartTrueFalse(divChart, sensorId, title, trueLabel = 'Entrée', falseLabel = 'Sortie') {
+
+        let tonight = moment().transform('23:59:59.999');
+        let beginday = moment().transform('00:00:00.000');
+
+        beginday = moment().add(-2, 'days');
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+            let trueVals = [];
+            let falseVals = [];
+            trueFalseValDateTime(data, trueVals, falseVals, 1);
+            $(divChart).highcharts({
+                chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text: title
+                },
+                xAxis: [{
+                    type: 'datetime',
+                }],
+                tooltip: {
+                    formatter: function() {return moment.utc(this.x).format('dddd, h:mm:ss a')}
+                },
+                yAxis: [{ // Primary yAxis
+                    min: 0,
+                    max: 1,
+                    tickInterval: 1,
+                    title: {
+                        text: trueLabel+'/'+falseLabel,
+                    },
+                    labels: {
+                        formatter: function () {
+                            if (this.value == 1)
+                              return trueLabel;
+                            if (this.value == 0)
+                                return falseLabel;
+                        }
+                    }
+                }],
+                series: [
+                    {   name: trueLabel,
+                        type: 'scatter',
+                        data: trueVals
+                    },
+                    {   name: falseLabel,
+                        type: 'scatter',
+                        data: falseVals
+                    }
+                ]
+            });
+        });
+
+    }
+
+    function allValDateTime(data, allVals) {
+        var lastVal;
+        $.each(data, function (index, val) {
+            if ((val.value != lastVal) || (index == data.length)) {
+                var m = moment(val.valueDate);
+                allVals.push([Date.UTC(m.year(), m.month(), m.date(), m.hours(), m.minutes()), val.value]);
+                //lastVal = val.value;
+            }
+        });
+    };
+
+    function genChartTempDay(divChart, sensorId, sensorId2, title, tempUnit = 'C') {
+
+        var tonight = moment().transform('23:59:59.999');
+        var beginday = moment().transform('00:00:00.000');
+
+        tempUnit = '°'+tempUnit;
+        beginday = moment().add(-2, 'days');
+
+        function generateChart(dataChart1, dataChart2){
+            let seriesData = [{
+                  name: 'Temperature',
+                  type: 'areaspline',
+                  data: dataChart1,
+                  tooltip: {
+                    valueSuffix: tempUnit
+                  }
+                }];
+
+            if (dataChart2)
+                seriesData.push({
+                    name: 'Temperature',
+                    type: 'areaspline',
+                    data: dataChart2,
+                    tooltip: {
+                        valueSuffix: tempUnit
+                    }
+                });
+
+            $(divChart).highcharts({
+                chart: {
+                    events: {
+                        load: function () {
+                        }
+                    },
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'Température'
+                },
+                xAxis: [{
+                    type: 'datetime',
+                }],
+                tooltip: {
+                    xDateFormat: '%e %b %H:%M'
+
+                },
+                yAxis: [{ // Primary yAxis
+                    labels: {
+                        format: '{value}' + tempUnit,
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Temperature',
+
+                    }
+                }],
+                series: seriesData
+            });
+          }
+
+        let valChart1 = [];
+        let valChart2 = [];
+
+        $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+
+            allValDateTime(data, valChart1);
+            if (!sensorId2) {
+                generateChart(valChart1);
+            } else
+                $.getJSON($$myHomeSiteApiURL + '/api/sensor/' + sensorId2 + '/dbvalues?minValueDate=' + beginday + '&?maxValueDate=' + tonight, function (data) {
+                        allValDateTime(data, valChart2);
+                        generateChart(valChart1, valChart2);
+                });
+        });
+    }
+
+    function sumByDate(data, minsVal, labelsVal, datesVal) {
+        var day = -1;
+        var totalMin = 0;
+        $.each(data, function (index, val) {
+            if (day == -1)
+                day = moment(val.valueDate).format('YYYYMMDD');
+            if (day == moment(val.valueDate).format('YYYYMMDD'))
+                totalMin += val.value;
+            else {
+                labelsVal.push(moment(day, 'YYYYMMDD').format('ddd DD'));
+                datesVal.push(day);
+                minsVal.push(_.round(totalMin / 60, 1));
+                day = moment(val.valueDate).format('YYYYMMDD');
+                totalMin = val.value;
+            }
+        });
+        datesVal.push(day);
+        labelsVal.push(moment(day, 'YYYYMMDD').format('ddd DD'));
+        minsVal.push(_.round(totalMin / 60, 1));
+    }
+
+    /*function dateOnly(dateTime) {
+        return dateTime.startOf('date');
+    }*/
+
+    function avrByDate(data, avrsVal, labelsVal) {
+        var day = -1;
+        var totalVal = 0;
+        var i = 0;
+        $.each(data, function (index, val) {
+            if (day == -1)
+                day = moment(val.valueDate).format('YYYYMMDD');
+            if (day==moment(val.valueDate).format('YYYYMMDD')) {
+                totalVal += val.value;
+                i += 1;
+            } else {
+                avrsVal.push(_.round(totalVal / i, 1));
+                if (labelsVal) labelsVal.push(moment(day, 'YYYYMMDD').format('ddd DD'));
+                day = moment(val.valueDate).format('YYYYMMDD');
+                totalVal = val.value;
+                i = 1;
+            }
+        });
+        avrsVal.push(_.round(totalVal / i, 1));
+        if (labelsVal) labelsVal.push(moment(day, 'YYYYMMDD').format('ddd DD'));
+    }
+
+
+    function genChartCustom1(divChart) {
+        var minValueDate = moment().add(-7, 'days');
+        $.getJSON($$myHomeSiteApiURL +'/api/sensor/rJWMiyi7Zg/dbvalues?minValueDate=' + minValueDate+ '&limit=99999999', function (data) {
+            var minsVal = [], labelsVal = [], datesVal = [];
+
+            sumByDate(data, minsVal, labelsVal, datesVal);
+
+            //minValueDate = datesVal[0];
+            $.getJSON($$myHomeSiteApiURL + '/api/sensor/BJM3Cd00/dbvalues?minValueDate=' + minValueDate + '&limit=99999999', function (data) {
+                var avrsVal = [];
+
+                avrByDate(data, avrsVal);
+
+
+                $(divChart).highcharts({
+                    chart: {
+                        events: {
+                            load: function () {
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Température Moyenne - Minutes de chauffage'
+                    },
+                    xAxis: [{
+                        categories: labelsVal,
+                        crosshair: true
+                    }],
+                    yAxis: [{ // Primary yAxis
+                        labels: {
+                            format: '{value}°C',
+                            style: {
+                                color: Highcharts.getOptions().colors[1]
+                            }
+                        },
+                        title: {
+                            text: 'Température',
+
+                        }
+                    }, { // Secondary yAxis
+                        title: {
+                            text: 'Chauffage',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        labels: {
+                            format: '{value} min',
+                            style: {
+                                color: Highcharts.getOptions().colors[0]
+                            }
+                        },
+                        opposite: true
+                    }],
+                    tooltip: {
+                        shared: true
+                    },
+                    series: [{
+                        name: 'Chauffage',
+                        type: 'column',
+                        yAxis: 1,
+                        data: minsVal,
+                        tooltip: {
+                            valueSuffix: ' minutes'
+                        }
+
+                    }, {
+                        name: 'Temperature Moyenne',
+                        type: 'spline',
+                        data: avrsVal,
+                        tooltip: {
+                            valueSuffix: '°C'
+                        }
+                    }]
+                });
+            });
+
+        });
+    }
+
+
 </script>
+
 
 <div id="myModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="max-width: 850px;">
@@ -601,6 +1313,25 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="runScript();">Exécuter</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalChart" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="max-width: 1600px;">
+        <div class="modal-content">
+            <!--<div class="modal-header">
+                <h5 class="modal-title">Highchart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div> /!-->
+            <div class="modal-body" id="chartContainer">
+
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Quitter</button>
             </div>
         </div>

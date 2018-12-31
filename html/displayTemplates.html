@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <script id="cardTemplate" type="text/template7">
         {{#each display}}
-        {{#each this}}
-        <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
-        {{#if title}}
-        <div class="card-header">{{title}}</div>
-        {{/if}}
-        {{#if body}}
-        <ul class="list-group">
-            {{#each body}}
-            <li class="list-group-item">
-                <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
-                {{html}}
-                {{#if items}}
-                {{#each items}}
-                <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}} {{#if style}} style='{{style}}' {{/if}}>{{html}}</{{tag}}>
+            {{#each this}}
+                <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
+                {{#if title}}
+                <div class="card-header">{{title}}</div>
+                {{/if}}
+                {{#if body}}
+                <ul class="list-group">
+                    {{#each body}}
+                    <li class="list-group-item">
+                        <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if style}} style='{{style}}' {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}}>
+                        {{html}}
+                        {{#if items}}
+                          {{#each items}}
+                             <{{tag}} {{#if tagId}} id="{{tagId}}" {{/if}} {{#if class}} class="{{class}}" {{/if}} {{#if _id}} _id="{{_id}}" {{/if}} {{#if hint}} data-hint='{{JSON hint}}' {{/if}} {{#if style}} style='{{style}}' {{/if}}>{{html}}</{{tag}}>
+                          {{/each}}
+                    {{/if}}
+                </{{tag}}>
+                </li>
+                {{/each}}
+                </ul>
+                {{/if}}
+                </{{tag}}>
             {{/each}}
-            {{/if}}
-        </{{tag}}>
-        </li>
-        {{/each}}
-        </ul>
-        {{/if}}
-        </{{tag}}>
-        {{/each}}
         {{/each}}
     </script>
 
@@ -49,9 +49,13 @@
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" data-id="{{_id}}" data-type="sensor" href="#tab{{_id}}">
                                     {{#if vendor}}
-                                    <span>{{vendor.name}} {{vendor.desc}}</span>
+                                      {{#if vendor.name}}
+                                        <span>{{vendor.name}} {{vendor.desc}}</span>
+                                      {{else}}
+                                        <span>{{name}} {{desc}}</span>
+                                    {{/if}}
                                     {{else}}
-                                    <span>{{name}} {{desc}}</span>
+                                      <span>{{name}} {{desc}}</span>
                                     {{/if}}
 
                                     {{#arrayIn this.functionType "info"}}
@@ -61,6 +65,7 @@
                                     <span class="badge badge-pill badge-success sensorInfo">{{#if prefix}} {{format prefix this}} {{/if}} {{lastValue}}°{{tempUnit}}</span>
                                     {{/arrayIn}}
                                     {{#arrayIn this.functionType "switch"}}
+                                    {{#if prefix}} {{format prefix this}} {{/if}}
                                     <input id="binary-switch" type="checkbox"
                                            {{#js_compare "this.lastValue == true"}}
                                     checked
@@ -74,14 +79,14 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link active dropdown-toggle" data-toggle="dropdown">Action</a>
                                 <ul class="dropdown-menu">
+                                    <a class="dropdown-item" data-toggle="run-script" href="#">Run Script</a>
                                     <a class="dropdown-item" data-id="{{node._id}}" data-toggle="reboot-node" href="#">Reboot Node</a>
+                                    <a class="dropdown-item" data-toggle="delete-sensor" href="#">Delete</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fileinput-button" href="#">
                                         Upload a file
                                         <input class="fileupload" data-url="/api/upload" type="file" name="files[]" multiple>
                                     </a>
-                                    <a class="dropdown-item" data-toggle="run-script" href="#">Run Script</a>
-                                    <div class="dropdown-divider" id="dropDownItems"></div>
-                                    <a class="dropdown-item" id="dropDownItem1" href="#">Separated link</a>
                                 </ul>
                             </li>
 
@@ -89,13 +94,13 @@
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div id="home" class="container tab-pane active">
+                            <div id="home" class="tab-pane active">
                                 <form id="nodeForm" method="post">
                                     <div class="editor" id="editor{{node._id}}"></div>
                                 </form>
                             </div>
                             {{#each node.sensors}}
-                            <div id=tab{{_id}} class="container tab-pane">
+                            <div id=tab{{_id}} class="tab-pane">
                                 <form id="sensorForm" method="post">
                                     <div class="editor" id="editor{{_id}}"></div>
                                 </form>
@@ -110,6 +115,75 @@
                 </div>
             </div>
         </div>
+    </script>
+
+    <script id="wunderGroundTemplate" type="text/template7">
+
+        {{#with data.vendor}}
+        <div class="card forecastPanel" id="card-wunderground" >
+            <canvas id="canvas" style="position: absolute; z-index: -1;"></canvas>
+            <div class="card-header" data-toggle="tooltip-wheater"  title="{{forecast.txt_forecast.forecastday[0].fcttext_metric}}">
+                <div style="margin-top: 20px; float: right;">
+                    <span style="font-size:60px;" class='wi wi-wu-{{current_observation.icon}}'></span>
+                    <span style="font-size:60px;" class="wi" data-toggle="tooltip-wheater"  title="{{moon_phase.phaseofMoon}}">{{moonUnicode this.moon_phase.ageOfMoon}}</span>
+                </div>
+                <h3>{{current_observation.weather}}</h3>
+                <h3>{{current_observation.temperature_string}} <span class="wi wi-strong-wind"></span> {{current_observation.feelslike_string}}</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-center" style="font-size: medium">
+                    <span class="wi wi-humidity"></span>
+                    <span class="">{{current_observation.relative_humidity}}</span>
+                    <span class="wi wi-cloudy-gusts"></span>
+                    <span class="">{{current_observation.wind_kph}} km/h</span>
+                    <span class="wi wi-sunrise"></span>
+                    <span class="">{{moon_phase.sunrise.hour}}:{{moon_phase.sunrise.minute}}</span>
+                    <span class="wi wi-sunset"></span>
+                    <span class="">{{moon_phase.sunset.hour}}:{{moon_phase.sunset.minute}}</span>
+                </p>
+
+                <div style="">
+                    {{#each forecast.simpleforecast.forecastday}}
+                    <table style="float: left; margin: 5px;" class="forecastTable" data-toggle="tooltip-wheater"
+                           title="{{conditions}}">
+                        <tr style="">
+                            <td colspan="2" style="min-width: 120px;">
+                                <strong>{{date.weekday}}</strong>
+                                <div>{{conditions}}</div>
+                            </td>
+                        </tr>
+                        <tr style="height: 5px;" />
+                        <tr style="text-align: center;">
+                            <td style="" align="">
+                                <i class="wi wi-wu-{{icon}}"
+                                   style="display:block; font-size: 30px; "></i>
+                            </td>
+                            <td style="width: 50px;" align="">
+                                <span class="fa fa-arrow-up"> {{high.celsius}}°</span>
+                                <br>
+                                <span class="fa fa-arrow-down"> {{low.celsius}}°</span>
+                            </td>
+                        </tr>
+                        <tr style="height: 5px;" />
+                        <tr style="text-align: center;">
+                            <td colspan="2">
+                                <span class="">{{qpf_allday.mm}} mm</span>
+                                <span class="">à {{pop}} %</span>
+                            </td>
+                        </tr>
+
+                    </table>
+                    {{/each}}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span style="float: right">{{current_observation.display_location.full}} - {{current_observation.observation_time}}</span>
+            </div>
+        </div>
+        {{/with}}
+
+
     </script>
 
     <script>
@@ -160,6 +234,12 @@
             Template7.registerHelper('format',
                 function (val, data) {
                     return format(val, {icon, data: data});
+                });
+
+            Template7.registerHelper('moonUnicode',
+                function (val) {
+                    console.log('moon age ', val/1.05);
+                    return '&#x' + ((61589 + parseInt(val / 1.05)).toString(16));
                 });
 
             var compiledTemplate = Template7.compile(template);

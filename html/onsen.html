@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/dark-onsen-css-components.min.css">
+
+    <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.3.1/template7.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.1/lodash.min.js"></script>
+
+    <script>
+
+        window.fn = {};
+
+        window.vars = {};
+
+        window.fn.open = function() {
+            var menu = document.getElementById('menu');
+            menu.open();
+        };
+
+        window.fn.closeMenu = function() {
+            var menu = document.getElementById('menu');
+            menu.close();
+        };
+
+
+        window.fn.load = function(page, pageId) {
+            let menu = document.getElementById('menu');
+            console.log('load page', pageId);
+            if (vars.onsNavigator.topPage.id != pageId) {
+                if (pageId == 'home') {
+                    vars.onsNavigator.resetToPage(page).then(menu.close.bind(menu));
+                } else
+                  vars.onsNavigator.pushPage(page)
+                    .then(menu.close.bind(menu))
+                    .then(function () {
+                        if (pageId == 'nodes')
+                            fn.loadNodes();
+
+
+                    }).catch(function (err) {
+                      menu.close();
+                      console.log('catch push page error', err)
+                    });
+            } else
+                menu.close();
+        };
+
+        window.fn.nodeClick = function(node) {
+            let nodeData = $(node).data('node');
+                $.getJSON('/api/node/' + nodeData._id + '/?includeSensors=True', function (dataNode) {
+
+                    let menu = document.getElementById('menu');
+                    vars.onsNavigator.pushPage('sensors.html')
+                        .then(menu.close.bind(menu))
+                        .then(function () {
+                            renderTemplate7($('#sensorsTemplate'), {sensors: dataNode.sensors}, $('#sensorsList'));
+                        }).catch(function (err) {
+                        menu.close();
+                        console.log('catch push page error', err)
+                    });
+
+                });
+        };
+
+        window.fn.loadNodes = function (filter) {
+            console.log('loadNodes');
+            $('#nodesList').children().remove();
+            $.getJSON('/api/nodes' , function (data) {
+                if (filter) {
+                    filter = filter.toUpperCase();
+                    data = _.filter(data, function (o) {
+                        return (o.name.toUpperCase().search(filter) >-1) || (o.desc && o.desc.toUpperCase().search(filter) >-1);
+                    });
+                }
+                renderTemplate7($('#nodesTemplate'), {nodes: data}, $('#nodesList'));
+            });
+        };
+
+
+        $(document).on('init', function(event) {
+            console.log('ons init');
+            let page = event.target;
+            if (page.id == 'homePage') {
+                window.vars.onsNavigator = document.querySelector('ons-navigator');
+            }
+
+        });
+
+
+    </script>
+
+    <style>
+        @media screen and (min-width: 1920px) {
+            /* For mobile phones: */
+            body {
+                margin-left: 400px;
+                margin-right: 400px;
+            }
+        }
+
+        .speed-dial__item div {
+            position: absolute;
+            /*background: rgba(54, 88, 128, 0.3);*/
+            font-size: 16px;
+            padding: 0 5px;
+            border-radius: 10px;
+            top: 0;
+            right: 45px;
+        }
+        .speed-dial__item {
+            overflow: visible !important;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="templates" data-template="/onsenTemplates.html"></div>
+
+<ons-page>
+    <ons-splitter>
+        <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
+            <ons-page>
+                <ons-list>
+                    <ons-list-item tappable onclick="fn.load('homePage.html', 'home')">
+                        Home
+                    </ons-list-item>
+                    <ons-list-item tappable onclick="fn.load('nodes.html', 'nodes')">
+                        Nodes
+                    </ons-list-item>
+                    <ons-list-item tappable onclick="fn.load('settings.html', 'settings')">
+                        Settings
+                    </ons-list-item>
+                    <ons-list-item tappable onclick="fn.load('about.html', 'about')">
+                        About
+                    </ons-list-item>
+                </ons-list>
+            </ons-page>
+        </ons-splitter-side>
+        <ons-splitter-content id="content" page="homePage.html"></ons-splitter-content>
+    </ons-splitter>
+</ons-page>
+
+
+<ons-template id="homePage.html">
+    <ons-page id="homePage">
+        <ons-navigator id="myNavigator" page="home.html"></ons-navigator>
+    </ons-page>
+</ons-template>
+
+
+<ons-template id="home.html">
+    <ons-page id="home">
+        <ons-toolbar>
+            <div class="right">
+                <ons-toolbar-button onclick="fn.open()">
+                    <ons-icon icon="md-menu"></ons-icon>
+                </ons-toolbar-button>
+            </div>
+            <div class="center">Home Page</div>
+        </ons-toolbar>
+        <p>This is the home page in the navigator.</p>
+    </ons-page>
+</ons-template>
+
+
+<ons-template id="settings.html">
+    <ons-page id="settings">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="right"><ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+            </div>
+            <div class="center"></div>
+        </ons-toolbar>
+        <p>This is settgins page  in the navigator still using the splitter.</p>
+
+    </ons-page>
+</ons-template>
+
+
+<ons-template id="about.html">
+    <ons-page id="about">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="right"><ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+            </div>
+            <div class="center"></div>
+        </ons-toolbar>
+        <p>This is about page in the navigator still using the splitter.</p>
+
+    </ons-page>
+</ons-template>
+
+
+<template id="nodes.html">
+    <ons-page id="nodes">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="right"><ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+            </div>
+            <div class="center"></div>
+        </ons-toolbar>
+
+        <ons-speed-dial position="bottom right" direction="up">
+            <ons-fab>
+                <ons-icon icon="md-share"></ons-icon>
+            </ons-fab>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-twitter"></ons-icon>
+                <div>twitter</div>
+            </ons-speed-dial-item>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-facebook"></ons-icon>
+                <div>facebook</div>
+            </ons-speed-dial-item>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-google-plus"></ons-icon>
+                <div>
+                    <ons-search-input
+                            style="min-width: 160px; line-height: 27px;"
+                            placeholder="Search"
+                            onchange="fn.loadNodes(this.value);    //ons.notification.alert('Searched for: ' + this.value);"
+                    ></ons-search-input>
+                </div>
+
+
+            </ons-speed-dial-item>
+        </ons-speed-dial>
+
+        <ons-list id="nodesList">
+            <ons-list-header>Nodes List</ons-list-header>
+        </ons-list>
+
+    </ons-page>
+</template>
+
+<template id="sensors.html">
+    <ons-page id="sensors">
+        <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="right"><ons-toolbar-button onclick="fn.open()">
+                <ons-icon icon="md-menu"></ons-icon>
+            </ons-toolbar-button>
+            </div>
+            <div class="center"></div>
+        </ons-toolbar>
+
+        <ons-speed-dial position="bottom right" direction="up">
+            <ons-fab>
+                <ons-icon icon="md-share"></ons-icon>
+            </ons-fab>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-twitter"></ons-icon>
+                <div>twitter</div>
+            </ons-speed-dial-item>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-facebook"></ons-icon>
+                <div>facebook</div>
+            </ons-speed-dial-item>
+            <ons-speed-dial-item>
+                <ons-icon icon="md-google-plus"></ons-icon>
+                <div>
+                    <ons-search-input
+                            style="min-width: 160px; line-height: 27px;"
+                            placeholder="Search"
+                            onchange="fn.loadNodes(this.value);    //ons.notification.alert('Searched for: ' + this.value);"
+                    ></ons-search-input>
+                </div>
+
+
+            </ons-speed-dial-item>
+        </ons-speed-dial>
+
+        <ons-list id="sensorsList">
+            <ons-list-header>Sensors List</ons-list-header>
+        </ons-list>
+
+    </ons-page>
+</template>
+
+<script>
+    $('#templates').load($('#templates').data('template'),
+        function () {});
+    ons.ready(function() {
+        console.log('ons ready');
+    });
+
+</script>
+
+
+</body>
+</html>

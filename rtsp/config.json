@@ -1,0 +1,12 @@
+{
+  apps: [{
+    name: 'RTSP Server',
+    script: './server.js',
+    watch: false,
+    env: {
+      DEBUG: 'rtsp:server',
+      TZ: 'America/Toronto'
+    }
+  }
+ ]
+}

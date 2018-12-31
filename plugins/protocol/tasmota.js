@@ -14,37 +14,37 @@ class tasmota extends plugins {
 
         self.clients = {};
 
-        controller.on('mqtt-newclient', function(client){
-            //if tasmota client //todo
-            self.clients[client.id] = client;
-            self.log.info('new tasmota client', client.id);
+        controller.on('loadDBCompleted', function () {
+
+            controller.on('mqtt-newclient', function (client) {
+                //if tasmota client //todo
+
+                if (_.startsWith(client.id, 'DVES')) {
+                    self.clients[client.id] = client;
+                    self.log.info('New Tasmota Client', client.id);
+                }
+
+            });
+
+            controller.on('mqtt-published', function (packet, client) {
+
+                if (client && client.id && (_.startsWith(client.id, 'DVES'))) {
+
+                    if (!self.clients[client.id]) self.clients[client.id] = client;
+                    //self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
+
+                    if (_.endsWith(packet.topic, 'SENSOR'))
+                        self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toString());
+                    else if (_.endsWith(packet.topic, 'STATE'))
+                        self.updateTasmotaState(client.id, packet.topic, packet.payload.toString());
+                    else if (_.endsWith(packet.topic, 'POWER'))
+                        self.updateTasmotaState(client.id, packet.topic, '{"POWER": "' + packet.payload.toString() + '"}');
+                    else if (_.endsWith(packet.topic, 'INFO1') || _.endsWith(packet.topic, 'INFO2'))
+                        self.updateTasmotaState(client.id, packet.topic, packet.payload.toString());
+                }
+            });
 
         });
-
-        controller.on('mqtt-published', function(packet, client){
-
-            if (client && client.id && !self.clients[client.id]) {
-                self.clients[client.id] = client;
-            }
-
-            if (client && client.id && self.clients[client.id]){
-                //self.log.info('tasmota client published', client.id, packet.topic, packet.payload.toString());
-
-                if (_.endsWith(packet.topic, 'SENSOR'))
-                    self.updateTasmotaSensor(client.id, packet.topic, packet.payload.toString());
-                else
-                  if (_.endsWith(packet.topic, 'STATE'))
-                      self.updateTasmotaState(client.id, packet.topic, packet.payload.toString());
-                  else
-                    if (_.endsWith(packet.topic, 'POWER'))
-                        self.updateTasmotaState(client.id, packet.topic, '{"POWER": "'+ packet.payload.toString() +'"}');
-                    else
-                      if  (_.endsWith(packet.topic, 'INFO1') || _.endsWith(packet.topic, 'INFO2'))
-                          self.updateTasmotaState(client.id, packet.topic,  packet.payload.toString() );
-            }
-        });
-
-
     };
 
     getClientInfo(IPAddress, callback) {

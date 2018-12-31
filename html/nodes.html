@@ -59,7 +59,8 @@
             'battery': "<i class='fa fa-battery-full' aria-hidden='true'></i>",
             "bell": "<i class='fa fa-bell-o' aria-hidden='true'></i>",
             "bug": "<i class='fa fa-bug' aria-hidden='true'></i>",
-            "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>"
+            "pencil": "<i class='fa fa-pencil-square-o' aria-hidden='true'></i>",
+            "lightbulb": "<i class='fa fa-lightbulb' aria-hidden='true'></i>"
         };
 
 
@@ -125,6 +126,10 @@
 
         }
 
+        .colorTempSlider{
+            background: linear-gradient(to right, #ff9933 0%, #99ccff 100%);
+        }
+
         .dialog-width { width: 800px !important; }
     </style>
 </head>
@@ -147,7 +152,7 @@
             <h7 class="panel-title">{{desc}}</h7>
             {{#arrayIn this.functionType "switch"}}
               <span class="panel-title"><input id="binary-switch" type="checkbox"
-                  {{#js_compare "this.stateOn == true"}}
+                  {{#js_compare "((this.stateOn == true) || (this.lastValue == true))"}}
                      checked
                   {{/js_compare}}
                  data-id="{{_id}}" data-toggle="toggle-relay">
@@ -157,6 +162,12 @@
               <input data-id="{{_id}}" class="slider"
                      type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateBrigthness}}"/>
             {{/arrayIn}}
+
+            {{#arrayIn this.functionType "colorTemperature"}}
+            <input data-id="{{_id}}" class="sliderColorTemp"
+                   type="text" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{{stateColorTemp}}"/>
+            {{/arrayIn}}
+
             {{#arrayIn this.functionType "temperature"}}
               <span data-id="{{_id}}"><i class='fa fa-thermometer' aria-hidden='true'></i> {{Temperature}} {{tempUnit}}</span>
             {{/arrayIn}}
@@ -376,6 +387,25 @@
              });
 
            });
+        });
+
+        $('.sliderColorTemp').each(function(i,e){
+            $(e).slider({
+                /*formatter: function (value) {
+                    return value;
+                }*/
+            }).on('change', function (event) {
+                let sensorId =  $(this).attr('data-id');
+                $.put($$myHomeSiteApiURL + '/api/sensor/function/' + sensorId + '/colorTemp',
+                    {value: event.value.newValue},
+                    function(data) {
+                        console.log(data);
+                    });
+
+            });
+
+            $($(e).slider('getElement')).addClass('colorTempSlider');
+            debugger;
         });
 
         $("[data-data]").each(function (index, elem) {

@@ -8,7 +8,7 @@
 const mySensor = require("./serialProtocol.js");
 const plugins = require("../../lib/hsPlugins.js");
 const net = require('net');
-const moment  = require('moment');
+const _ = require('lodash');
 
 class mySensorsEthernetDevice extends plugins {
 
@@ -30,6 +30,16 @@ class mySensorsEthernetDevice extends plugins {
       controller.checkNodeHeartBeat();
       self.log.info('Connecting to mySensors Ethernet Gateway', self.params.url.bold);
       self.connect(self.params.url, self.params.port);
+      _.forEach(controller.sensors, function(sensor){
+          if (sensor.name == 'S_LIGHT_LEVEL') {
+              sensor.brightness = function(value){
+                  sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, Math.trunc(parseInt(value) / 100 * 255));  //Math.trunc(e.value.newValue / 100 * 255)
+                  this.stateBrigthness = parseInt(value);
+              };
+          }
+      });
+
+
     });
 
     this.__client.on('data', function(data) {
@@ -39,7 +49,7 @@ class mySensorsEthernetDevice extends plugins {
         var msg = buffer.substring(0, i);
         buffer = buffer.substring(i+1);
         self.__mySensor.parseSerialMessage(msg);
-        self.__log.info(msg, {type: 'SerialMessage'});
+        //self.__log.info(msg, {type: 'SerialMessage'});
       }
     });
 
@@ -48,7 +58,7 @@ class mySensorsEthernetDevice extends plugins {
     });
 
     this.__client.on('connect', function() {
-       console.log('ethernetGatewayConnected');
+       self.log.info('ethernetGatewayConnected');
        //self.__controller.vars['ethernetGatewayConnected'] = true;
         self.ready();
     });
@@ -73,7 +83,7 @@ class mySensorsEthernetDevice extends plugins {
 
     let sendMessage = function(){
       let msg = self.__msgToSendQueue[0].toString();
-      console.log('Send Message To Node', msg );
+      self.log.info('Send Message To Node', msg );
       self.__client.write(msg);
       if (self.__msgToSendQueue.length > 0) {
          setTimeout(function(){
@@ -100,7 +110,6 @@ class mySensorsEthernetDevice extends plugins {
   }
 
   reboot(node, now) {
-    debugger;
     this.log.info('Stack reboot node msg to ', node._id);
     var msg = new this.__mySensor.message({
       nodeId: node.vendor.id,

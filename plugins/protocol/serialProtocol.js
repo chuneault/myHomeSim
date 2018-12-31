@@ -150,7 +150,11 @@ const mySensorsProtocol = {
     I_REGISTRATION_REQUEST: 26, //	Register request to GW
     I_REGISTRATION_RESPONSE: 27, //	Register response from GW
     I_DEBUG: 28, //	Debug message
-
+    I_SIGNAL_REPORT_REQUEST: 29,
+    I_SIGNAL_REPORT_REVERSE: 30,
+    I_SIGNAL_REPORT_RESPONSE: 31,
+    I_PRE_SLEEP_NOTIFICATION: 32,
+    I_POST_SLEEP_NOTIFICATION: 33
   },
 
   getName: function (config, value) {
@@ -213,17 +217,26 @@ class mySensors {
           ctrl.addOrGetNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
               {vendor: {id: msg.nodeId, name: 'unknown'}}, self.device,
               function (error, node) {
-                if (node)
-                  ctrl.addOrUpdateSensor({nodeId: node._id, vendor: {id: msg.childSensorId}}, {
-                    name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
-
-                    vendor: {
-                        id: msg.childSensorId,
+                if (node) {
+                    ctrl.addOrUpdateSensor({nodeId: node._id, vendor: {id: msg.childSensorId}}, {
                         name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
-                        type: msg.subType,
-                        desc: msg.payLoad
-                    }
-                  }, node);
+
+                        vendor: {
+                            id: msg.childSensorId,
+                            name: mySensorsProtocol.getName(mySensorsProtocol.presentation, msg.subType),
+                            type: msg.subType,
+                            desc: msg.payLoad
+                        }
+                    }, node, function(err, sensor){
+                      if (sensor.name == 'S_LIGHT_LEVEL') {
+                          sensor.brightness = function(value){
+                              sensor.__ownerNode.__ownerDevice.send(sensor.__ownerNode, sensor, 23, parseInt(value));
+                              this.stateBrigthness = parseInt(value);
+                          };
+                      }
+
+                    });
+                }
               });
         }
         break;
@@ -241,7 +254,7 @@ class mySensors {
                           name: 'unknown'}
                         }, node);
                       ctrl.addSensorValue(sensor, msg.payLoad);
-                      sensor.__log.info(serialMessage, {type: 'set'});
+                      //sensor.__log.info(serialMessage, {type: 'set'});
                     });
             });
 
@@ -290,7 +303,9 @@ class mySensors {
             break;
           case mySensorsProtocol.internal.I_DISCOVER_RESPONSE:
             break;
-          case mySensorsProtocol.internal.I_HEARTBEAT_RESPONSE:
+            case mySensorsProtocol.internal.I_PRE_SLEEP_NOTIFICATION:
+            case mySensorsProtocol.internal.I_POST_SLEEP_NOTIFICATION:
+            case mySensorsProtocol.internal.I_HEARTBEAT_RESPONSE:
             ctrl.findNode({deviceId: self.device._id, vendor: {id: msg.nodeId}},
                 function (notFound, node) {
                   if (node) {
@@ -300,8 +315,8 @@ class mySensors {
                       delete(node.__msgToSend);
                     }
 
-                    node.__log.info(serialMessage, {type: 'HeartBeat'});
-                    ctrl.updateNode(node, {lastHeartBeat: _.now()});
+                    //node.__log.info(serialMessage, {type: 'HeartBeat'});
+                    ctrl.updateNode(node, {lastHeartBeat: _.now()}, false);
                     delete(node.__alertSended);
                   }
                 });

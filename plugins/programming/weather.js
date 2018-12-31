@@ -1,58 +1,50 @@
 const plugins = require("../../lib/hsPlugins.js");
-let schedule = require('node-schedule');
+const schedule = require('node-schedule');
+const unirest = require('unirest');
+const _       = require('lodash');
 
 class weather extends plugins {
 
     constructor(controller, params) {
-
         super(controller, params);
-
-        let ctrl = this.__controller;
         let self = this;
 
+        self.log = params.logger.addLogger('wunderground', {fileName: './logs/wunderground.log'});
 
-
-
-
-            ctrl.addOrGetNode({name: 'weather'}, {name: 'weather'}, null,
+        controller.on('loadDBCompleted', function () {
+            controller.addOrGetNode({name: 'wunderground'}, {name: 'wunderground'}, null,
                 function (error, node) {
                     if (node) {
                         self.checkweather(node);
-
-                        schedule.schedulejob('*/15 * * * *', function () {
-                            //console.log('the answer to life, the universe, and everything!');
+                        schedule.scheduleJob('*/15 * * * *', function () { //every 15 minutes
                             self.checkweather(node);
                         });
-
                     }
                 });
-
-
-        };
-    }
+          });
+    };
 
     checkweather(node) {
-        let unirest = require('unirest');
         let ctrl = this.__controller;
-        unirest.get('http://api.wunderground.com/api/bccd91f6919ff946/lang:FC/conditions/forecast/astronomy/q/canada/sainte-therese.json')
-            .end(function (resp) {
-                console.log(resp.body);
-                //resp.body.sun_phase.sunrise.hour
-
-                /*ctrl.addOrUpdateSensor({_nodeId: node._id, name: 'home'}, {name: 'weather'}, node,
-                    function (err, sensor) {
-                        if (sensor.lastvalue != ip) {
-                            ctrl.addsensorvalue(sensor, ip);
+        let self = this;
+        _.forEach(this.params, function(param){
+            self.log.debug('checkweather', param);
+            unirest.get(param.url)
+                .end(function (resp) {
+                    if (resp.body)
+                      ctrl.addOrUpdateSensor({name: param.name}, {name: param.name, vendor: resp.body}, node,
+                        function (err, sensor) {
+                          if (err) self.log.error('checkweather', err);
                         }
-
-                });*/
-            })
+                    );
+                })
+        });
     }
 }
 
 exports.connect = function (pluginType, params, callback) {
     callback({
-        name: 'weather',
+        name: 'wunderground',
         params: params,
         pluginClass: weather
     });

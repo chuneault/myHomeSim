@@ -4,6 +4,7 @@ const plugins = require("../../lib/hsPlugins.js");
 const { Client } = require('tplink-smarthome-api');
 const client = new Client();
 const _       = require('lodash');
+const assert = require('assert');
 
 class kasaTplink extends plugins {
 
@@ -26,9 +27,11 @@ class kasaTplink extends plugins {
      client.startDiscovery({discoveryTimeout: 15000}).on('device-new', (device) => {
           device.getSysInfo().then(
               function (deviceInfo) {
+
                   self.__controller.addOrUpdateNode({id: deviceInfo.deviceId},
                       {id: deviceInfo.deviceId, name: deviceInfo.dev_name}, self,
                       function (error, node) {
+                        assert.equal(error, null);
                         if (node) {
                             node.__deviceApi = device;
                             self.__controller
@@ -37,6 +40,9 @@ class kasaTplink extends plugins {
                                         functionType: [self.__controller.sensorFunctionType.switch],
                                         vendor: deviceInfo}, node,
                                       function(err, sensor) {
+                                        assert.equal(err, null);
+
+
                                         sensor.turnOn = function(){
                                             this.__ownerNode.__deviceApi.setPowerState(true).then();
                                         };
@@ -44,12 +50,15 @@ class kasaTplink extends plugins {
                                             this.__ownerNode.__deviceApi.setPowerState(false).then();
                                         };
 
+                                         self.log.info('new TPLink Sensor found', sensor._id);
+
                                         device.__sensor = sensor;
+
                                         device.startPolling(10000);
                                         device.on('power-update', function(newSate) {
                                             if (device.__sensor.lastValue != newSate) {
-                                              self.__controller.addSensorValue(device.__sensor, newSate);
-                                              device.__sensor.stateOn = newSate
+                                               device.__sensor.stateOn = newSate
+                                               self.__controller.addSensorValue(device.__sensor, newSate);
                                               //console.log('power-update', newSate, this );
                                             }
                                         });
@@ -62,7 +71,7 @@ class kasaTplink extends plugins {
           //device.setPowerState(true);
       });
 
-      setTimeout(function(){self.ready();}, 15000);
+      setTimeout(function(){self.ready();}, 20000);
 
   }
 

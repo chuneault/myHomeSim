@@ -6,7 +6,8 @@
 
 const _ = require('lodash'),
       plugins = require("../../lib/hsPlugins.js"),
-      assert = require('assert');
+      assert = require('assert'),
+      querystring = require('querystring');
 
 class httpServer extends plugins {
 
@@ -41,7 +42,7 @@ class httpServer extends plugins {
              generate(index + 1, orValues, result, result);
            else {
              let s = _.lowerCase(_.deburr(result));
-             console.log(s.bold.green);
+             //console.log(s.bold.green);
              self.allInteraction.push({question: s, obj: orValues[index].obj[i], answer: interaction.answer, answerEval: interaction.answerEval, answerAction: interaction.answerAction});
            }
          })
@@ -55,23 +56,52 @@ class httpServer extends plugins {
 
     super(controller, params);
 
-    var self = this;
+    let self = this;
 
     /*var users = [
           { id: 1, username: 'admin', password: 'secret', email: 'chuneault@gmail.com', apikey: 'asdasjsdgfhgdsfjkjhg' }
       ];*/
 
 
-    var express = require('express'),
-        //passport = require('passport'),
-        //LocalStrategy = require('passport-localapikey').Strategy,
-        bodyParser = require('body-parser'),
-        appRoot = require('app-root-path'),
-        //cookieParser = require('cookie-parser'),
-        //session = require('express-session');
-        fileUpload = require('express-fileupload');
+    const express = require('express'),
+          passport = require('passport'),
+          bodyParser = require('body-parser'),
+          appRoot = require('app-root-path'),
+          session = require('express-session'),
+          fileUpload = require('express-fileupload'),
+          mongoose = require('mongoose'),
+          MongoStore = require('connect-mongo')(session),
+          GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-    var app = express();
+      var User = require('./user.js')(self.params.mongoDBSession);
+
+      let app = express();
+
+      //connect to MongoDB
+      //mongoose.connect(self.params.mongoDBSession, { socketTimeoutMS: 0, keepAlive: true, reconnectTries: 5 });
+      //let db = mongoose.connection;
+
+      //handle mongo error
+      //db.on('error', console.error.bind(console, 'connection error:'));
+
+      app.use(passport.initialize());
+      app.use(session({
+        secret: 'work hard',
+        resave: true,
+        saveUninitialized: false
+        /*store: new MongoStore({
+            mongooseConnection: db
+        })*/
+    }));
+
+    passport.serializeUser(function(user, cb) {
+        cb(null, user);
+    });
+
+    passport.deserializeUser(function(obj, cb) {
+        cb(null, obj);
+    });
+
 
     app.use(fileUpload());
 
@@ -110,49 +140,12 @@ class httpServer extends plugins {
               checkIntegerProp(obj[key]);
         });
     }
-/*
-    passport.serializeUser(function(user, done) {
-        done(null, user.id);
-    });
-
-    passport.deserializeUser(function(id, done) {
-        findById(id, function (err, user) {
-            done(err, user);
-        });
-    });
-
-    passport.use(new LocalStrategy(
-        function(apikey, done) {
-            // asynchronous verification, for effect...
-            process.nextTick(function () {
-                // Find the user by username.  If there is no user with the given
-                // username, or the password is not correct, set the user to `false` to
-                // indicate failure and set a flash message.  Otherwise, return the
-                // authenticated `user`.
-                findByApiKey(apikey, function(err, user) {
-                    if (err) { return done(err); }
-                    if (!user) { return done(null, false, { message: 'Unknown apikey : ' + apikey }); }
-                    // if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-                    return done(null, user);
-                })
-            });
-        }
-   ));
-*/
-      //app.use(express.static(appRoot + '/html'));
-
-    //app.use('/static', express.static(appRoot + '/bower_components'));
-    //app.use('/dist/colorpicker', express.static(appRoot + '/node_modules/bootstrap-colorpicker/dist'));
-    //app.use('/dist/colorpickersliders', express.static(appRoot + '/html/components/colorpickersliders/dist'));
 
 
     var server = require('http').Server(app);
     var io = require('socket.io')(server);
 
-    //app.use(cookieParser());
-    //app.use(session({ secret: 'keyboard cat',  resave: true, saveUninitialized: true }));
-
-
+    this.io = io;
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -163,74 +156,71 @@ class httpServer extends plugins {
     app.engine('html', require('ejs').renderFile);
     app.engine('js', require('ejs').renderFile);
 
-    // use morgan to log requests to the console
-    //app.use(morgan('dev'));
-    //app.use(require('morgan')("dev", { stream: logger.stream }));
 
-    //disable Nagle
-    app.use(function (req, res, next) {
-      req.connection.setNoDelay(true);
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-      next();
-    });
 
-    //app.use(passport.initialize());
+    let googleStrategy = new GoogleStrategy({
+            clientID: self.params.googleClientID,
+            clientSecret: self.params.googleClientSecret,
+            callbackURL: "http://home.huneault.ca/auth/google/callback"
+            },
+              function(accessToken, refreshToken, profile, cb) {
+               User.authenticate(profile.id, profile._json, cb);
+            });
 
-    // persistent login sessions
-    //app.use(passport.session());
+    passport.use(googleStrategy);
 
-    app.use(express.static(appRoot + '/html'));
+      app.get('/auth/google',
+          passport.authenticate('google', { scope: ['profile'] }));
 
-    /*function ensureAuthenticated(req, res, next) {
-          if (req.isAuthenticated())
+      app.get('/auth/google/callback',
+          passport.authenticate('google', { failureRedirect: '/login' }),
+          function(req, res) {
+              // Successful authentication, redirect home.
+              res.redirect('/index.html');
+          });
+
+
+      function ensureAuthenticated(req, res, next) {
+          //console.log('ensureAuthenticated', req.headers.host);
+          if ((req.session.passport)  && (req.session.passport.user)) {
+              //console.log(req.session.passport.user);
               return next();
-          else
-            if ((req.query.apikey) && (_.find(users, {apikey: req.query.apikey})))
-               return next();
-            else
-              res.redirect('/unauthorized');
+          }
+          // denied. redirect to login
+          googleStrategy._callbackURL = 'http://' + req.headers.host + '/auth/google/callback';
+          res.redirect('/auth/google')
       }
 
-    app.get('/unauthorized', function(req, res){
-        res.json({ message: "Authentication Error" })
-    });
 
-    app.post('/login',
-        passport.authenticate('localapikey', { failureRedirect: '/unauthorized' }),
-        function(req, res) {
-            res.json({ message: "Authenticated" })
-     });
+      app.use(ensureAuthenticated, function (req, res, next) {
+          req.connection.setNoDelay(true);
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+          res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+          next();
+      });
 
-    app.get('/logout', function(req, res){
-        req.logout();
-        res.redirect('/');
-    });
+      app.use(express.static(appRoot + '/html'));
 
-    app.all('/api/*', ensureAuthenticated, function(req, res, next){
-        next();
-    });*/
+      app.get('/api', function (req, res) {
+        res.send('Hello from myHomeSim!');
+      });
 
-    app.get('/api', function (req, res) {
-      res.send('Hello from myHomeSim!');
-    });
-
-    app.get('/espeasy/:sysname', function (req, res) {
+      /*app.get('/espeasy/:sysname', function (req, res) {
           console.log('Hello from espeasy!');
           console.log(req.params.sysname);
           res.send('OK');
       });
 
-    app.get('/espeasy/:sysname/:taskname/:valname/:value', function (req, res) {
+      app.get('/espeasy/:sysname/:taskname/:valname/:value', function (req, res) {
           console.log('Hello from espeasy!');
           console.log(req.params);
           res.send('OK');
-    });
+      });*/
 
-
-    app.get('/', function (req, res) {
-      res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
+     app.get('/',  function (req, res) {
+       console.log('index.html');
+       res.render(appRoot + '/html/index.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
     app.get('/dashboard', function (req, res) {
@@ -245,70 +235,101 @@ class httpServer extends plugins {
         res.render(appRoot + '/html/piscine.html', {myHomeSiteApiURL: self.params.apiUrl});
     });
 
-    app.get('/display', async function (req, res) {
+    app.get('/display/:filter?', async function (req, res) {
 
         let resultDisplay = {};
         let resultData = {};
         let tags = {};
+
         let addDisplay = function(display, data) {
 
-            let owner;
-            if (display.template) {
-                if (resultDisplay[display.template])
-                    owner = resultDisplay[display.template];
-                else {
-                    owner = [];
-                    resultDisplay[display.template] = owner;
-                }
-                delete display.template;
-            }
+            if ((display.visible == null) || (display.visible != false)) {
 
-            let addItem = function (item, owner = null, pushProperty = 'items') {
-
-                if (item.tagId)
-                    tags[item.tagId] = item;
-
-                if (item.body)
-                    _.forEach(item.body, function(bodyItem){
-                        addItem(bodyItem, null, 'body');
-                    });
-
-                if (item.ownerTagId) {
-                    let ownerItem = tags[item.ownerTagId];
-                    if (!ownerItem) {
-                        console.log('owerItem not Found', item.ownerTagId, item);
-                        return false;
+                let owner;
+                if (display.template) {
+                    if (resultDisplay[display.template])
+                        owner = resultDisplay[display.template];
+                    else {
+                        owner = [];
+                        resultDisplay[display.template] = owner;
                     }
-                    if (!ownerItem[pushProperty])
-                        ownerItem[pushProperty] = [];
-                    delete item.ownerTagId;
-                    ownerItem[pushProperty].push(item);
+                    delete display.template;
+                }
+
+                let addItem = function (item, owner = null, pushProperty = 'items') {
+
+                    if (item.tagId)
+                        tags[item.tagId] = item;
+
+                    if (item.body)
+                        _.forEach(item.body, function(bodyItem){
+                            addItem(bodyItem, null, 'body');
+                        });
+
+                    if (item.options)
+                        _.forEach(item.options, function(options){
+                            addItem(options, null, 'options');
+                        });
+
+                    if (item.ownerTagId) {
+                        let ownerItem = tags[item.ownerTagId];
+                        if (!ownerItem) {
+                            console.log('ownerItem not Found', item.ownerTagId, item);
+                            return false;
+                        }
+                        if (!ownerItem[pushProperty])
+                            ownerItem[pushProperty] = [];
+                        delete item.ownerTagId;
+                        ownerItem[pushProperty].push(item);
+                    }
+                    else {
+                        if (owner) owner.push(item);
+                    }
+
+                    if ((data) && (data._id)) {
+                        item._id = data._id;
+                        if (!resultData[data._id]) {
+                            let dataItem = serializeObj(data);
+                            delete dataItem['display'];
+                            resultData[data._id] = dataItem;
+                        }
+                    }
+                };
+
+                if (display.items) {
+                    _.forEach(display.items, function (item) {
+                        addItem(item, owner, 'items')
+                    });
                 }
                 else
-                    if (owner) owner.push(item);
-
-                if ((data) && (data._id)) {
-                  item._id = data._id;
-                  if (!resultData[data._id]) {
-                    let dataItem = serializeObj(data);
-                    delete dataItem['display'];
-                    resultData[data._id] = dataItem;
-                  }
-                }
-            };
-
-            if (display.items) {
-                _.forEach(display.items, function (item) {
-                    addItem(item, owner)
-                });
+                    addItem(display, owner)
             }
-            else
-                addItem(display, owner)
         };
 
-        let displays = await ctrl.__db.collection('display').find({}).sort({"zorder": 1}).toArray();
+        let filter = {};
+        let filterParams;
+        if (req.params.filter) {
+            filterParams = querystring.parse(req.params.filter);
+            _.forEach(filterParams, function(value, key){
+                if (_.isArray(value))
+                    filter[key] = {"$in": value};
+                else
+                    filter[key] = value;
+            });
+
+        }
+
+        console.log('get display', filterParams, filter);
+
+
+        let displays = await ctrl.__db.collection('display').find(filter).sort({"zorder": 1}).toArray();
         _.forEach(displays, function (display) {
-            addDisplay(display);
+            let data = null;
+            if (display.data)
+                if (display.data.sensor)
+                    data = self.__controller.sensors[display.data.sensor];
+
+            addDisplay(display, data);
         });
 
         let nodes = await ctrl.__db.collection('node').find({"display":{$exists: true}}).sort({"display.zorder": 1}).toArray();
@@ -426,8 +447,9 @@ class httpServer extends plugins {
     });
 
     app.get('/api/query/:question', function (request, response){
-      var utf8 = require('utf8');
-      var question = utf8.decode(request.params.question);
+      //var utf8 = require('utf8');
+      //var question = utf8.decode(request.params.question);
+      var question = request.params.question;
       console.log('query question',  question.yellow.green);
       question = _.lowerCase(_.deburr( question ));
       console.log('searching for', question.bold.green);
@@ -438,12 +460,13 @@ class httpServer extends plugins {
         if (found.answerAction)
           found.obj.__ownerNode.__ownerDevice.send(found.obj.__ownerNode, found.obj, 2, found.answerAction);
         if (found.answer)
-          response.end(found.answer.replace('{value}', val ));
+            response.status(200).send(found.answer.replace('{value}', val ));
+
         if (found.answerEval)
-          response.end(eval(found.answerEval.replace('{value}', val)));
+            response.status(200).send(eval(found.answerEval.replace('{value}', val)));
 
       } else
-        response.end('interraction non trouvé');
+          response.status(412).send('interaction non trouvé');
     });
 
     app.get('/api/nodes', function (request, response){
@@ -491,14 +514,23 @@ class httpServer extends plugins {
     });
 
     app.get('/api/node/:_nodeId/reboot', function (request, response){
-      debugger;
       let node = ctrl.nodes[request.params._nodeId];
       if (node) {
         node.__ownerDevice.reboot(node, false);
-        response.end('Stack reboot node msg to ' + node.name);
+        response.status(200).send('Stack reboot node msg to ' + node.name);
       }
       else
         response.status(412).send('node not found');
+    });
+
+    app.get('/api/node/:_nodeId/refresh', function (request, response){
+        let node = ctrl.nodes[request.params._nodeId];
+        if (node) {
+            node.refresh();
+            response.status(200).send('refresh was called ' + node.name);
+        }
+        else
+            response.status(412).send('node not found');
     });
 
     app.post('/api/node/:_nodeId', function (request, response){
@@ -509,7 +541,7 @@ class httpServer extends plugins {
         checkIntegerProp(request.body);
         console.log(request.body);
 
-        ctrl.updateNode(node, request.body);
+        ctrl.updateNode(node, request.body, false);
         response.status(200).send('node updated');
       }
       else
@@ -517,8 +549,7 @@ class httpServer extends plugins {
     });
 
     app.delete('/api/node/:_nodeId', function (request, response){
-
-      var node = ctrl.nodes[request.params._nodeId];
+      let node = ctrl.nodes[request.params._nodeId];
       if (node) {
 
         ctrl.deleteNode(node);
@@ -527,6 +558,17 @@ class httpServer extends plugins {
       else
         response.status(412).send('node not found');
     });
+
+    app.delete('/api/sensor/:_sensorId', function (request, response){
+        let sensor = ctrl.sensors[request.params._sensorId];
+        if (sensor) {
+            ctrl.deleteSensor(sensor);
+            response.status(200).send('sensor deleted');
+        }
+        else
+            response.status(412).send('sensor not found');
+    });
+
 
     app.get('/api/sensors/query/:filter', function (request, response){
         console.log('searching for', request.params.filter.bold.green);
@@ -582,7 +624,7 @@ class httpServer extends plugins {
       var sensor = ctrl.sensors[request.params._sensorId];
       if (sensor) {
         checkIntegerProp(request.body);
-        ctrl.updateSensor(sensor, request.body);
+        ctrl.updateSensor(sensor, request.body, false);
         response.status(200).send('sensor updated');
       }
       else
@@ -619,7 +661,7 @@ class httpServer extends plugins {
               ctrl.addFileAttachement(file.data, function(result){
                   console.log('addFileAttachement', req.body.id);
                   let sensor = ctrl.sensors[req.body.id];
-                  ctrl.updateSensor(sensor, {fileData: {name: file.name,  mimetype: file.mimetype, fileId: result.ops[0]._id}});
+                  ctrl.updateSensor(sensor, {fileData: {name: file.name,  mimetype: file.mimetype, fileId: result.ops[0]._id}}, false);
                   console.log(result.ops[0]._id);
                   res.json({fileId: result.ops[0]._id});
               });

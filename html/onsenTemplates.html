@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+
+    <script id="sensorsTemplate" type="text/template7">
+        {{#each sensors}}
+        <ons-list-item modifier="chevron" onclick="window.fn.nodeClick(this)" data-node='{{JSON this}}'>
+            <div class="left">
+                <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
+            </div>
+            <div class="center">
+                <span class="list-item__title">{{name}}</span><span class="list-item__subtitle">{{lastValue}}</span>
+            </div>
+        </ons-list-item>
+        {{/each}}
+    </script>
+
+    <script id="nodesTemplate" type="text/template7">
+        {{#each nodes}}
+            <ons-list-item modifier="chevron" onclick="window.fn.nodeClick(this)" data-node='{{JSON this}}'>
+                <div class="left">
+                    <img class="list-item__thumbnail" src="https://placekitten.com/g/40/40">
+                </div>
+                <div class="center">
+                    <span class="list-item__title">{{name}}</span><span class="list-item__subtitle">{{desc}}</span>
+                </div>
+            </ons-list-item>
+        {{/each}}
+    </script>
+
+    <script>
+        function renderTemplate7(template, data, container) {
+            var template = $(template).html();
+            // compile it with Template7
+
+            Template7.registerHelper('compare',
+                function (key, compareWith, options) {
+                    if (key === compareWith)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('ifIn',
+                function (key, compareWith, options) {
+                    if (compareWith.split('|').indexOf(key) >= 0)
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('arrayIn',
+                function (key, compareWith, options) {
+                    //console.log('arrayIn', key, compareWith);
+                    if ((key) && (key.indexOf(compareWith) >= 0))
+                        return options.fn(this, options.data);
+                    else
+                        return options.inverse(this, options.data);
+                });
+
+            Template7.registerHelper('fieldVal',
+                function (key, val, type) {
+                    var returnVal = val[key] != null ? val[key] : '';
+
+                    if ((type == 'date') && (returnVal != ''))
+                        returnVal = moment(returnVal).format();
+
+                    return returnVal;
+                });
+
+            Template7.registerHelper('JSON',
+                function (val) {
+                    return JSON.stringify(val, null, 2);
+                });
+
+            Template7.registerHelper('format',
+                function (val, data) {
+                    return format(val, {icon, data: data});
+                });
+
+            Template7.registerHelper('moonUnicode',
+                function (val) {
+                    console.log('moon age ', val/1.05);
+                    return '&#x' + ((61589 + parseInt(val / 1.05)).toString(16));
+                });
+
+            var compiledTemplate = Template7.compile(template);
+            // Now we may render our compiled template by passing required context
+            var html = compiledTemplate(data);
+            if (container)
+                container.append(html);
+            else
+                return html;
+        }
+    </script>
+</head>
+</html>
